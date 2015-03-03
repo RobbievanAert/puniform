@@ -1,0 +1,18 @@
+{
+    "contents" : "#' Data from a meta-analysis infants' habituation to a give stimulus and their later cognitive\n#' ability (IQ)\n#'\n#' Results from 12 studies on the association between infants' habituation to a give stimulus and\n#' their later cognitive ability (IQ).\n#'\n#' @name data.mccall93\n#' @docType data\n#' @author Robbie C.M. van Aert \\email{R.C.M.vanAert@@tilburguniversity.edu}\n#' @format The data frame contains two columns: ri (raw correlation coefficients) and ni (sample sizes).\n#' @keywords data\n#' @source McCall, R. B., & Carriger, M. S. (1993). A meta-analysis of infant habituation and recognition\n#' memory performance as predictors of later IQ. Child Development, 64, 57-79.\n#' http://dx.doi.org/10.2307/1131437\n#'\nNULL\n",
+    "created" : 1425398831492.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1899401058",
+    "id" : "BE14350F",
+    "lastKnownWriteTime" : 1425400025,
+    "path" : "D:/Dropbox/Werk/Onderzoek/Code/Program Files/puniform/R/GIT_data.R",
+    "project_path" : "R/GIT_data.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
