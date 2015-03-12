@@ -35,4 +35,7 @@ Function returns a data frame with Hedges' g effect sizes (yi), Hedges' g varian
 \description{
 Function that computes Hedges' g for one-sample mean and two-sample mean and computes p-value as in primary studies.
 }
+\author{
+Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
+}
 

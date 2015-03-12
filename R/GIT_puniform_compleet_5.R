@@ -1,6 +1,8 @@
 #' p-uniform
 #'
-#' Function to apply p-uniform method for one-sample means, two-sample means, and correlations.
+#' Function to apply p-uniform method for one-sample means, two-sample means, and correlations. \cr
+#' \cr
+#' Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email (\email{R.C.M.vanAert@@tilburguniversity.edu}).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations
@@ -15,7 +17,9 @@
 #' @param alpha A integer specifying the alpha level as used in primary studies (default is 0.05)
 #' @param side A character indicating the direction of the tested hypothesis in the primary studies (either "right" or "left")
 #' @param method A character indicating the method to be used ("P" (default), "LNP", "LN1MINP", "KS", or "AD")
-#' @param plot A logical indicating whether a plot showing the relation between observed and expected p-values has to be rendered
+#' @param plot A logical indicating whether a plot showing the relation between observed and expected p-values has to be rendered (default is TRUE)
+#'
+#' @details Only one effect size measure can be specified at a time. A combination of effect size measures is not possible.
 #'
 #' @return
 #' \item{est}{p-uniform's effect size estimate}
@@ -31,7 +35,7 @@
 #' \item{ci.lb.fe}{lower bound of confidence interval based on traditional fixed-effect meta-analysis}
 #' \item{ci.ub.fe}{ci.ub.fe upper bound of confidence interval based on traditional fixed-effect meta-analysis}
 #' \item{Qstat.}{test statistic of the Q-test for testing the null-hypothesis of homogeneity}
-#' \item{Qpval}{p-value of the Q-test}
+#' \item{Qpval}{one-tailed p-value of the Q-test}
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
@@ -45,14 +49,14 @@
 #' data(data.mccall93)
 #'
 #' ### Apply p-uniform method to get the same results as in van Assen et al. (2014)
-#' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .025, side = "right", method = "LNP", plot = FALSE)
+#' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .025, side = "right", method = "LNP", plot = TRUE)
 #'
 #' ### Note that the results of the publication bias test of p-uniform are not exactly equal to the results as stated in van Assen et al. (2014).
 #' ### This is caused by a minor mistake in the analyses in van Assen et al. (2014).
 #'
 #' @export
 
-puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, alpha = .05, side, method, plot = FALSE) {
+puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, alpha = .05, side, method = "P", plot = TRUE) {
 
   require(metafor)
   require(ADGofTest)
@@ -87,6 +91,6 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, alpha = .0
             est.fe = res5$est.fe, se.fe = res5$se.fe, ci.lb.fe = res5$ci.lb.fe, ci.ub.fe = res5$ci.ub.fe, Qstat. = res1$res$QE, Qpval = res1$res$QEp)
 
   class(x) <- "puniformoutput"
-  print(x)
+  return(x)
 
 }

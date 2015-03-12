@@ -16,6 +16,8 @@
 #'
 #' @return Function returns a data frame with Hedges' g effect sizes (yi), Hedges' g variances (vi), z-values (zval), and p-values as computed in primary studies (pval).
 #'
+#' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
+#'
 #' @export
 
 escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, side, measure) {
@@ -24,7 +26,7 @@ escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, side, mea
     di <- mi/sdi
     J <- 1 - 3/(4*(ni-1)-1)
     yi <- J * di
-    vi <- J^2 * (1/ni+yi^2/(2*ni*(ni-1)))
+    vi <- J^2 * (1/ni+di^2/(2*ni))
     zval <- yi/sqrt(vi)
     tval <- mi/(sdi/sqrt(ni))
     if(side == "right") { pval <- pt(tval, df = ni - 1, lower.tail = FALSE) }

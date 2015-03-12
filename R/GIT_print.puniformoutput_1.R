@@ -1,4 +1,14 @@
-
+#' print.puniformoutput
+#'
+#' Print method for objecs of class \code{puniformoutput}
+#'
+#' @param x an object of class \code{puniformoutput}
+#'
+#' @return The print function does not return an object.
+#'
+#' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
+#'
+#' @export
 
 print.puniformoutput <- function(x) {
   cat("\n")
@@ -8,7 +18,7 @@ print.puniformoutput <- function(x) {
   cat("Effect size estimation p-uniform")
   cat("\n")
   cat("\n")
-  print(format(data.frame(estimate = x$est, ci.lb = x$ci.lb, ci.ub = x$ci.ub, ksig = x$ksig, row.names = ""), width = 9))
+  print(format(data.frame(estimate = round(x$est, 4), ci.lb = round(x$ci.lb, 4), ci.ub = round(x$ci.ub, 4), ksig = x$ksig, row.names = ""), width = 9))
   cat("\n")
   if(x$approx.est == 1 & x$approx.ci.lb == 1) {
     cat("Approximation used for estimating effect size and ci.lb")
@@ -25,9 +35,9 @@ print.puniformoutput <- function(x) {
   cat("Test of an effect p-uniform")
   cat("\n")
   cat("\n")
-  if(x$method == "LNP" | x$method == "LN1MINP") { print(format(data.frame(L.0 = x$L.0, pval = x$pval.0, row.names = ""), width = 9)) }
+  if(x$method == "LNP" | x$method == "LN1MINP") { print(format(data.frame(L.0 = round(x$L.0, 4), pval = round(x$pval.0, 4), row.names = ""), width = 9)) }
   if(x$method == "P") {
-    print(format(data.frame(z.0 = x$L.0, pval = x$pval.0, row.names = ""), width = 9))
+    print(format(data.frame(z.0 = round(x$L.0, 4), pval = round(x$pval.0, 4), row.names = ""), width = 9))
     cat("\n")
     cat("p-value approximated with normal distribution")
     cat("\n")
@@ -48,9 +58,9 @@ print.puniformoutput <- function(x) {
   cat("Publication bias test p-uniform")
   cat("\n")
   cat("\n")
-  if(x$method == "LNP" | x$method == "LN1MINP") { print(format(data.frame(L.pb = x$L.pb, pval = x$pval.pb, row.names = ""), width = 9)) }
+  if(x$method == "LNP" | x$method == "LN1MINP") { print(format(data.frame(L.pb = round(x$L.pb, 4), pval = round(x$pval.pb, 4), row.names = ""), width = 9)) }
   if(x$method == "P") {
-    print(format(data.frame(z.pb = x$L.pb, pval = x$pval.pb, row.names = ""), width = 9))
+    print(format(data.frame(z.pb = round(x$L.pb, 4), pval = round(x$pval.pb, 4), row.names = ""), width = 9))
     cat("\n")
     cat("p-value approximated with normal distribution")
     cat("\n")
@@ -69,6 +79,6 @@ print.puniformoutput <- function(x) {
   cat("Fixed-effect meta-analysis")
   cat("\n")
   cat("\n")
-  print(format(data.frame(estimate = x$est.fe, se = x$se.fe, ci.lb = x$ci.lb.fe, ci.ub = x$ci.ub.fe, Qstat. = x$Qstat., Qpval = x$Qpval, row.names = ""), width = 9))
+  print(format(data.frame(estimate = round(x$est.fe, 4), se = round(x$se.fe, 4), ci.lb = round(x$ci.lb.fe, 4), ci.ub = round(x$ci.ub.fe, 4), Qstat. = round(x$Qstat., 4), Qpval = round(x$Qpval, 4), row.names = ""), width = 9))
   cat("\n")
 }
