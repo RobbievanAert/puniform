@@ -7,6 +7,7 @@ Description: The p-uniform package provides a method for estimating effect size,
 Depends: R (>= 3.1.2)
 License: GPL-2
 LazyData: FALSE
+Encoding: UTF-8
 Imports:
   ADGofTest,
   metafor
