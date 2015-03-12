@@ -1,12 +1,12 @@
 {
-    "contents" : "Package: puniform\nTitle: Meta-analysis with p-uniform\nVersion: 0.0.0.9000\nAuthor: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>\nMaintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>\nDescription: The p-uniform package provides a method for estimating effect size, testing the null-hypothesis of no effect, and testing for publication bias. The p-uniform method is based on the statistical theory that the distribution of p-values is uniform conditional on the population effect size. Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email.\nDepends: R (>= 3.1.2)\nLicense: GPL-2\nLazyData: FALSE\nImports:\n  ADGofTest,\n  metafor\n",
+    "contents" : "Package: puniform\nTitle: Meta-analysis with p-uniform\nVersion: 0.0.0.9001\nAuthor: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>\nMaintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>\nDescription: The p-uniform package provides a method for estimating effect size, testing the null-hypothesis of no effect, and testing for publication bias. The p-uniform method is based on the statistical theory that the distribution of p-values is uniform conditional on the population effect size. Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email.\nDepends: R (>= 3.1.2)\nLicense: GPL-2\nLazyData: FALSE\nImports:\n  ADGofTest,\n  metafor\n",
     "created" : 1426151938244.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1166962179",
+    "hash" : "2129043174",
     "id" : "710194AA",
-    "lastKnownWriteTime" : 1425483164,
+    "lastKnownWriteTime" : 1426153233,
     "path" : "D:/Dropbox/Werk/Onderzoek/Code/puniform/DESCRIPTION",
     "project_path" : "DESCRIPTION",
     "properties" : {
