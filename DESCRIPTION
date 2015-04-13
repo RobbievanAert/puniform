@@ -6,7 +6,7 @@ Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: The p-uniform package provides a method for estimating effect size, testing the null-hypothesis of no effect, and testing for publication bias. The p-uniform method is based on the statistical theory that the distribution of p-values is uniform conditional on the population effect size. Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email.
 Depends: R (>= 3.1.2)
 License: GPL-2
-LazyData: FALSE
+LazyData: TRUE
 Encoding: UTF-8
 Imports:
   ADGofTest (>= 0.3)

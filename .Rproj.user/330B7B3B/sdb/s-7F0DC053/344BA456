@@ -1,0 +1,17 @@
+{
+    "contents" : "devtools::install_github(\"RobbievanAert/puniform\")\nlibrary(puniform)\n?puniform\n",
+    "created" : 1428937371388.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "1876061164",
+    "id" : "344BA456",
+    "lastKnownWriteTime" : 157680768,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
