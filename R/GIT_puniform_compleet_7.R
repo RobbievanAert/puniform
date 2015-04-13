@@ -19,7 +19,7 @@
 #' @param method A character indicating the method to be used ("P" (default), "LNP", "LN1MINP", "KS", or "AD")
 #' @param plot A logical indicating whether a plot showing the relation between observed and expected p-values has to be rendered (default is TRUE)
 #'
-#' @details Only one effect size measure can be specified at a time. A combination of effect size measures is not possible.
+#' @details Only one effect size measure can be specified at a time. A combination of effect size measures is not possible at the moment.
 #'
 #' @return
 #' \item{est}{p-uniform's effect size estimate}
@@ -32,9 +32,11 @@
 #' \item{pval.pb}{one-tailed p-value of p-uniform's publication bias test}
 #' \item{est.fe}{effect size estimate based on traditional fixed-effect meta-analysis}
 #' \item{se.fe}{standard error of effect size estimate based on traditional fixed-effect meta-analysis}
+#' \item{zval.fe}{test statistic of the null-hypothesis of no effect based on traditional fixed-effect meta-analysis}
+#' \item{pval.fe}{one-tailed p-value of the null-hypothesis of no effect based on traditional fixed-effect meta-analysis}
 #' \item{ci.lb.fe}{lower bound of confidence interval based on traditional fixed-effect meta-analysis}
 #' \item{ci.ub.fe}{ci.ub.fe upper bound of confidence interval based on traditional fixed-effect meta-analysis}
-#' \item{Qstat.}{test statistic of the Q-test for testing the null-hypothesis of homogeneity}
+#' \item{Qstat}{test statistic of the Q-test for testing the null-hypothesis of homogeneity}
 #' \item{Qpval}{one-tailed p-value of the Q-test}
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}

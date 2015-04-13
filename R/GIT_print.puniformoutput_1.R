@@ -18,7 +18,7 @@ print.puniformoutput <- function(x) {
   cat("Effect size estimation p-uniform")
   cat("\n")
   cat("\n")
-  print(format(data.frame(estimate = round(x$est, 4), ci.lb = round(x$ci.lb, 4), ci.ub = round(x$ci.ub, 4), ksig = x$ksig, row.names = ""), width = 9))
+  print(format(data.frame(est = round(x$est, 4), ci.lb = round(x$ci.lb, 4), ci.ub = round(x$ci.ub, 4), ksig = x$ksig, row.names = ""), width = 9))
   cat("\n")
   if(x$approx.est == 1 & x$approx.ci.lb == 1) {
     cat("Approximation used for estimating effect size and ci.lb")
@@ -79,6 +79,8 @@ print.puniformoutput <- function(x) {
   cat("Fixed-effect meta-analysis")
   cat("\n")
   cat("\n")
-  print(format(data.frame(estimate = round(x$est.fe, 4), se = round(x$se.fe, 4), zval = round(x$zval.fe, 4), pval = round(x$pval.fe, 4), ci.lb = round(x$ci.lb.fe, 4), ci.ub = round(x$ci.ub.fe, 4), Qstat = round(x$Qstat, 4), Qpval = round(x$Qpval, 4), row.names = ""), width = 9))
+  print(format(data.frame(est.fe = round(x$est.fe, 4), se.fe = round(x$se.fe, 4), zval.fe = round(x$zval.fe, 4),
+                          pval.fe = round(x$pval.fe, 4), ci.lb.fe = round(x$ci.lb.fe, 4), ci.ub.fe = round(x$ci.ub.fe, 4),
+                          Qstat = round(x$Qstat, 4), Qpval = round(x$Qpval, 4), row.names = ""), width = 9))
   cat("\n")
 }
