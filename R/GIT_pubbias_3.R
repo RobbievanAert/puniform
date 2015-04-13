@@ -1,7 +1,16 @@
 pubbias <- function(es, alpha, method) {
 
-  res <- rma(yi = es$yi, vi = es$vi, method = "FE")
-  est.fe <- res$b[1]
+  wi <- 1/es$vi
+  est.fe <- sum(es$yi*wi)/sum(wi)
+  se.fe <- sqrt(1/sum(wi))
+  zval.fe <- est.fe/se.fe
+  if (zval.fe > 0) {
+    pval.fe <- pnorm(zval.fe, lower.tail = FALSE)
+  } else { pval.fe <- pnorm(zval.fe) }
+  ci.lb.fe <- est.fe-qnorm(0.975)*se.fe
+  ci.ub.fe <- est.fe+qnorm(0.975)*se.fe
+  Qstat <- sum(wi*(es$yi-est.fe)^2)
+  Qpval <- pchisq(Qstat, df = 1, lower.tail = FALSE)
 
   sub <- subset(es, es$pval < alpha)
   yi <- sub$yi
@@ -50,5 +59,7 @@ pubbias <- function(es, alpha, method) {
       }
     }
   }
-  return(list(data = data.frame(yi, vi, zval), L.pb = L.pb, pval.pb = pval.pb, ksig = ksig, res = res, approx.pb = max(approx.pb)))
+  return(list(data = data.frame(yi, vi, zval), L.pb = L.pb, pval.pb = pval.pb, ksig = ksig, est.fe = est.fe,
+              se.fe = se.fe, zval.fe = zval.fe, pval.fe = pval.fe, ci.lb.fe = ci.lb.fe, ci.ub.fe = ci.ub.fe,
+              Qstat = Qstat, Qpval = Qpval, approx.pb = max(approx.pb)))
 }

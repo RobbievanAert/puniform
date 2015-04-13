@@ -25,7 +25,7 @@ esest <- function(yi, vi, zval, ksig, alpha, method) {
     else if(method == "LN1MINP") { stat <- sum(-log(1 - q)) }
     else if(method == "P") { stat <- sum(q) }
     else if(method == "KS" & val == "est") { out <- ks.test(x = q, y = punif)$statistic }
-    else if(method == "AD" & val == "est") { out <- as.numeric(ad.test(x = q, distr.fun = punif)$statistic) }
+    else if(method == "AD" & val == "est") { out <- as.numeric(ADGofTest::ad.test(x = q, distr.fun = punif)$statistic) }
 
     if(val == "est" & (method == "LNP" | method == "LN1MINP" | method == "P")) { out <- stat - ksig }
     else if(val == "ci.lb" & (method == "LNP" | method == "LN1MINP")) { out <- stat - qgamma(.975, ksig, 1) }

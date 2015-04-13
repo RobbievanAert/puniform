@@ -1,0 +1,16 @@
+{
+    "contents" : "pubbias <- function(es, alpha, method) {\n\n  wi <- 1/es$vi\n  est.fe <- sum(es$yi*wi)/sum(wi)\n  se.fe <- sqrt(1/sum(wi))\n  zval.fe <- est.fe/se.fe\n  if (zval.fe > 0) {\n    pval.fe <- pnorm(zval.fe, lower.tail = FALSE)\n  } else { pval.fe <- pnorm(zval.fe) }\n  ci.lb.fe <- est.fe-qnorm(0.975)*se.fe\n  ci.ub.fe <- est.fe+qnorm(0.975)*se.fe\n  Qstat <- sum(wi*(es$yi-est.fe)^2)\n  Qpval <- pchisq(Qstat, df = 1, lower.tail = FALSE)\n\n  sub <- subset(es, es$pval < alpha)\n  yi <- sub$yi\n  vi <- sub$vi\n  zval <- sub$zval\n  zcv <- qnorm(alpha, lower.tail = FALSE)\n  ksig <- nrow(sub)\n\n  if(ksig == 0) {\n    L.pb <- NA\n    pval.pb <- NA\n    approx.pb <- NA\n  } else {\n\n    if(method == \"KS\" | method == \"AD\") {\n      L.pb <- NA\n      pval.pb <- NA\n      approx.pb <- 0\n    } else {\n      zd <- est.fe/sqrt(vi)\n      q <- numeric()\n      for(i in 1:length(yi)) {\n        if(zcv - zd[i] <= 38) {\n          approx.pb <- 0\n          pmarg <- exp(pnorm(zcv*sqrt(vi[i]), est.fe, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE))\n          ph1 <- exp(pnorm(yi[i], est.fe, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE))\n          q[i] <- ph1/pmarg\n        } else if(zd[i] > -(700-.5*(zval[i]-zcv)^2)/(zval[i]-zcv) + zcv) {\n          approx.pb <- 1\n          q[i] <- approx(zd[i], zval[i], zcv)\n        } else {\n          approx.pb <- 2\n          zx <- -(700-.5*(zval[i]-zcv)^2)/(zval[i]-zcv) + zcv\n          q[i] <- approx(zx, zval[i], zcv)\n        }\n        if(method == \"LNP\") {\n          L.pb <- sum(-log(q))\n          pval.pb <- pgamma(L.pb, ksig, 1)\n        } else if(method == \"LN1MINP\") {\n          L.pb <- sum(-log(1 - q))\n          pval.pb <- exp(pgamma(L.pb, ksig, 1, lower.tail = FALSE, log.p = TRUE))\n        } else if(method == \"P\") {\n          L.pb <- (sum(q)-ksig*0.5)/sqrt(ksig/12)\n          pval.pb <- pnorm(L.pb, lower.tail = FALSE)\n        }\n      }\n    }\n  }\n  return(list(data = data.frame(yi, vi, zval), L.pb = L.pb, pval.pb = pval.pb, ksig = ksig, est.fe = est.fe,\n              se.fe = se.fe, zval.fe = zval.fe, pval.fe = pval.fe, ci.lb.fe = ci.lb.fe, ci.ub.fe = ci.ub.fe,\n              Qstat = Qstat, Qpval = Qpval, approx.pb = max(approx.pb)))\n}\n",
+    "created" : 1428928901286.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3492943438",
+    "id" : "268E9D93",
+    "lastKnownWriteTime" : 1428929010,
+    "path" : "D:/Dropbox/Werk/Onderzoek/Code/puniform/R/GIT_pubbias_3.R",
+    "project_path" : "R/GIT_pubbias_3.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

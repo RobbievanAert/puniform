@@ -58,9 +58,6 @@
 
 puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, alpha = .05, side, method = "P", plot = TRUE) {
 
-  require(metafor)
-  require(ADGofTest)
-
   if(!missing("mi") & !missing("ni") & !missing("sdi")) {
     measure <- "M"
     es <- escompute(mi = mi, ni = ni, sdi = sdi, side = side, measure = measure)
@@ -86,9 +83,10 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, alpha = .0
 
   res5 <- transform(res1 = res1, res3 = res3, side = side, measure = measure)
 
-  x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub, ksig = res1$ksig, approx.est = res3$approx.est, approx.ci.lb = res3$approx.ci.lb,
-            L.0 = res2$L.0, pval.0 = res2$pval.0, approx.0.imp = res2$approx.0.imp, L.pb = res1$L.pb, pval.pb = res1$pval.pb, approx.pb = res1$approx.pb,
-            est.fe = res5$est.fe, se.fe = res5$se.fe, ci.lb.fe = res5$ci.lb.fe, ci.ub.fe = res5$ci.ub.fe, Qstat. = res1$res$QE, Qpval = res1$res$QEp)
+  x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub, ksig = res1$ksig, approx.est = res3$approx.est,
+            approx.ci.lb = res3$approx.ci.lb, L.0 = res2$L.0, pval.0 = res2$pval.0, approx.0.imp = res2$approx.0.imp, L.pb = res1$L.pb, pval.pb = res1$pval.pb,
+            approx.pb = res1$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe, zval.fe = res5$zval.fe, pval.fe = res1$pval.fe, ci.lb.fe = res5$ci.lb.fe,
+            ci.ub.fe = res5$ci.ub.fe, Qstat = res1$Qstat, Qpval = res1$Qpval)
 
   class(x) <- "puniformoutput"
   return(x)
