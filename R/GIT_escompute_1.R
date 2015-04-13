@@ -14,7 +14,7 @@
 #' @param side A character indicating the direction of the tested hypothesis in the primary studies (either "right" or "left")
 #' @param measure A character indicating whether a Hedges' g should be computed based on one-sample mean or two-sample mean ("M" or "MD")
 #'
-#' @return Function returns a data frame with Hedges' g effect sizes (yi), Hedges' g variances (vi), z-values (zval), and p-values as computed in primary studies (pval).
+#' @return Function returns a data frame with standardized effect sizes (yi), variances of these standardized effect sizes (vi), z-values (zval), and p-values as computed in primary studies (pval).
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'

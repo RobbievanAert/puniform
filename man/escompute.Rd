@@ -30,7 +30,7 @@ escompute(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, side, measure)
 \item{measure}{A character indicating whether a Hedges' g should be computed based on one-sample mean or two-sample mean ("M" or "MD")}
 }
 \value{
-Function returns a data frame with Hedges' g effect sizes (yi), Hedges' g variances (vi), z-values (zval), and p-values as computed in primary studies (pval).
+Function returns a data frame with standardized effect sizes (yi), variances of these standardized effect sizes (vi), z-values (zval), and p-values as computed in primary studies (pval).
 }
 \description{
 Function that computes Hedges' g for one-sample mean and two-sample mean and computes p-value as in primary studies.

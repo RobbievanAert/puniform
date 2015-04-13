@@ -1,0 +1,16 @@
+{
+    "contents" : "#' escompute\n#'\n#' Function that computes Hedges' g for one-sample mean and two-sample mean and computes p-value as in primary studies.\n#'\n#' @param mi A vector of group means for one-sample mean\n#' @param ni A vector of sample sizes for one-sample mean\n#' @param sdi A vector of standard deviations for one-sample mean\n#' @param m1i A vector of means in group 1 for two-sample mean\n#' @param m2i A vector of means in group 2 for two-sample mean\n#' @param n1i A vector of sample sizes in group 1 for two-sample mean\n#' @param n2i A vector of sample sizes in group 2 for two-sample mean\n#' @param sd1i A vector of standard deviations in group 1 for two-sample mean\n#' @param sd2i A vector of standard deviations in group 2 for two-sample mean\n#' @param side A character indicating the direction of the tested hypothesis in the primary studies (either \"right\" or \"left\")\n#' @param measure A character indicating whether a Hedges' g should be computed based on one-sample mean or two-sample mean (\"M\" or \"MD\")\n#'\n#' @return Function returns a data frame with standardized effect sizes (yi), variances of these standardized effect sizes (vi), z-values (zval), and p-values as computed in primary studies (pval).\n#'\n#' @author Robbie C.M. van Aert \\email{R.C.M.vanAert@@tilburguniversity.edu}\n#'\n#' @export\n\nescompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, side, measure) {\n\n  if(measure == \"M\") {\n    di <- mi/sdi\n    J <- 1 - 3/(4*(ni-1)-1)\n    yi <- J * di\n    vi <- J^2 * (1/ni+di^2/(2*ni))\n    zval <- yi/sqrt(vi)\n    tval <- mi/(sdi/sqrt(ni))\n    if(side == \"right\") { pval <- pt(tval, df = ni - 1, lower.tail = FALSE) }\n    if(side == \"left\") { pval <- pt(tval, df = ni - 1) }\n  }\n\n  if(measure == \"MD\") {\n\n    s.pool <- sqrt(((n1i-1)*sd1i^2 + (n2i-1)*sd2i^2)/(n1i+n2i-2))\n    di <- (m1i-m2i)/s.pool\n    J <- 1 - 3/(4*(n1i+n2i-2)-1)\n    yi <- J * di\n    vi <- 1/n1i+1/n2i+(1-(n1i+n2i-2)/(n1i+n2i*J^2))*yi^2\n    zval <- yi/sqrt(vi)\n    tval <- (m1i - m2i)/sqrt(s.pool*(1/n1i+1/n2i))\n    if(side == \"right\") { pval <- pt(tval, df = n1i+n2i-2, lower.tail = FALSE) }\n    if(side == \"left\") { pval <- pt(tval, df = n1i+n2i-2) }\n  }\n\n  if(measure == \"COR\") {\n\n    yi <- .5*log((1 + ri) / (1 - ri))\n    vi <- 1/(ni-3)\n    zval <- yi/sqrt(vi)\n    if(side == \"right\") { pval <- pnorm(zval, lower.tail = FALSE) }\n    if(side == \"left\") { pval <- pnorm(zval) }\n  }\n\n  if(side == \"left\") {\n    yi <- yi * -1\n    zval <- zval * -1\n  }\n\n  return(data.frame(yi, vi, zval, pval))\n}\n",
+    "created" : 1428933677175.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1187539404",
+    "id" : "C539C91F",
+    "lastKnownWriteTime" : 1428933797,
+    "path" : "D:/Dropbox/Werk/Onderzoek/Code/puniform/R/GIT_escompute_1.R",
+    "project_path" : "R/GIT_escompute_1.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
