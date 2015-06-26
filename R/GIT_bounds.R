@@ -1,6 +1,6 @@
 bounds <- function(yi, vi, zval, zcv, ext) {
 
-  ub <- max(yi + 0.3)
+  ub <- max(yi + 1)
 
   if(ext == FALSE) {
     lb <- max(yi - 38*sqrt(vi))

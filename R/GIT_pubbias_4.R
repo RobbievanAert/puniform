@@ -16,7 +16,7 @@ pubbias <- function(es, alpha, method) {
   yi <- sub$yi
   vi <- sub$vi
   zval <- sub$zval
-  zcv <- qnorm(alpha, lower.tail = FALSE)
+  zcv <- sub$zcv
   ksig <- nrow(sub)
 
   if(ksig == 0) {
@@ -24,27 +24,26 @@ pubbias <- function(es, alpha, method) {
     pval.pb <- NA
     approx.pb <- NA
   } else {
-
     if(method == "KS" | method == "AD") {
       L.pb <- NA
       pval.pb <- NA
       approx.pb <- 0
     } else {
       zd <- est.fe/sqrt(vi)
-      q <- numeric()
+      q <- numeric(ksig)
       for(i in 1:length(yi)) {
-        if(zcv - zd[i] <= 38) {
+        if(zcv[i] - zd[i] <= 38) {
           approx.pb <- 0
-          pmarg <- exp(pnorm(zcv*sqrt(vi[i]), est.fe, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE))
+          pmarg <- exp(pnorm(zcv[i]*sqrt(vi[i]), est.fe, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE))
           ph1 <- exp(pnorm(yi[i], est.fe, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE))
           q[i] <- ph1/pmarg
-        } else if(zd[i] > -(700-.5*(zval[i]-zcv)^2)/(zval[i]-zcv) + zcv) {
+        } else if(zd[i] > -(700-.5*(zval[i]-zcv[i])^2)/(zval[i]-zcv[i]) + zcv[i]) {
           approx.pb <- 1
-          q[i] <- approx(zd[i], zval[i], zcv)
+          q[i] <- approx(zd[i], zval[i], zcv[i])
         } else {
           approx.pb <- 2
-          zx <- -(700-.5*(zval[i]-zcv)^2)/(zval[i]-zcv) + zcv
-          q[i] <- approx(zx, zval[i], zcv)
+          zx <- -(700-.5*(zval[i]-zcv[i])^2)/(zval[i]-zcv[i]) + zcv[i]
+          q[i] <- approx(zx, zval[i], zcv[i])
         }
         if(method == "LNP") {
           L.pb <- sum(-log(q))
@@ -59,7 +58,7 @@ pubbias <- function(es, alpha, method) {
       }
     }
   }
-  return(list(data = data.frame(yi, vi, zval), L.pb = L.pb, pval.pb = pval.pb, ksig = ksig, est.fe = est.fe,
+  return(list(data = data.frame(yi, vi, zval, zcv), L.pb = L.pb, pval.pb = pval.pb, ksig = ksig, est.fe = est.fe,
               se.fe = se.fe, zval.fe = zval.fe, pval.fe = pval.fe, ci.lb.fe = ci.lb.fe, ci.ub.fe = ci.ub.fe,
               Qstat = Qstat, Qpval = Qpval, approx.pb = max(approx.pb)))
 }

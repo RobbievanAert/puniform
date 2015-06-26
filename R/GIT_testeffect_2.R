@@ -1,23 +1,23 @@
-testeffect <- function(zval, ksig, alpha, method) {
-
-  zcv <- qnorm(alpha, lower.tail = FALSE)
+testeffect <- function(zval, zcv, ksig, method) {
 
   if(method == "KS" | method == "AD") {
     L.0 <- NA
     pval.0 <- NA
     approx.0.imp <- 0
   } else {
-    q <- numeric()
+    q <- numeric(ksig)
     for(i in 1:length(zval)) {
       if(zval[i] <= 38) {
         approx.0.imp <- 0
+        pmarg <- exp(pnorm(zcv[i], 0, 1, lower.tail = FALSE, log.p = TRUE))
         ph1 <- exp(pnorm(zval[i], 0, 1, lower.tail = FALSE, log.p = TRUE))
-        q[i] <- ph1/alpha
+        q[i] <- ph1/pmarg
       } else {
         approx.0.imp <- 1
-        zx <- sqrt(1400 + zcv^2)
-        q[i] <- approx(0, zx, zcv)
+        zx <- sqrt(1400 + zcv[i]^2)
+        q[i] <- approx(0, zx, zcv[i])
       }
+
       if(method == "LNP") {
         L.0 <- sum(-log(q))
         pval.0 <- exp(pgamma(L.0, ksig, 1, lower.tail = FALSE, log.p = TRUE))
