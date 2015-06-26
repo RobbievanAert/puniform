@@ -1,0 +1,18 @@
+{
+    "contents" : "puniform(mi = c(-0.2,-0.2), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"left\")\npuniform(mi = c(0.2,0.2), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"right\")\n\nmi <- c(0.2, 0.2)\nni <- c(100, 100)\nsdi <- c(1, 1)\nalpha <- 0.05\nmethod <- \"P\"\nplot <- FALSE\nside <- \"right\"\n\nmeasure <- \"M\"\nes <- escompute(mi = mi, ni = ni, sdi = sdi, alpha = alpha/2, side = side, measure = measure) ### Mean unknown sigma\n\nalpha <- 0.025\n",
+    "created" : 1435344476584.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "411107825",
+    "id" : "CE1FC863",
+    "lastKnownWriteTime" : 7011605692497750387,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

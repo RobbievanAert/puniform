@@ -1,10 +1,10 @@
 {
-    "contents" : "devtools::install_github(\"RobbievanAert/puniform\")\nlibrary(puniform)\n?puniform\n\npuniform(mi = c(-0.2,-0.2), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"left\")\npuniform(mi = c(0.2,0.2), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"right\")\n\npuniform(mi = c(-0.2276003,-0.2276003), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", sim.pval = FALSE, plot = FALSE, side = \"left\")\npuniform(mi = c(0.2276003,0.2276003), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"right\")\n",
+    "contents" : "devtools::install_github(\"RobbievanAert/puniform\")\nlibrary(puniform)\n?puniform\n\npuniform(mi = c(-0.2,-0.2), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"left\")\npuniform(mi = c(0.2,0.2), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"right\")\n\npuniform(mi = c(-0.2276003,-0.2276003), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"left\")\npuniform(mi = c(0.2276003,0.2276003), ni = c(100,100), sdi = c(1,1), alpha = 0.05, method = \"P\", plot = FALSE, side = \"right\")\n",
     "created" : 1428937371388.000,
     "dirty" : true,
     "encoding" : "",
     "folds" : "",
-    "hash" : "992324626",
+    "hash" : "3824904721",
     "id" : "344BA456",
     "lastKnownWriteTime" : 157680768,
     "path" : null,

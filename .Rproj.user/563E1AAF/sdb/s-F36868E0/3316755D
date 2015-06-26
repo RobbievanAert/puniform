@@ -1,0 +1,18 @@
+{
+    "contents" : "approx <- function(zd, zval, zcv) {\n  a <- zval - zcv\n  oz <- 1 - 1/((zcv-zd)^2+2) + 1/(((zcv-zd)^2+2)*((zcv-zd)^2+4)) - 5/(((zcv-zd)^2+2)*((zcv-zd)^2+4)*((zcv-zd)^2+6))\n  oz.a <- 1 - 1/((zval-zd)^2+2) + 1/(((zval-zd)^2+2)*((zval-zd)^2+4)) - 5/(((zval-zd)^2+2)*((zval-zd)^2+4)*((zval-zd)^2+6))\n  exp(-(zcv-zd)*a-.5*a^2)*(zcv-zd)/(zval-zd)*oz.a/oz\n}\n",
+    "created" : 1435345311436.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2816799242",
+    "id" : "3316755D",
+    "lastKnownWriteTime" : 1435345327,
+    "path" : "C:/Dropbox/Werk/Onderzoek/Code/puniform/R/GIT_approx.R",
+    "project_path" : "R/GIT_approx.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

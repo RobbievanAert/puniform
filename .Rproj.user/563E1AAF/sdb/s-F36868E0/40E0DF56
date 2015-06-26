@@ -1,0 +1,17 @@
+{
+    "contents" : "bisect <- function(func, lo, hi, tol = 0.0001, verbose = FALSE, ...) {\n\n  flo <- func(lo, ...)\n  fhi <- func(hi, ...)\n\n  if (flo * fhi > 0)\n    stop(\"root is not included in the specified interval\")\n\n  chg <- hi - lo\n  while (abs(chg) > tol) {\n    root <- (lo + hi)/2\n    froot <- func(root, ...)\n\n    if(verbose == TRUE) { cat(\"root = \", root, \"froot =\", froot,  \"chg = \", chg, fill = TRUE) }\n\n    if (abs(froot) <= tol) break\n    if (flo * froot < 0) hi <- root\n    if (fhi * froot < 0) lo <- root\n    chg <- hi - lo\n  }\n\n  return(root)\n}",
+    "created" : 1435345080993.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3998449638",
+    "id" : "40E0DF56",
+    "lastKnownWriteTime" : 1425318540,
+    "path" : "C:/Dropbox/Werk/Onderzoek/Code/puniform/R/GIT_bisect.R",
+    "project_path" : "R/GIT_bisect.R",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
