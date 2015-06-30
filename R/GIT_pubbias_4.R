@@ -10,7 +10,7 @@ pubbias <- function(es, alpha, method) {
   ci.lb.fe <- est.fe-qnorm(0.975)*se.fe
   ci.ub.fe <- est.fe+qnorm(0.975)*se.fe
   Qstat <- sum(wi*(es$yi-est.fe)^2)
-  Qpval <- pchisq(Qstat, df = 1, lower.tail = FALSE)
+  Qpval <- pchisq(Qstat, df = length(es$yi)-1, lower.tail = FALSE)
 
   sub <- subset(es, es$pval < alpha)
   yi <- sub$yi
