@@ -59,7 +59,7 @@ escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alp
     if (measure == "MD") {
       s.pool <- sqrt(((n1i-1)*sd1i^2 + (n2i-1)*sd2i^2)/(n1i+n2i-2))
       di <- (m1i-m2i)/s.pool
-      tval <- (m1i - m2i)/sqrt(s.pool*(1/n1i+1/n2i))
+      tval <- (m1i - m2i)/sqrt(s.pool^2*(1/n1i+1/n2i))
     } else if (measure == "MDT") {
       di <- tobs*sqrt((n1i+n2i)/(n1i*n2i))
       tval <- tobs
