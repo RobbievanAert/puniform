@@ -1,21 +1,21 @@
 #' escompute
 #'
-#' Function that computes Hedges' g for an one-sample mean and a two-sample mean, Fisher's r-to-z transformed correlation coefficient for a raw correlation coefficient and computes a p-value as in primary studies.
+#' Function that computes Hedges' g for an one-sample mean and a two-independent means, Fisher's r-to-z transformed correlation coefficient for a raw correlation coefficient and computes a p-value as in primary studies.
 #'
 #' @param mi A vector of group means for one-sample mean
 #' @param ni A vector of sample sizes for one-sample mean
 #' @param sdi A vector of standard deviations for one-sample mean
-#' @param m1i A vector of means in group 1 for two-sample mean
-#' @param m2i A vector of means in group 2 for two-sample mean
-#' @param n1i A vector of sample sizes in group 1 for two-sample mean
-#' @param n2i A vector of sample sizes in group 2 for two-sample mean
-#' @param sd1i A vector of standard deviations in group 1 for two-sample mean
-#' @param sd2i A vector of standard deviations in group 2 for two-sample mean
+#' @param m1i A vector of means in group 1 for two-independent means
+#' @param m2i A vector of means in group 2 for two-independent means
+#' @param n1i A vector of sample sizes in group 1 for two-independent means
+#' @param n2i A vector of sample sizes in group 2 for two-independent means
+#' @param sd1i A vector of standard deviations in group 1 for two-independent means
+#' @param sd2i A vector of standard deviations in group 2 for two-independent means
 #' @param ri A vector of raw correlation coefficients
 #' @param tobs A vector of t-values
 #' @param alpha A integer specifying the alpha level as used in primary studies
-#' @param side A character indicating the direction of the tested hypothesis in the primary studies (either "right" or "left")
-#' @param measure A character indicating what kind of effect size should be computed (Hedges' g or Fisher's r-to-z transformed correlation coefficients) and which arguments are used as input ("M", "MT", "MD", "MDT", or "COR"). See Details below.
+#' @param side A character indicating the direction of the tested hypothesis in the primary studies (either "\code{right}" or "\code{left}")
+#' @param measure A character indicating what kind of effect size should be computed (Hedges' g or Fisher's r-to-z transformed correlation coefficients) and which arguments are used as input ("\code{M}", "\code{MT}", "\code{MD}", "\code{MDT}", or "\code{COR}"). See Details below.
 #'
 #' @details The \code{measure} argument has to be used to specify the desired effect size and what input parameters are used. There are five options:
 #' \itemize{
