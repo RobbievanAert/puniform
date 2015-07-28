@@ -1,8 +1,7 @@
 README for "puniform" package
 
 The p-uniform package provides a method for estimating effect size, testing the null-hypothesis of no effect, 
-and testing for publication bias. The p-uniform method is based on the statistical theory that the distribution of 
-p-values is uniform conditional on the population effect size.
+and testing for publication bias while taking into account publication bias. The p-uniform method is based on the statistical theory that the distribution of p-values is uniform conditional on the population effect size.
 
 Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email (R.C.M.vanAert@tilburguniversity.edu).
 
