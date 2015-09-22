@@ -47,8 +47,8 @@ The \code{measure} argument has to be used to specify the desired effect size an
 \itemize{
 \item{\code{"M"}}{ for one-sample mean with \code{mi}, \code{ni}, \code{sdi}, \code{alpha}, and \code{side} as input parameters}
 \item{\code{"MT"}}{ for one-sample mean with \code{tobs}, \code{ni}, \code{alpha}, and \code{side} as input parameters}
-\item{\code{"M"}}{ for two-sample mean with \code{m1i}, \code{m2i}, \code{n1i}, \code{n2i}, \code{sd1i}, \code{sd2i}, \code{alpha}, and \code{side} as input parameters}
-\item{\code{"MT"}}{ for two-sample mean with \code{tobs}, \code{n1i}, \code{n2i}, \code{alpha}, and \code{side} as input parameters}
+\item{\code{"MD"}}{ for two-sample mean with \code{m1i}, \code{m2i}, \code{n1i}, \code{n2i}, \code{sd1i}, \code{sd2i}, \code{alpha}, and \code{side} as input parameters}
+\item{\code{"MDT"}}{ for two-sample mean with \code{tobs}, \code{n1i}, \code{n2i}, \code{alpha}, and \code{side} as input parameters}
 \item{\code{"COR"}}{ for raw correlation coefficients with \code{ri}, \code{ni}, \code{alpha}, and \code{side} as input parameters}
 }
 }
