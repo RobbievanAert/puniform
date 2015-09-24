@@ -39,11 +39,11 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
       if(class(est.bo) == "try-error") {
         est.bo <- bisect(func = pdist, lo = bo.ext[1], hi = bo.ext[2], yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig/2, val = "est", method = "P")
       }
-      est <- try(as.numeric(optimize(pdist, interval = c(est.bo-1.5, est.bo+1.5), yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "est", method = method)$minimum), silent = TRUE)
+      est <- suppressWarnings(try(as.numeric(optimize(pdist, interval = c(est.bo-1.5, est.bo+1.5), yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "est", method = method)$minimum), silent = TRUE))
       if(class(est) == "try-error") { est <- NA }
     }
     if(method == "AD") {
-      est.AD <- nlm(pdist, p = 0, yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "est", method = method)
+      est.AD <- suppressWarnings(nlm(pdist, p = 0, yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "est", method = method))
       if(est.AD$gradient < 0.1) { est <- est.AD$estimate
       } else { est <- NA }
     }
