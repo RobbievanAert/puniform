@@ -8,4 +8,4 @@ Please note that the method is still in development and that this is a beta vers
 The paper about the method:
 
 van Assen, M. A. L. M., van Aert, R. C. M., & Wicherts, J. M. (2014). Meta-analysis using effect size distributions of 
-only statistically significant studies. Psychological Methods, Advance online publication. doi: http://dx.doi.org/10.1037/met0000025
+only statistically significant studies. Psychological Methods, 20(3). doi: http://dx.doi.org/10.1037/met0000025
