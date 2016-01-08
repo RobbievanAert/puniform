@@ -50,8 +50,7 @@ escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alp
     if (side == "left") { pval <- pt(tval, df = ni - 1) }
     dcvi <- qt(alpha, df = ni-1, lower.tail = FALSE)*1/sqrt(ni)
     ycvi <- J * dcvi
-    vcvi <- J^2 * (1/ni+dcvi^2/(2*ni))
-    zcv <- ycvi/sqrt(vcvi)
+    zcv <- ycvi/sqrt(vi)
 
   }
 
@@ -72,8 +71,7 @@ escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alp
     if (side == "left") { pval <- pt(tval, df = n1i+n2i-2) }
     dcvi <- qt(alpha, df = n1i+n2i-2, lower.tail = FALSE)*sqrt((n1i+n2i)/(n1i*n2i))
     ycvi <- J * dcvi
-    vcvi <- 1/n1i+1/n2i+(1-(n1i+n2i-2-2)/((n1i+n2i-2)*J^2))*ycvi^2
-    zcv <- ycvi/sqrt(vcvi)
+    zcv <- ycvi/sqrt(vi)
   }
 
   if (measure == "COR") {
