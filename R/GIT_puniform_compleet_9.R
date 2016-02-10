@@ -1,6 +1,6 @@
 #' p-uniform
 #'
-#' Function to apply p-uniform method for one-sample mean, two-independent means, and one raw correlation coefficient as described in van Assen, van Aert, and Wicherts (2015) and van Aert, Wicherts, and van Assen (2015). \cr
+#' Function to apply p-uniform method for one-sample mean, two-independent means, and one raw correlation coefficient as described in Van Assen, Van Aert, and Wicherts (2015) and Van Aert, Wicherts, and Van Assen (2015). \cr
 #' \cr
 #' Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email (\email{R.C.M.vanAert@@tilburguniversity.edu}).
 #'
@@ -34,9 +34,9 @@
 #' different effect size measures is therefore not recommended.
 #'
 #' Five different estimators can be used when applying p-uniform. The \code{P} method is based on the distribution of the sum of independent uniformly distributed random
-#' variables (Irwin-Hall distribution) and is the recommended estimator (van Aert et al., 2015). The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
+#' variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2015). The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
 #' for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each study before applying Fisher’s method on these transformed p-values
-#' (van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
+#' (Van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
 #' for testing whether the (conditional) p-values follow a uniform distribution.
 #'
 #' @return
@@ -68,11 +68,11 @@
 #' @examples ### Load data from meta-analysis by McCall and Carriger (1993)
 #' data(data.mccall93)
 #'
-#' ### Apply p-uniform method to get the same results as in van Assen et al. (2015)
+#' ### Apply p-uniform method to get the same results as in Van Assen et al. (2015)
 #' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .025, side = "right", method = "LNP", plot = TRUE)
 #'
-#' ### Note that the results of the publication bias test of p-uniform are not exactly equal to the results as stated in van Assen et al. (2015).
-#' ### This is caused by a minor mistake in the analyses in van Assen et al. (2015).
+#' ### Note that the results of the publication bias test of p-uniform are not exactly equal to the results as stated in Van Assen et al. (2015).
+#' ### This is caused by a minor mistake in the analyses in Van Assen et al. (2015).
 #'
 #' ### Generate some example data
 #' set.seed(123)
