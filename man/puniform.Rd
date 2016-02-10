@@ -5,7 +5,7 @@
 \title{p-uniform}
 \usage{
 puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05,
-  side, method, plot = FALSE)
+  side, method, plot = TRUE)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample means}
@@ -30,7 +30,7 @@ puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05,
 
 \item{tobs}{A vector of t-values}
 
-\item{alpha}{A integer specifying the alpha level as used in primary studies (default is 0.05)}
+\item{alpha}{A integer specifying the alpha level as used in primary studies (default is 0.05).}
 
 \item{side}{A character indicating whether the effect sizes in the primary studies are in the right-tail of the distribution (i.e., positive)  or in the left-tail of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})}
 
@@ -57,7 +57,7 @@ puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05,
 \item{Qpval}{one-tailed p-value of the Q-test}
 }
 \description{
-Function to apply p-uniform method for one-sample mean, two-independent means, and one raw correlation coefficient as described in van Assen, van Aert, and Wicherts (2014) and van Aert, Wicherts, and van Assen (2015). \cr
+Function to apply p-uniform method for one-sample mean, two-independent means, and one raw correlation coefficient as described in van Assen, van Aert, and Wicherts (2015) and van Aert, Wicherts, and van Assen (2015). \cr
 \cr
 Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email (\email{R.C.M.vanAert@tilburguniversity.edu}).
 }
@@ -68,24 +68,28 @@ Analyzing one-sample means and two-independent means can be done by either provi
 and \code{n2i}). Both options should be accompanied with input for the arguments \code{side} and \code{method}. See the Example section for examples. Raw correlation
 coefficients can be analyzed by supplying \code{ri} and \code{ni} to the \code{puniform} function next to input for the arguments \code{side} and \code{method}.
 
+P-uniform assumes that two-tailed hypothesis tests were conducted in the primary studies. In case one-tailed hypothesis tests were conducted in the primary studies, the
+alpha level has to be multiplied by two. For example, if one-tailed hypothesis tests were conducted with an alpha level of .05, an alpha of 0.1 has to be
+submitted to p-uniform.
+
 Note that only one effect size measure can be specified at a time. A combination of effect size measures usually causes true heterogeneity among effect sizes and including
 different effect size measures is therefore not recommended.
 
 Five different estimators can be used when applying p-uniform. The \code{P} method is based on the distribution of the sum of independent uniformly distributed random
 variables (Irwin-Hall distribution) and is the recommended estimator (van Aert et al., 2015). The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
 for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each study before applying Fisher’s method on these transformed p-values
-(van Assen et al., 2014). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
+(van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
 for testing whether the (conditional) p-values follow a uniform distribution.
 }
 \examples{
 ### Load data from meta-analysis by McCall and Carriger (1993)
 data(data.mccall93)
 
-### Apply p-uniform method to get the same results as in van Assen et al. (2014)
+### Apply p-uniform method to get the same results as in van Assen et al. (2015)
 puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .025, side = "right", method = "LNP", plot = TRUE)
 
-### Note that the results of the publication bias test of p-uniform are not exactly equal to the results as stated in van Assen et al. (2014).
-### This is caused by a minor mistake in the analyses in van Assen et al. (2014).
+### Note that the results of the publication bias test of p-uniform are not exactly equal to the results as stated in van Assen et al. (2015).
+### This is caused by a minor mistake in the analyses in van Assen et al. (2015).
 
 ### Generate some example data
 set.seed(123)
@@ -110,8 +114,8 @@ Fisher, R. A. (1950). Statistical methods for research workers (11th ed.). Londo
 
 Massey, F. J. (1951). The Kolmogorov-Smirnov test for goodness of fit. Journal of the American Statistical Association, 46(253), 68-78.
 
-van Aert, R. C. M., Wicherts, J. M., & van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Manuscript in preparation.
+Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Manuscript submitted for publication.
 
-van Assen, M. A. L. M., van Aert, R. C. M., & Wicherts, J. M. (2014). Meta-analysis using effect size distributions of only statistically significant studies. Psychological Methods, Advance online publication. doi: http://dx.doi.org/10.1037/met0000025
+Van Assen, M. A. L. M., Van Aert, R. C. M., & Wicherts, J. M. (2015). Meta-analysis using effect size distributions of only statistically significant studies. Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
 }
 

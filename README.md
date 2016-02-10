@@ -5,7 +5,9 @@ and testing for publication bias while taking into account publication bias. The
 
 Please note that the method is still in development and that this is a beta version. If you suspect a bug, please send me an email (R.C.M.vanAert@tilburguniversity.edu).
 
-The paper about the method:
+Papers about the method:
 
-van Assen, M. A. L. M., van Aert, R. C. M., & Wicherts, J. M. (2014). Meta-analysis using effect size distributions of 
-only statistically significant studies. Psychological Methods, 20(3). doi: http://dx.doi.org/10.1037/met0000025
+van Assen, M. A. L. M., van Aert, R. C. M., & Wicherts, J. M. (2015). Meta-analysis using effect size distributions of 
+only statistically significant studies. Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
+
+Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Manuscript submitted for publication.
