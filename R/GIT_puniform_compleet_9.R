@@ -85,7 +85,7 @@
 #'
 #' @export
 
-puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = .05, side, method, plot = FALSE) {
+puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = .05, side, method, plot = TRUE) {
 
   if (!missing("mi") & !missing("ni") & !missing("sdi")) {
     measure <- "M"
