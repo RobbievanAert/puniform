@@ -129,15 +129,12 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
 
   if (plot == TRUE) { plottrans(tr.q = res3$tr.q, ksig = res1$ksig) }
 
-  res4 <- hetero(vi = res1$data$vi, est = res3$est, ksig = res1$ksig, tr.q = res3$tr.q, alpha = alpha/2, method = method, sim.pval = sim.pval)
-
   res5 <- transform(res1 = res1, res3 = res3, side = side, measure = measure)
 
   x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub, ksig = res1$ksig, approx.est = res3$approx.est,
-            approx.ci.lb = res3$approx.ci.lb, ext.lb = res3$ext.lb, L.het = res4$L.het, pval.het = res4$pval.het, cor.pval = res4$cor.pval,
-            L.0 = res2$L.0, pval.0 = res2$pval.0, approx.0.imp = res2$approx.0.imp, L.pb = res1$L.pb, pval.pb = res1$pval.pb,
-            approx.pb = res1$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe, zval.fe = res5$zval.fe, pval.fe = res1$pval.fe, ci.lb.fe = res5$ci.lb.fe,
-            ci.ub.fe = res5$ci.ub.fe, Qstat = res1$Qstat, Qpval = res1$Qpval)
+            approx.ci.lb = res3$approx.ci.lb, ext.lb = res3$ext.lb, L.0 = res2$L.0, pval.0 = res2$pval.0, approx.0.imp = res2$approx.0.imp,
+            L.pb = res1$L.pb, pval.pb = res1$pval.pb, approx.pb = res1$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe, zval.fe = res5$zval.fe,
+            pval.fe = res1$pval.fe, ci.lb.fe = res5$ci.lb.fe, ci.ub.fe = res5$ci.ub.fe, Qstat = res1$Qstat, Qpval = res1$Qpval)
 
   class(x) <- "puniformoutput"
   return(x)
