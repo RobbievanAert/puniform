@@ -1,8 +1,8 @@
 esest <- function(yi, vi, zval, zcv, ksig, method) {
-
+  
   bo <- bounds(yi = yi, vi = vi, zval = zval, zcv = zcv, ext = FALSE)
   bo.ext <- bounds(yi = yi, vi = vi, zval = zval, zcv = zcv, ext = TRUE)
-
+  
   pdist <- function(d, yi, vi, zval, zcv, ksig, val, method, cv.P) {
     zd <- d/sqrt(vi)
     q <- numeric(ksig)
@@ -28,7 +28,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
     else if(val == "ci.lb" & method == "P") { out <- stat - cv.P }
     out
   }
-
+  
   if(method == "KS" | method == "AD") {
     ci.lb <- NA
     ci.ub <- NA
@@ -49,7 +49,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
     }
     if(any(is.na(est) == FALSE & any(zcv - est/sqrt(vi) > 38))) { approx.est <- 1
     } else { approx.est <- 0 }
-
+    
   } else {
     if(method == "P") {
       ksig.est <- ksig/2
@@ -61,7 +61,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
       est <- try(bisect(func = pdist, lo = bo.ext[1], hi = bo.ext[2], yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig.est, val = "est", method = method), silent = TRUE)
       if(class(est) == "try-error") { est <- NA }
     }
-
+    
     if(method == "P") {
       approx.ci.lb <- 0
       ci.lb <- try(bisect(func = pdist, lo = bo[1], hi = est, yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "ci.lb", method = method, cv.P = get.cv.P(ksig)), silent = TRUE)
@@ -87,7 +87,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
         if(class(ci.lb) == "try-error") { ci.lb <- NA }
       }
     }
-
+    
     if(method == "P") {
       ci.ub <- try(bisect(func = pdist, lo = est, hi = bo[2], yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "ci.ub", method = method, cv.P = ksig-get.cv.P(ksig)), silent = TRUE)
       if(class(ci.ub) == "try-error") { ci.ub <- NA }
@@ -104,6 +104,6 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
     }
     if(class(ci.ub) == "try-error") { ci.ub <- NA }
   }
-
+  
   return(list(est = est, ci.lb = ci.lb, ci.ub = ci.ub, approx.est = max(approx.est), approx.ci.lb = max(approx.ci.lb), ext.lb = bo.ext[1], tr.q = tr.q))
 }

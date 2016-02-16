@@ -15,6 +15,8 @@
 #' @param sd1i A vector of standard deviations in group 1 for two-independent means
 #' @param sd2i A vector of standard deviations in group 2 for two-independent means
 #' @param tobs A vector of t-values
+#' @param yi A vector of standardized effect sizes
+#' @param vi A vector of sampling variances belonging to the standardized effect sizes (\code{yi})
 #' @param alpha A integer specifying the alpha level as used in primary studies (default is 0.05).
 #' @param side A character indicating whether the effect sizes in the primary studies are in the right-tail of the distribution (i.e., positive)  or in the left-tail of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})
 #' @param method A character indicating the method to be used (\code{"P"} (default), \code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, or \code{"AD"})
@@ -24,7 +26,11 @@
 #' Analyzing one-sample means and two-independent means can be done by either providing the function group means (\code{mi} or \code{m1i} and \code{m2i}), standard deviations
 #' (\code{sdi} or \code{sd1i} and \code{sd2i}), and sample sizes (\code{ni} or \code{n1i} and \code{n2i}) or t-values (\code{tobs}) and sample sizes (\code{ni} or \code{n1i}
 #' and \code{n2i}). Both options should be accompanied with input for the arguments \code{side} and \code{method}. See the Example section for examples. Raw correlation
-#' coefficients can be analyzed by supplying \code{ri} and \code{ni} to the \code{puniform} function next to input for the arguments \code{side} and \code{method}.
+#' coefficients can be analyzed by supplying \code{ri} and \code{ni} to the \code{puniform} function next to input for the arguments \code{side} and \code{method}. It is also
+#' possible to specify the standardized effect sizes and its sampling variances directly via the \code{yi} and \code{vi} arguments. However, extensive knowledge about computing
+#' standardized effect sizes and its sampling variances is required and specifying standardized effect
+#' sizes and sampling variances is not recommended to be used if the p-values in the primary studies are not computed with a z-test. In case the p-values in the primary studies
+#' were computed with, for instance, a t-test, the p-values of a z-test and t-test do not exactly coincide and studies may be incorrectly included in the analyses.
 #'
 #' P-uniform assumes that two-tailed hypothesis tests were conducted in the primary studies. In case one-tailed hypothesis tests were conducted in the primary studies, the
 #' alpha level has to be multiplied by two. For example, if one-tailed hypothesis tests were conducted with an alpha level of .05, an alpha of 0.1 has to be
@@ -89,7 +95,7 @@
 #'
 #' @export
 
-puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = .05, side, method, plot = TRUE) {
+puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, alpha = .05, side, method, plot = FALSE) {
 
   if (!missing("mi") & !missing("ni") & !missing("sdi")) {
     measure <- "M"
@@ -106,6 +112,9 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alph
   } else if (!missing("ri") & !missing("ni")) {
     measure <- "COR"
     es <- escompute(ri = ri, ni = ni, alpha = alpha/2, side = side, measure = measure)
+  } else if (!missing("yi") & !missing("vi")) {
+    measure <- "SPE"
+    es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, measure = measure)
   }
 
   res1 <- pubbias(es = es, alpha = alpha/2, method = method)
@@ -118,14 +127,17 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alph
 
   res3 <- esest(yi = res1$data$yi, vi = res1$data$vi, zval = res1$data$zval, zcv = res1$data$zcv, ksig = res1$ksig, method = method)
 
-  if(plot == TRUE) { plottrans(tr.q = res3$tr.q, ksig = res1$ksig) }
+  if (plot == TRUE) { plottrans(tr.q = res3$tr.q, ksig = res1$ksig) }
+
+  res4 <- hetero(vi = res1$data$vi, est = res3$est, ksig = res1$ksig, tr.q = res3$tr.q, alpha = alpha/2, method = method, sim.pval = sim.pval)
 
   res5 <- transform(res1 = res1, res3 = res3, side = side, measure = measure)
 
   x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub, ksig = res1$ksig, approx.est = res3$approx.est,
-            approx.ci.lb = res3$approx.ci.lb, ext.lb = res3$ext.lb, L.0 = res2$L.0, pval.0 = res2$pval.0, approx.0.imp = res2$approx.0.imp,
-            L.pb = res1$L.pb, pval.pb = res1$pval.pb, approx.pb = res1$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe, zval.fe = res5$zval.fe,
-            pval.fe = res1$pval.fe, ci.lb.fe = res5$ci.lb.fe, ci.ub.fe = res5$ci.ub.fe, Qstat = res1$Qstat, Qpval = res1$Qpval)
+            approx.ci.lb = res3$approx.ci.lb, ext.lb = res3$ext.lb, L.het = res4$L.het, pval.het = res4$pval.het, cor.pval = res4$cor.pval,
+            L.0 = res2$L.0, pval.0 = res2$pval.0, approx.0.imp = res2$approx.0.imp, L.pb = res1$L.pb, pval.pb = res1$pval.pb,
+            approx.pb = res1$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe, zval.fe = res5$zval.fe, pval.fe = res1$pval.fe, ci.lb.fe = res5$ci.lb.fe,
+            ci.ub.fe = res5$ci.ub.fe, Qstat = res1$Qstat, Qpval = res1$Qpval)
 
   class(x) <- "puniformoutput"
   return(x)

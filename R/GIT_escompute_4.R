@@ -1,6 +1,6 @@
 #' escompute
 #'
-#' Function that computes Hedges' g for an one-sample mean and a two-independent means, Fisher's r-to-z transformed correlation coefficient for a raw correlation coefficient and computes a p-value as in primary studies.
+#' Function that computes Hedges' g and its sampling variance for an one-sample mean and a two-independent means, Fisher's r-to-z transformed correlation coefficient and its sampling variance for a raw correlation coefficient and computes a p-value as in the primary studies was done.
 #'
 #' @param mi A vector of group means for one-sample mean
 #' @param ni A vector of sample sizes for one-sample mean
@@ -13,17 +13,20 @@
 #' @param sd2i A vector of standard deviations in group 2 for two-independent means
 #' @param ri A vector of raw correlation coefficients
 #' @param tobs A vector of t-values
+#' @param yi A vector of standardized effect sizes
+#' @param vi A vector of sampling variances belonging to the standardized effect sizes (\code{yi})
 #' @param alpha A integer specifying the alpha level as used in primary studies
 #' @param side A character indicating the direction of the tested hypothesis in the primary studies (either "\code{right}" or "\code{left}")
 #' @param measure A character indicating what kind of effect size should be computed (Hedges' g or Fisher's r-to-z transformed correlation coefficients) and which arguments are used as input ("\code{M}", "\code{MT}", "\code{MD}", "\code{MDT}", or "\code{COR}"). See Details below.
 #'
-#' @details The \code{measure} argument has to be used to specify the desired effect size and what input parameters are used. There are five options:
+#' @details The \code{measure} argument has to be used to specify the desired effect size and what input parameters are used. There are six options:
 #' \itemize{
 #' \item{\code{"M"}}{ for one-sample mean with \code{mi}, \code{ni}, \code{sdi}, \code{alpha}, and \code{side} as input parameters}
 #' \item{\code{"MT"}}{ for one-sample mean with \code{tobs}, \code{ni}, \code{alpha}, and \code{side} as input parameters}
 #' \item{\code{"MD"}}{ for two-sample mean with \code{m1i}, \code{m2i}, \code{n1i}, \code{n2i}, \code{sd1i}, \code{sd2i}, \code{alpha}, and \code{side} as input parameters}
 #' \item{\code{"MDT"}}{ for two-sample mean with \code{tobs}, \code{n1i}, \code{n2i}, \code{alpha}, and \code{side} as input parameters}
 #' \item{\code{"COR"}}{ for raw correlation coefficients with \code{ri}, \code{ni}, \code{alpha}, and \code{side} as input parameters}
+#' \item{\code{"SPE"}}{ for user-specified standardized effect sizes and sampling variances with \code{yi}, \code{vi}, \code{alpha}, and \code{side} as input parameters}
 #' }
 #'
 #' @return Function returns a data frame with standardized effect sizes (yi), variances of these standardized effect sizes (vi), z-values (zval), p-values as computed in primary studies (pval), and critical z-values (zcv).
@@ -32,7 +35,7 @@
 #'
 #' @export
 
-escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha, side, measure) {
+escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, alpha, side, measure) {
 
   if (measure == "M" | measure == "MT") {
     if (measure == "M") {
@@ -51,10 +54,9 @@ escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alp
     dcvi <- qt(alpha, df = ni-1, lower.tail = FALSE)*1/sqrt(ni)
     ycvi <- J * dcvi
     zcv <- ycvi/sqrt(vi)
-
   }
 
-  if (measure == "MD" | measure == "MDT") {
+  else if (measure == "MD" | measure == "MDT") {
     if (measure == "MD") {
       s.pool <- sqrt(((n1i-1)*sd1i^2 + (n2i-1)*sd2i^2)/(n1i+n2i-2))
       di <- (m1i-m2i)/s.pool
@@ -74,13 +76,20 @@ escompute <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alp
     zcv <- ycvi/sqrt(vi)
   }
 
-  if (measure == "COR") {
+  else if (measure == "COR") {
     yi <- .5*log((1 + ri) / (1 - ri))
     vi <- 1/(ni-3)
     zval <- yi/sqrt(vi)
-    zcv <- qnorm(alpha, lower.tail = FALSE)
     if (side == "right") { pval <- pnorm(zval, lower.tail = FALSE) }
     if (side == "left") { pval <- pnorm(zval) }
+    zcv <- qnorm(alpha, lower.tail = FALSE)
+  }
+
+  else if (measure == "SPE") {
+    zval <- yi/sqrt(vi)
+    if (side == "right") { pval <- pnorm(zval, lower.tail = FALSE) }
+    if (side == "left") { pval <- pnorm(zval) }
+    zcv <- qnorm(alpha, lower.tail = FALSE)
   }
 
   if (side == "left") {
