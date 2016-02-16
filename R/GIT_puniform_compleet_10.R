@@ -15,7 +15,7 @@
 #' @param sd1i A vector of standard deviations in group 1 for two-independent means
 #' @param sd2i A vector of standard deviations in group 2 for two-independent means
 #' @param tobs A vector of t-values
-#' @param yi A vector of standardized effect sizes
+#' @param yi A vector of standardized effect sizes (see Details)
 #' @param vi A vector of sampling variances belonging to the standardized effect sizes (\code{yi})
 #' @param alpha A integer specifying the alpha level as used in primary studies (default is 0.05).
 #' @param side A character indicating whether the effect sizes in the primary studies are in the right-tail of the distribution (i.e., positive)  or in the left-tail of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})
@@ -26,11 +26,12 @@
 #' Analyzing one-sample means and two-independent means can be done by either providing the function group means (\code{mi} or \code{m1i} and \code{m2i}), standard deviations
 #' (\code{sdi} or \code{sd1i} and \code{sd2i}), and sample sizes (\code{ni} or \code{n1i} and \code{n2i}) or t-values (\code{tobs}) and sample sizes (\code{ni} or \code{n1i}
 #' and \code{n2i}). Both options should be accompanied with input for the arguments \code{side} and \code{method}. See the Example section for examples. Raw correlation
-#' coefficients can be analyzed by supplying \code{ri} and \code{ni} to the \code{puniform} function next to input for the arguments \code{side} and \code{method}. It is also
-#' possible to specify the standardized effect sizes and its sampling variances directly via the \code{yi} and \code{vi} arguments. However, extensive knowledge about computing
-#' standardized effect sizes and its sampling variances is required and specifying standardized effect
-#' sizes and sampling variances is not recommended to be used if the p-values in the primary studies are not computed with a z-test. In case the p-values in the primary studies
-#' were computed with, for instance, a t-test, the p-values of a z-test and t-test do not exactly coincide and studies may be incorrectly included in the analyses.
+#' coefficients can be analyzed by supplying \code{ri} and \code{ni} to the \code{puniform} function next to input for the arguments \code{side} and \code{method}. 
+#' 
+#' It is also possible to specify the standardized effect sizes and its sampling variances directly via the \code{yi} and \code{vi} arguments. However, extensive knowledge about computing
+#' standardized effect sizes and its sampling variances is required and specifying standardized effect sizes and sampling variances is not recommended to be used if the p-values in the 
+#' primary studies are not computed with a z-test. In case the p-values in the primary studies were computed with, for instance, a t-test, the p-values of a z-test and t-test do not exactly 
+#' coincide and studies may be incorrectly included in the analyses.
 #'
 #' P-uniform assumes that two-tailed hypothesis tests were conducted in the primary studies. In case one-tailed hypothesis tests were conducted in the primary studies, the
 #' alpha level has to be multiplied by two. For example, if one-tailed hypothesis tests were conducted with an alpha level of .05, an alpha of 0.1 has to be
