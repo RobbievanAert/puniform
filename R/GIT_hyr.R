@@ -16,7 +16,8 @@ hyr <- function(es, m1i, m2i, mi, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, measure, 
   est.hyr <- es$yi[2] 
   ci.lb.hyr <- est.hyr-qnorm(.975)*sqrt(es$vi[2]) 
   ci.ub.hyr <- est.hyr+qnorm(.975)*sqrt(es$vi[2]) 
-  pval.hyr <- ifelse(es$pval[2] > 0.5, (1-es$pval[2])*2, es$pval[2]*2) 
+  pval.hyr <- pnorm(es$zval[2], lower.tail = FALSE)
+  pval.hyr <- ifelse(pval.hyr > 0.5, (1-pval.hyr)*2, pval.hyr*2)
   pval.o <- ifelse(es$pval[1] > 0.5, (1-es$pval[1])*2, es$pval[1]*2) 
   
   if (measure == "COR") { 

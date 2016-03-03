@@ -16,7 +16,8 @@ repl <- function(es, m1i, m2i, mi, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, measure,
   est.repl <- es$yi[2] 
   ci.lb.repl <- est.repl-qnorm(.975)*sqrt(es$vi[2]) 
   ci.ub.repl <- est.repl+qnorm(.975)*sqrt(es$vi[2]) 
-  pval.repl <- ifelse(es$pval[2] > 0.5, (1-es$pval[2])*2, es$pval[2]*2) 
+  pval.repl <- pnorm(es$zval[2], lower.tail = FALSE)
+  pval.repl <- ifelse(pval.repl > 0.5, (1-pval.repl)*2, pval.repl*2)
   pval.o <- ifelse(es$pval[1] > 0.5, (1-es$pval[1])*2, es$pval[1]*2) 
   
   if (measure == "COR") { 
