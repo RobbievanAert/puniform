@@ -43,8 +43,8 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, alpha,
   w <- list(est.hy = res1$est, ci.lb.hy = res1$ci.lb, ci.ub.hy = res1$ci.ub, x.hy = res1$x, pval.hy = res1$pval, measure = measure, est.hyr = res2$est.hyr,
             ci.lb.hyr = res2$ci.lb.hyr, ci.ub.hyr = res2$ci.ub.hyr, stat.hyr = res2$stat.hyr, pval.hyr = res2$pval.hyr, pval.o = res2$pval.o, est.hy0 = res3$est.hy0,
             ci.lb.hy0 = res3$ci.lb.hy0, ci.ub.hy0 = res3$ci.ub.hy0, x.hy0 = res3$x.hy0, pval.hy0 = res3$pval.hy0, est.fe = res4$est.fe, se.fe = res4$se.fe,
-            ci.lb.fe = res4$ci.lb.fe, ci.ub.fe = res4$ci.ub.fe, zval.fe = res4$zval.fe, pval.fe = res4$pval.fe, est.repl = res.repl$est.repl, ci.lb.repl = res.repl$ci.lb.repl,
-            ci.ub.repl = res.repl$ci.ub.repl, stat.repl = res.repl$stat.repl, pval.repl = res.repl$pval.repl)
+            ci.lb.fe = res4$ci.lb.fe, ci.ub.fe = res4$ci.ub.fe, zval.fe = res4$zval.fe, pval.fe = res4$pval.fe, est.repl = res.repl$est.repl, se.repl = res.repl$se.repl,
+            ci.lb.repl = res.repl$ci.lb.repl, ci.ub.repl = res.repl$ci.ub.repl, stat.repl = res.repl$stat.repl, pval.repl = res.repl$pval.repl)
   class(w) <- "hybridoutput"
   return(w)
 }

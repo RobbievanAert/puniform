@@ -53,10 +53,10 @@ print.hybridoutput <- function(w) {
   cat("\n")
   w$pval.repl <- ifelse(w$pval.repl < .001, "  <.001", round(w$pval.repl, 4))
   if (w$measure == "COR") {
-    print(format(data.frame(est = round(w$est.repl, 4), zval = round(w$stat.repl, 4),
+    print(format(data.frame(est = round(w$est.repl, 4), se = round(w$se.repl, 4), zval = round(w$stat.repl, 4),
                             pval = w$pval.repl, ci.lb = round(w$ci.lb.repl, 4), ci.ub = round(w$ci.ub.repl, 4),
                             row.names = ""), width = 9))
-  } else { print(format(data.frame(est = round(w$est.repl, 4), tval = round(w$stat.repl, 4),
+  } else { print(format(data.frame(est = round(w$est.repl, 4), se = round(w$se.repl, 4), tval = round(w$stat.repl, 4),
                                    pval = w$pval.repl, ci.lb = round(w$ci.lb.repl, 4), ci.ub = round(w$ci.ub.repl, 4),
                                    row.names = ""), width = 9)) }
   cat("\n")

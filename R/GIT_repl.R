@@ -32,5 +32,5 @@ repl <- function(es, m1i, m2i, mi, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, measure,
     ci.lb.repl <- tmp*-1    
   }
   
-  return(data.frame(est.repl = est.repl, ci.lb.repl = ci.lb.repl, ci.ub.repl = ci.ub.repl, stat.repl = stat.repl, pval.repl = pval.repl, pval.o = pval.o))
+  return(data.frame(est.repl = est.repl, se.repl = sqrt(es$vi[2]), ci.lb.repl = ci.lb.repl, ci.ub.repl = ci.ub.repl, stat.repl = stat.repl, pval.repl = pval.repl, pval.o = pval.o))
 }
