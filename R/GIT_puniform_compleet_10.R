@@ -69,7 +69,7 @@
 #' @references Anderson, T. W., & Darling, D. A. (1954). A test of goodness of fit. Journal of the American Statistical Association, 49(268), 765-769.
 #' @references Fisher, R. A. (1950). Statistical methods for research workers (11th ed.). London: Oliver & Boyd.
 #' @references Massey, F. J. (1951). The Kolmogorov-Smirnov test for goodness of fit. Journal of the American Statistical Association, 46(253), 68-78.
-#' @references Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Manuscript submitted for publication.
+#' @references Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (in press). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Perspectives on Psychological Science.
 #' @references Van Assen, M. A. L. M., Van Aert, R. C. M., & Wicherts, J. M. (2015). Meta-analysis using effect size distributions of only statistically significant studies. Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
 #'
 #' @examples ### Load data from meta-analysis by McCall and Carriger (1993)
