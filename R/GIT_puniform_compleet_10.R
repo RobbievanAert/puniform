@@ -76,10 +76,10 @@
 #' data(data.mccall93)
 #'
 #' ### Apply p-uniform method to get the same results as in Van Assen et al. (2015)
-#' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .025, side = "right", method = "LNP", plot = TRUE)
+#' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "right", method = "LNP", plot = TRUE)
 #'
-#' ### Note that the results of the publication bias test of p-uniform are not exactly equal to the results as stated in Van Assen et al. (2015).
-#' ### This is caused by a minor mistake in the analyses in Van Assen et al. (2015).
+#' ### Note that the results of applying p-uniform are not exactly equal to the results as stated in Van Assen et al. (2015).
+#' ### This is caused by small improvements in implementation of p-uniform.
 #'
 #' ### Generate some example data
 #' set.seed(123)
