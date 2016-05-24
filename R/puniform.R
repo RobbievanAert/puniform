@@ -137,7 +137,7 @@
 #' @export
 
 puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-                     alpha = 0.05, side, method, plot = FALSE, sim.pval = FALSE) {
+                     alpha = 0.05, side, method, plot = FALSE) {
 
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
   if (!missing("mi") & !missing("ni") & !missing("sdi")) { # Mean unknown sigma
@@ -164,8 +164,11 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
     es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, measure = measure)
   }
 
+  ##### FIXED-EFFECT META-ANALYSIS #####
+  res.fe <- fix(yi = es$yi, vi = es$vi, measure = measure, side = side)
+
   ##### PUBLICATION BIAS TEST #####
-  res1 <- pubbias(es = es, alpha = alpha/2, method = method)
+  res1 <- pubbias(es = es, alpha = alpha/2, method = method, est.fe = res.fe$est.fe)
 
   if (res1$ksig == 0) { # If there are no significant studies return an error message
     stop("No significant studies on the specified side")
@@ -185,7 +188,7 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
   }
 
   ##### MIRROR OR TRANSFORM RESULTS #####
-  res5 <- transform(res1 = res1, res3 = res3, side = side, measure = measure)
+  res5 <- transform(res.fe = res.fe, res1 = res1, res3 = res3, side = side, measure = measure)
 
   ##### CREATE OUTPUT #####
   x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub,
@@ -193,8 +196,8 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
             ext.lb = res3$ext.lb, L.0 = res2$L.0, pval.0 = res2$pval.0,
             approx.0.imp = res2$approx.0.imp, L.pb = res1$L.pb, pval.pb = res1$pval.pb,
             approx.pb = res1$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe,
-            zval.fe = res5$zval.fe, pval.fe = res1$pval.fe, ci.lb.fe = res5$ci.lb.fe,
-            ci.ub.fe = res5$ci.ub.fe, Qstat = res1$Qstat, Qpval = res1$Qpval)
+            zval.fe = res5$zval.fe, pval.fe = res.fe$pval.fe.one, ci.lb.fe = res5$ci.lb.fe,
+            ci.ub.fe = res5$ci.ub.fe, Qstat = res.fe$Qstat, Qpval = res.fe$Qpval)
 
   class(x) <- "puniformoutput"
   return(x)

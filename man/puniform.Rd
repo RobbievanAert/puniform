@@ -5,7 +5,7 @@
 \title{p-uniform}
 \usage{
 puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-  alpha = 0.05, side, method, plot = FALSE, sim.pval = FALSE)
+  alpha = 0.05, side, method, plot = FALSE)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample means}

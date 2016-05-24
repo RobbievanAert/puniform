@@ -2,23 +2,23 @@
 ##### FUNCTION FOR PUBLICATION BIAS TEST P-UNIFORM            #####
 ###################################################################
 
-pubbias <- function(es, alpha, method) {
-  
-  ### Conduct fixed-effect meta-analysis
-  wi <- 1/es$vi  # Weight per study
-  est.fe <- sum(es$yi * wi)/sum(wi)  # FE meta-analytical estimate
-  se.fe <- sqrt(1/sum(wi))  # Standard error of meta-analytical estimate
-  zval.fe <- est.fe/se.fe  # Z-value for test of no effect
-  if (zval.fe > 0) {
-    pval.fe <- pnorm(zval.fe, lower.tail = FALSE) # Compute one-sided p-value
-  } else {
-    pval.fe <- pnorm(zval.fe)
-  }
-  ci.lb.fe <- est.fe - qnorm(0.975) * se.fe # Lower bound CI meta-analytical estimate
-  ci.ub.fe <- est.fe + qnorm(0.975) * se.fe # Upper bound CI meta-analytical estimate
-  Qstat <- sum(wi * (es$yi - est.fe)^2) # Q-statistic
-  Qpval <- pchisq(Qstat, df = length(es$yi) - 1, lower.tail = FALSE) # p-value of Q-statistic
-  
+pubbias <- function(es, alpha, method, est.fe) {
+
+  # ### Conduct fixed-effect meta-analysis
+  # wi <- 1/es$vi  # Weight per study
+  # est.fe <- sum(es$yi * wi)/sum(wi)  # FE meta-analytical estimate
+  # se.fe <- sqrt(1/sum(wi))  # Standard error of meta-analytical estimate
+  # zval.fe <- est.fe/se.fe  # Z-value for test of no effect
+  # if (zval.fe > 0) {
+  #   pval.fe <- pnorm(zval.fe, lower.tail = FALSE) # Compute one-sided p-value
+  # } else {
+  #   pval.fe <- pnorm(zval.fe)
+  # }
+  # ci.lb.fe <- est.fe - qnorm(0.975) * se.fe # Lower bound CI meta-analytical estimate
+  # ci.ub.fe <- est.fe + qnorm(0.975) * se.fe # Upper bound CI meta-analytical estimate
+  # Qstat <- sum(wi * (es$yi - est.fe)^2) # Q-statistic
+  # Qpval <- pchisq(Qstat, df = length(es$yi) - 1, lower.tail = FALSE) # p-value of Q-statistic
+
   ### Create a subset of significant studies
   sub <- subset(es, es$pval < alpha)
   yi <- sub$yi
@@ -26,7 +26,7 @@ pubbias <- function(es, alpha, method) {
   zval <- sub$zval
   zcv <- sub$zcv
   ksig <- nrow(sub)
-  
+
   ### Check if there are significant studies
   if (ksig == 0) {
     L.pb <- NA
@@ -43,11 +43,11 @@ pubbias <- function(es, alpha, method) {
       q <- numeric(ksig)  # Empty object for storing transformed p-values
       ### Loop for computing transformed p-values
       for (i in 1:length(yi)) {
-        if (zcv[i] - zd[i] <= 38) { # Do not use approximation 
+        if (zcv[i] - zd[i] <= 38) { # Do not use approximation
           approx.pb <- 0 # Create object for notification in output
-          pmarg <- exp(pnorm(zcv[i] * sqrt(vi[i]), est.fe, sqrt(vi[i]), 
+          pmarg <- exp(pnorm(zcv[i] * sqrt(vi[i]), est.fe, sqrt(vi[i]),
                              lower.tail = FALSE, log.p = TRUE))
-          ph1 <- exp(pnorm(yi[i], est.fe, sqrt(vi[i]), lower.tail = FALSE, 
+          ph1 <- exp(pnorm(yi[i], est.fe, sqrt(vi[i]), lower.tail = FALSE,
                            log.p = TRUE))
           q[i] <- ph1/pmarg
         } else if (zd[i] > -(700-0.5*(zval[i]-zcv[i])^2)/(zval[i]-zcv[i])+zcv[i]) {
@@ -73,9 +73,7 @@ pubbias <- function(es, alpha, method) {
       }
     }
   }
-  
-  return(list(data = data.frame(yi, vi, zval, zcv), L.pb = L.pb, pval.pb = pval.pb, 
-              ksig = ksig, est.fe = est.fe, se.fe = se.fe, zval.fe = zval.fe, pval.fe = pval.fe, 
-              ci.lb.fe = ci.lb.fe, ci.ub.fe = ci.ub.fe, Qstat = Qstat, Qpval = Qpval, 
-              approx.pb = max(approx.pb))) 
-} 
+
+  return(list(data = data.frame(yi, vi, zval, zcv), L.pb = L.pb, pval.pb = pval.pb,
+              ksig = ksig, approx.pb = max(approx.pb)))
+}

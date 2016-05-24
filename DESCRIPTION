@@ -1,6 +1,6 @@
 Package: puniform
 Title: Meta-analysis with p-uniform
-Version: 0.0.0.9004
+Version: 0.0.0
 Author: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: The p-uniform package provides a method for estimating effect size,
