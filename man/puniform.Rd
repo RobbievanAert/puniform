@@ -101,7 +101,9 @@ is required and specifying standardized effect sizes and sampling variances is
 not recommended to be used if the p-values in the primary studies are not computed
 with a z-test. In case the p-values in the primary studies were computed with,
 for instance, a t-test, the p-values of a z-test and t-test do not exactly
-coincide and studies may be incorrectly included in the analyses.
+coincide and studies may be incorrectly included in the analyses. Furthermore,
+critical values in the primary studies cannot be transformed to critical z-values
+if \code{yi} and \code{vi} are used as input. This yields less accurate results.
 
 P-uniform assumes that two-tailed hypothesis tests were conducted in the primary
 studies. In case one-tailed hypothesis tests were conducted in the primary studies,
@@ -134,7 +136,7 @@ puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "righ
 ### to the results as stated in Van Assen et al. (2015).
 ### This is caused by a small mistake in the analyses of Van Assen et al. (2015).
 
-### Generate some example data
+### Generate some example data for one-sample means design
 set.seed(123)
 ni <- 100
 sdi <- 1
