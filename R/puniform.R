@@ -167,7 +167,7 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
   }
 
   ##### FIXED-EFFECT META-ANALYSIS #####
-  res.fe <- fix(yi = es$yi, vi = es$vi, measure = measure, side = side)
+  res.fe <- fe.ma(yi = es$yi, vi = es$vi)
 
   ##### PUBLICATION BIAS TEST #####
   res1 <- pubbias(es = es, alpha = alpha/2, method = method, est.fe = res.fe$est.fe)

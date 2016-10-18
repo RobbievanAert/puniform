@@ -161,7 +161,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
 
   res3 <- hy0(es = es, res1 = res1, alpha = alpha/2)
 
-  res4 <- fix(yi = es$yi, vi = es$vi, measure = measure, side = side)
+  res4 <- fe.ma(yi = es$yi, vi = es$vi)
 
   ### Transform results of fixed-effect meta-analysis
   if (measure == "COR") { # Back transform Fisher z to correlation

@@ -3,5 +3,6 @@
 S3method(print,hybridoutput)
 S3method(print,puniformoutput)
 export(escompute)
+export(fe.ma)
 export(hybrid)
 export(puniform)

@@ -1,5 +1,23 @@
+#' fe.ma
+#'
+#' Function that conducts fixed-effect meta-analysis
+#'
+#' @param yi A vector of standardized effect sizes
+#' @param vi A vector of sampling variances belonging to the standardized effect sizes (\code{yi})
+#'
+#' @details The \code{fe.ma} function can be used for conducting fixed-effect meta-analysis
+#' on a set of studies
+#'
+#' @return Function returns a data frame with the following results of fixed-effect meta-analysis:
+#' estimate (\code{est.fe}), standard error (\code{se.fe}), lower bound 95\% confidence interval (\code{ci.lb.fe}),
+#' upper bound 95\% confidence interval (\code{ci.ub.fe}), z-value of test of no effect (\code{zval.fe}),
+#' two-tailed p-value of test of no effect (\code{pval.fe}), one-tailed p-value of test of no effect (\code{pval.fe.one}),
+#' test statistic of the Q-test (\code{Qstat}), and p-value of the Q-test (\code{Qpval}).
+#'
+#' @export
+
 ### Function for fixed-effect meta-analysis
-fix <- function(yi, vi, measure, side) {
+fe.ma <- function(yi, vi) {
   wi <- 1/vi # Weight per study
   est.fe <- sum(yi*wi)/sum(wi) # FE meta-analytic estimate
   se.fe <- sqrt(1/sum(wi)) # Standard error of meta-analytic estimate

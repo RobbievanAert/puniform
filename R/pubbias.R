@@ -4,21 +4,6 @@
 
 pubbias <- function(es, alpha, method, est.fe) {
 
-  # ### Conduct fixed-effect meta-analysis
-  # wi <- 1/es$vi  # Weight per study
-  # est.fe <- sum(es$yi * wi)/sum(wi)  # FE meta-analytical estimate
-  # se.fe <- sqrt(1/sum(wi))  # Standard error of meta-analytical estimate
-  # zval.fe <- est.fe/se.fe  # Z-value for test of no effect
-  # if (zval.fe > 0) {
-  #   pval.fe <- pnorm(zval.fe, lower.tail = FALSE) # Compute one-sided p-value
-  # } else {
-  #   pval.fe <- pnorm(zval.fe)
-  # }
-  # ci.lb.fe <- est.fe - qnorm(0.975) * se.fe # Lower bound CI meta-analytical estimate
-  # ci.ub.fe <- est.fe + qnorm(0.975) * se.fe # Upper bound CI meta-analytical estimate
-  # Qstat <- sum(wi * (es$yi - est.fe)^2) # Q-statistic
-  # Qpval <- pchisq(Qstat, df = length(es$yi) - 1, lower.tail = FALSE) # p-value of Q-statistic
-
   ### Create a subset of significant studies
   sub <- subset(es, es$pval < alpha)
   yi <- sub$yi
