@@ -12,11 +12,15 @@ fe.ma(yi, vi)
 \item{vi}{A vector of sampling variances belonging to the standardized effect sizes (\code{yi})}
 }
 \value{
-Function returns a data frame with the following results of fixed-effect meta-analysis:
-estimate (\code{est.fe}), standard error (\code{se.fe}), lower bound 95\% confidence interval (\code{ci.lb.fe}),
-upper bound 95\% confidence interval (\code{ci.ub.fe}), z-value of test of no effect (\code{zval.fe}),
-two-tailed p-value of test of no effect (\code{pval.fe}), one-tailed p-value of test of no effect (\code{pval.fe.one}),
-test statistic of the Q-test (\code{Qstat}), and p-value of the Q-test (\code{Qpval}).
+\item{est.fe}{effect size estimate of fixed-effect meta-analysis}
+\item{se.fe}{standard error of estimate of fixed-effect meta-analysis}
+\item{ci.lb.fe}{lower bound 95\% confidence interval}
+\item{ci.ub.fe}{upper bound 95\% confidence interval}
+\item{zval.fe}{z-value of test of no effect}
+\item{pval.fe}{two-tailed p-value of test of no effect}
+\item{pval.fe.one}{one-tailed p-value of test of no effect}
+\item{Qstat}{test statistic of the Q-test}
+\item{Qpval}{p-value of the Q-test}
 }
 \description{
 Function that conducts fixed-effect meta-analysis
