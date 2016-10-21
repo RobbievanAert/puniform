@@ -4,7 +4,7 @@
 \alias{print.hybridoutput}
 \title{print.hybridoutput}
 \usage{
-print.hybridoutput(w)
+\method{print}{hybridoutput}(w)
 }
 \arguments{
 \item{x}{an object of class \code{hybridoutput}}

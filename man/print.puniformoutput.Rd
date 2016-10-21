@@ -4,7 +4,7 @@
 \alias{print.puniformoutput}
 \title{print.puniformoutput}
 \usage{
-print.puniformoutput(x)
+\method{print}{puniformoutput}(x)
 }
 \arguments{
 \item{x}{an object of class \code{puniformoutput}}

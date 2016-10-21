@@ -4,7 +4,7 @@
 \alias{diff.prior}
 \title{diff.prior}
 \usage{
-diff.prior(prior, res.snap)
+\method{diff}{prior}(prior, res.snap)
 }
 \arguments{
 \item{prior}{A vector of length four containing the prior probabilities for no,
