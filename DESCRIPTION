@@ -4,7 +4,8 @@ Version: 0.0.2
 Author: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: The puniform package provides meta-analysis methods that correct for
-    publication bias. The p-uniform method can be used for estimating effect size,
+    publication bias. Three methods are currently included in the package.
+    The p-uniform method can be used for estimating effect size,
     testing the null hypothesis of no effect, and testing for publication bias.
     The second method in the package is the hybrid method. The hybrid method is a
     meta-analysis method for combining an original study and replication and while
