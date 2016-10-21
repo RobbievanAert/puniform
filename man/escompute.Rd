@@ -34,7 +34,7 @@ escompute(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, alpha,
 
 \item{vi}{A vector of sampling variances belonging to the standardized effect sizes (\code{yi})}
 
-\item{alpha}{A integer specifying the alpha level as used in primary studies}
+\item{alpha}{An integer specifying the alpha level as used in primary studies}
 
 \item{side}{A character indicating the direction of the tested hypothesis in the primary studies (either "\code{right}" or "\code{left}")}
 

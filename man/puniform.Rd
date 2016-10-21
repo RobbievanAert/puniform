@@ -82,17 +82,17 @@ Please note that this package is still under development and that this is a beta
 version. If you suspect a bug, please send me an email (\email{R.C.M.vanAert@tilburguniversity.edu}).
 }
 \details{
-Three different effect sizes can be used as input for the \code{puniform}
+Three different effect size measures can be used as input for the \code{puniform}
 function: one-sample means, two-independent means, and raw correlation coefficients.
 Analyzing one-sample means and two-independent means can be done by either providing
 the function group means (\code{mi} or \code{m1i} and \code{m2i}), standard deviations
 (\code{sdi} or \code{sd1i} and \code{sd2i}), and sample sizes (\code{ni} or
 \code{n1i} and \code{n2i}) or t-values (\code{tobs}) and sample sizes (\code{ni}
 or \code{n1i} and \code{n2i}). Both options should be accompanied with input
-for the arguments \code{side} and \code{method}. See the Example section for
+for the arguments \code{side}, \code{method}, and \code{alpha}. See the Example section for
 examples. Raw correlation coefficients can be analyzed by supplying \code{ri}
 and \code{ni} to the \code{puniform} function next to input for the arguments
-\code{side} and \code{method}.
+\code{side}, \code{method}, and \code{alpha}.
 
 It is also possible to specify the standardized effect sizes and its sampling
 variances directly via the \code{yi} and \code{vi} arguments. However, extensive
@@ -105,8 +105,8 @@ coincide and studies may be incorrectly included in the analyses. Furthermore,
 critical values in the primary studies cannot be transformed to critical z-values
 if \code{yi} and \code{vi} are used as input. This yields less accurate results.
 
-P-uniform assumes that two-tailed hypothesis tests were conducted in the primary
-studies. In case one-tailed hypothesis tests were conducted in the primary studies,
+The \code{puniform} function assumes that two-tailed hypothesis tests were conducted
+in the primary studies. In case one-tailed hypothesis tests were conducted in the primary studies,
 the alpha level has to be multiplied by two. For example, if one-tailed hypothesis
 tests were conducted with an alpha level of .05, an alpha of 0.1 has to be
 submitted to p-uniform.
