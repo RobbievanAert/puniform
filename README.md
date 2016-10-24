@@ -23,7 +23,8 @@ Papers about the p-uniform method:
 
 van Assen, M. A. L. M., Van Aert, R. C. M., & Wicherts, J. M. (2015). Meta-analysis using effect size distributions of only statistically significant studies. Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
 
-Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Manuscript submitted for publication.
+Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Perspectives on 
+Psychological Science, 11(5), 713-729.
 
 Paper about the hybrid method:
 
