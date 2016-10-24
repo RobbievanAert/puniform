@@ -1,6 +1,6 @@
-#' uncor.snapshot
+#' snapshot.naive
 #'
-#' Function for applying Snapshot Bayesian Meta-Analysis Method (uncorrected method)
+#' Function for applying Snapshot Bayesian Meta-Analysis Method (snapshot naive)
 #' for two-independent means and raw correlation coefficients.
 #'
 #' @param m1i A vector of length two containing the means in group 1 for the original
@@ -25,16 +25,16 @@
 #' on an original study and replication. For more information see van Aert and
 #' van Assen (2016).
 #'
-#' Two different effect size measures can be used as input for the \code{uncor.snapshot}
+#' Two different effect size measures can be used as input for the \code{snapshot.naive}
 #' function: two-independent means and raw correlation coefficients.
 #' Analyzing two-independent means can be done by either providing
 #' the function group means (\code{m1i} and \code{m2i}), standard deviations
 #' (\code{sd1i} and \code{sd2i}), and sample sizes (\code{n1i} and \code{n2i}) or
 #' t-values (\code{tobs}) and sample sizes (\code{n1i} and \code{n2i}).See the Example section for
 #' an example. Raw correlation coefficients can be analyzed by supplying \code{ri}
-#' and \code{ni} to the \code{uncor.snapshot}.
+#' and \code{ni} to the \code{snapshot.naive}.
 #'
-#' @return The \code{uncor.snapshot } function returns a data frame with posterior
+#' @return The \code{snapshot.naive} function returns a data frame with posterior
 #' probabilities for no (\code{p.0}), small (\code{p.sm}), medium (\code{p.me}),
 #' and large (\code{p.la}) true effect size.
 #'
@@ -45,12 +45,12 @@
 #' publication.
 #'
 #' @examples ### Example as presented on page 491 in Maxwell, Lau, and Howard (2015)
-#' uncor.snapshot(ri = c(0.243, 0.114), ni = c(80, 172))
+#' snapshot.naive(ri = c(0.243, 0.114), ni = c(80, 172))
 #'
 #' @export
 
 
-uncor.snapshot <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs)
+snapshot.naive <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs)
 {
 
   alpha <- 0.05/2 # Compute alpha in two-tailed tests with results reported in predicted direction
