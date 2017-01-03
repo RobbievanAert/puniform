@@ -1,4 +1,4 @@
-#' diff.prior
+#' diffprior
 #'
 #' Function for computing posterior probabilities based on the Snapshot Bayesian
 #' Hybrid Meta-Analysis Method or Snapshot Bayesian Meta-Analysis Method (uncorrected)
@@ -31,13 +31,11 @@
 #' prior <- c(0.4, 0.2, 0.2, 0.2)
 #'
 #' ### Compute posterior probabilities based on new prior
-#' diff.prior(prior = prior, res.snap = res.snap)
+#' diffprior(prior = prior, res.snap = res.snap)
 #'
 #' @export
-
-
-### Function computing posterior probabilities other than uniform prior
-diff.prior <- function(prior, res.snap)
+#'
+diffprior <- function(prior, res.snap)
 {
 
   p.0 <- (prior[1]*res.snap$p.0)/(prior[1]*res.snap$p.0+prior[2]*res.snap$p.sm+

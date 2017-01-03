@@ -21,14 +21,14 @@ version. If you suspect a bug, please send me an email (R.C.M.vanAert@tilburguni
 
 Papers about the p-uniform method:
 
-van Assen, M. A. L. M., Van Aert, R. C. M., & Wicherts, J. M. (2015). Meta-analysis using effect size distributions of only statistically significant studies. Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
+van Assen, M. A. L. M., van Aert, R. C. M., & Wicherts, J. M. (2015). Meta-analysis using effect size distributions of only statistically significant studies. Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
 
-Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Perspectives on 
+van Aert, R. C. M., Wicherts, J. M., & van Assen, M. A. L. M. (2015). Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Perspectives on 
 Psychological Science, 11(5), 713-729.
 
 Paper about the hybrid method:
 
-Van Aert, R. C. M., & Van Assen, M. A. L. M. (2016). Examining reproducibility 
+van Aert, R. C. M., & van Assen, M. A. L. M. (2016). Examining reproducibility 
 in psychology: A hybrid method for statistically combining a biased original study and replication. Manuscript submitted for publication.
 
 Paper about the Snapshot Bayesian Hybrid Meta-Analysis Method:
