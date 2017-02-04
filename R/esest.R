@@ -154,6 +154,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
                             yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, 
                             val = "ci.lb", method = method), silent = TRUE)
       }
+     if (class(ci.ub) == "try-error") { ci.ub <- NA } 
     } else if (method == "LNP") {
       if (is.na(est) == TRUE) { # If est could not be estimated: use lower bound search interval
         ci.ub <- try(bisect(func = pdist, lo = bo[1], hi = bo[2], yi = yi, 
