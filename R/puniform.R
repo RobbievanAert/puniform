@@ -2,7 +2,7 @@
 #'
 #' Function to apply p-uniform method for one-sample mean, two-independent means,
 #' and one raw correlation coefficient as described in Van Assen, Van Aert, and
-#' Wicherts (2015) and Van Aert, Wicherts, and Van Assen (2015).
+#' Wicherts (2015) and Van Aert, Wicherts, and Van Assen (2016).
 #' \cr
 #' \cr
 #' Please note that this package is still under development and that this is a beta
