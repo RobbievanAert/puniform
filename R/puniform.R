@@ -65,11 +65,14 @@
 #' of effect size measures usually causes true heterogeneity among effect sizes and
 #' including different effect size measures is therefore not recommended.
 #'
-#' Five different estimators can be used when applying p-uniform. The \code{P} method
+#' Six different estimators can be used when applying p-uniform. The \code{P} method
 #' is based on the distribution of the sum of independent uniformly distributed random
-#' variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2015).
-#' The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4) for combining
-#' p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
+#' variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2016).
+#' The \code{ML} estimator refers to effect size estimation with maximum likelihood.
+#' Profile likelihood confidence intervals are computed, and likelihood ratio tests are
+#' used for the test of no effect and publication bias test if \code{ML} is used.
+#' The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
+#' for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
 #' study before applying Fisher’s method on these transformed p-values
 #' (Van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
 #' test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
@@ -107,8 +110,9 @@
 #' London: Oliver & Boyd.
 #' @references Massey, F. J. (1951). The Kolmogorov-Smirnov test for goodness of fit.
 #' Journal of the American Statistical Association, 46(253), 68-78.
-#' @references Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (in press).
-#' Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Perspectives on Psychological Science.
+#' @references Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2016).
+#' Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve.
+#' Perspectives on Psychological Science, 11(5), 713-729. doi:10.1177/1745691616650874
 #' @references Van Assen, M. A. L. M., Van Aert, R. C. M., & Wicherts, J. M. (2015).
 #' Meta-analysis using effect size distributions of only statistically significant studies.
 #' Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
@@ -169,35 +173,43 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
   ##### FIXED-EFFECT META-ANALYSIS #####
   res.fe <- fe.ma(yi = es$yi, vi = es$vi)
 
-  ##### PUBLICATION BIAS TEST #####
-  res1 <- pubbias(es = es, alpha = alpha/2, method = method, est.fe = res.fe$est.fe)
+  ### Create a subset of significant studies
+  sub <- subset(es, es$pval < alpha)
+  yi <- sub$yi
+  vi <- sub$vi
+  zval <- sub$zval
+  zcv <- sub$zcv
+  ksig <- nrow(sub)
 
-  if (res1$ksig == 0) { # If there are no significant studies return an error message
+  ##### EFFECT SIZE ESTIMATION #####
+  res.es <- esest(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, method = method)
+
+  ##### PUBLICATION BIAS TEST #####
+  res.pub <- pubbias(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
+                  alpha = alpha/2, method = method, est.fe = res.fe$est.fe, est = res.es$est)
+
+  if (ksig == 0) { # If there are no significant studies return an error message
     stop("No significant studies on the specified side")
   }
 
   ##### TEST OF AN EFFECT #####
-  res2 <- testeffect(zval = res1$data$zval, zcv = res1$data$zcv, ksig = res1$ksig,
-                     method = method)
-
-  ##### EFFECT SIZE ESTIMATION #####
-  res3 <- esest(yi = res1$data$yi, vi = res1$data$vi, zval = res1$data$zval, zcv = res1$data$zcv,
-                ksig = res1$ksig, method = method)
+  res.null <- testeffect(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
+                     method = method, est = res.es$est)
 
   ##### PLOT ILLUSTRATING RELATIONSHIP BETWEEN OBSERVED AND EXPECTED P-VALUES #####
-  if (plot == TRUE) {
-    plottrans(tr.q = res3$tr.q, ksig = res1$ksig)
+  if (plot == TRUE & any(method == c("LNP", "LN1MINP", "P", "KS", "AD"))) {
+    plottrans(tr.q = res.es$tr.q, ksig = ksig)
   }
 
   ##### MIRROR OR TRANSFORM RESULTS #####
-  res5 <- transform(res.fe = res.fe, res1 = res1, res3 = res3, side = side, measure = measure)
+  res5 <- transform(res.fe = res.fe, res.es = res.es, side = side, measure = measure)
 
   ##### CREATE OUTPUT #####
   x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub,
-            ksig = res1$ksig, approx.est = res3$approx.est, approx.ci.lb = res3$approx.ci.lb,
-            ext.lb = res3$ext.lb, L.0 = res2$L.0, pval.0 = res2$pval.0,
-            approx.0.imp = res2$approx.0.imp, L.pb = res1$L.pb, pval.pb = res1$pval.pb,
-            approx.pb = res1$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe,
+            ksig = ksig, approx.est = res.es$approx.est, approx.ci.lb = res.es$approx.ci.lb,
+            ext.lb = res.es$ext.lb, L.0 = res.null$L.0, pval.0 = res.null$pval.0,
+            approx.0.imp = res.null$approx.0.imp, L.pb = res.pub$L.pb, pval.pb = res.pub$pval.pb,
+            approx.pb = res.pub$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe,
             zval.fe = res5$zval.fe, pval.fe = res.fe$pval.fe.one, ci.lb.fe = res5$ci.lb.fe,
             ci.ub.fe = res5$ci.ub.fe, Qstat = res.fe$Qstat, Qpval = res.fe$Qpval)
 

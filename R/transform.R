@@ -4,13 +4,13 @@
 ##### TAILED TESTS                                       #####
 ##############################################################
 
-transform <- function(res.fe, res1, res3, side, measure) {
+transform <- function(res.fe, res.es, side, measure) {
 
   ### Tranform to raw correlations
   if(measure == "COR") {
-    est <- (exp(2*res3$est) - 1)/(exp(2*res3$est) + 1)
-    ci.lb <- (exp(2*res3$ci.lb) - 1)/(exp(2*res3$ci.lb) + 1)
-    ci.ub <- (exp(2*res3$ci.ub) - 1)/(exp(2*res3$ci.ub) + 1)
+    est <- (exp(2*res.es$est) - 1)/(exp(2*res.es$est) + 1)
+    ci.lb <- (exp(2*res.es$ci.lb) - 1)/(exp(2*res.es$ci.lb) + 1)
+    ci.ub <- (exp(2*res.es$ci.ub) - 1)/(exp(2*res.es$ci.ub) + 1)
     est.fe <- (exp(2*res.fe$est.fe) - 1)/(exp(2*res.fe$est.fe) + 1)
     ci.lb.fe <- (exp(2*res.fe$ci.lb.fe) - 1)/(exp(2*res.fe$ci.lb.fe) + 1)
     ci.ub.fe <- (exp(2*res.fe$ci.ub.fe) - 1)/(exp(2*res.fe$ci.ub.fe) + 1)
@@ -31,9 +31,9 @@ transform <- function(res.fe, res1, res3, side, measure) {
     }
   } else if(measure != "COR" & side == "left") {
     ### Re-mirror effect sizes
-    est <- res3$est * -1
-    tmp <- res3$ci.ub
-    ci.ub <- res3$ci.lb * -1
+    est <- res.es$est * -1
+    tmp <- res.es$ci.ub
+    ci.ub <- res.es$ci.lb * -1
     ci.lb <- tmp * -1
     est.fe <- res.fe$est.fe * -1
     tmp <- res.fe$ci.ub.fe
@@ -42,9 +42,9 @@ transform <- function(res.fe, res1, res3, side, measure) {
     se.fe <- res.fe$se.fe
     zval.fe <- res.fe$zval.fe * -1
   } else {
-    est <- res3$est
-    ci.lb <- res3$ci.lb
-    ci.ub <- res3$ci.ub
+    est <- res.es$est
+    ci.lb <- res.es$ci.lb
+    ci.ub <- res.es$ci.ub
     est.fe <- res.fe$est.fe
     ci.lb.fe <- res.fe$ci.lb.fe
     ci.ub.fe <- res.fe$ci.ub.fe

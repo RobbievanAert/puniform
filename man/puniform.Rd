@@ -115,11 +115,14 @@ Note that only one effect size measure can be specified at a time. A combination
 of effect size measures usually causes true heterogeneity among effect sizes and
 including different effect size measures is therefore not recommended.
 
-Five different estimators can be used when applying p-uniform. The \code{P} method
+Six different estimators can be used when applying p-uniform. The \code{P} method
 is based on the distribution of the sum of independent uniformly distributed random
-variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2015).
-The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4) for combining
-p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
+variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2016).
+The \code{ML} estimator refers to effect size estimation with maximum likelihood.
+Profile likelihood confidence intervals are computed, and likelihood ratio tests are
+used for the test of no effect and publication bias test if \code{ML} is used.
+The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
+for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
 study before applying Fisher’s method on these transformed p-values
 (Van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
 test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
@@ -163,8 +166,9 @@ London: Oliver & Boyd.
 Massey, F. J. (1951). The Kolmogorov-Smirnov test for goodness of fit.
 Journal of the American Statistical Association, 46(253), 68-78.
 
-Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (in press).
-Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve. Perspectives on Psychological Science.
+Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2016).
+Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve.
+Perspectives on Psychological Science, 11(5), 713-729. doi:10.1177/1745691616650874
 
 Van Assen, M. A. L. M., Van Aert, R. C. M., & Wicherts, J. M. (2015).
 Meta-analysis using effect size distributions of only statistically significant studies.
