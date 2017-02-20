@@ -63,6 +63,5 @@ pubbias <- function(yi, vi, zval, zcv, ksig, alpha, method, est.fe, est) {
     }
   }
 
-  return(list(data = data.frame(yi, vi, zval, zcv), L.pb = L.pb, pval.pb = pval.pb,
-              ksig = ksig, approx.pb = max(approx.pb)))
+  return(list(L.pb = L.pb, pval.pb = pval.pb, ksig = ksig, approx.pb = max(approx.pb)))
 }
