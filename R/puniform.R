@@ -174,7 +174,7 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
   res.fe <- fe.ma(yi = es$yi, vi = es$vi)
 
   ### Create a subset of significant studies
-  sub <- subset(es, es$pval < alpha)
+  sub <- subset(es, es$pval < alpha/2)
   yi <- sub$yi
   vi <- sub$vi
   zval <- sub$zval
