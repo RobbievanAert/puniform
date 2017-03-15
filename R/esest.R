@@ -198,26 +198,31 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
     }
 
     ### Creating interval for optimization
-    # int <- seq(-50,10,.5)
-    # int <- seq(est-10, est+5, 0.1)
     int <- seq(est-100/(5*ksig), est+10/(0.5*ksig), 0.5/ksig)
     out <- sapply(int, function(int) get.LR.ci(d = int, yi = yi, vi = vi, zcv = zcv, est = est))
-    bo <- data.frame(lb = int[min(which(out < 0))-1], ub = int[max(which(out < 0))+1])
+    bo <- try(data.frame(lb = int[min(which(out < 0))-1], ub = int[max(which(out < 0))+1]), silent = TRUE)
 
-    ### Lower bound confidence interval
-    ci.lb <- try(uniroot(get.LR.ci, interval = c(bo$lb, est), yi = yi,
-                         vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
-    if (class(ci.lb) == "try-error")
-    { # Check if lower bound could be computed
-      ci.lb <- NA
-    }
+    if (class(bo) == "try-error")
+    { # If only one bound can be estimated and search interval cannot be created, return NA
+      ci.lb <- ci.ub <- NA
+    } else {
 
-    ### Upper bound confidence interval
-    ci.ub <- try(uniroot(get.LR.ci, interval = c(est, bo$ub), yi = yi,
-                         vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
-    if (class(ci.ub) == "try-error")
-    { # Check if upper bound could be estimated
-      ci.ub <- NA
+      ### Lower bound confidence interval
+      ci.lb <- try(uniroot(get.LR.ci, interval = c(bo$lb, est), yi = yi,
+                           vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
+      if (class(ci.lb) == "try-error")
+      { # Check if lower bound could be computed
+        ci.lb <- NA
+      }
+
+      ### Upper bound confidence interval
+      ci.ub <- try(uniroot(get.LR.ci, interval = c(est, bo$ub), yi = yi,
+                           vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
+      if (class(ci.ub) == "try-error")
+      { # Check if upper bound could be estimated
+        ci.ub <- NA
+      }
+
     }
 
   }
