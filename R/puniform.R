@@ -181,16 +181,16 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
   zcv <- sub$zcv
   ksig <- nrow(sub)
 
+  if (ksig == 0) { # If there are no significant studies return an error message
+    stop("No significant studies on the specified side")
+  }
+  
   ##### EFFECT SIZE ESTIMATION #####
   res.es <- esest(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, method = method)
 
   ##### PUBLICATION BIAS TEST #####
   res.pub <- pubbias(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
                   alpha = alpha/2, method = method, est.fe = res.fe$est.fe, est = res.es$est)
-
-  if (ksig == 0) { # If there are no significant studies return an error message
-    stop("No significant studies on the specified side")
-  }
 
   ##### TEST OF AN EFFECT #####
   res.null <- testeffect(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
