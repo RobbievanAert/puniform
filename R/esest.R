@@ -187,40 +187,64 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
     sub <- subset(data.frame(int, tmp), is.finite(tmp)) # Select effect size estimate
     est.int <- sub$int[which.max(sub$tmp)] # Estimate based on using interval
 
-    ### Estimate effect size with maximum likelihood
-    est <- optimize(f = ml, interval = c(est.int-0.25, est.int+0.25), yi = yi,
-                    vi = vi, zcv = zcv, maximum=TRUE)$maximum
-
-    ### Function for estimating profile likelihood confidence interval
-    get.LR.ci <- function(d, yi, vi, zcv, est)
-    {
-      LR.test(d.alt = est, d.null = d, yi = yi, vi = vi, zcv = zcv)-qchisq(0.95, df=1)
+    if (est.int == -15)
+    { # Extend interval if effect size cannot be estimated
+      int <- seq(-120, 3, 0.2) # Interval on which effect size is optimized
+      tmp <- sapply(int, function(x) ml(x, yi = yi, vi = vi, zcv = zcv)) # Compute likelihoods for different values in interval
+      sub <- subset(data.frame(int, tmp), is.finite(tmp)) # Select effect size estimate
+      est.int <- sub$int[which.max(sub$tmp)] # Estimate based on using interval
     }
 
-    ### Creating interval for optimization
-    int <- seq(est-100/(5*ksig), est+10/(0.5*ksig), 0.5/ksig)
-    out <- sapply(int, function(int) get.LR.ci(d = int, yi = yi, vi = vi, zcv = zcv, est = est))
-    bo <- try(data.frame(lb = int[min(which(out < 0))-1], ub = int[max(which(out < 0))+1]), silent = TRUE)
-
-    if (class(bo) == "try-error")
-    { # If only one bound can be estimated and search interval cannot be created, return NA
-      ci.lb <- ci.ub <- NA
+    if (est.int == -120)
+    { # If effect size is smaller than -120, return NA
+      est <- NA
+      ci.lb <- NA
+      ci.ub <- NA
     } else {
 
-      ### Lower bound confidence interval
-      ci.lb <- try(uniroot(get.LR.ci, interval = c(bo$lb, est), yi = yi,
-                           vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
-      if (class(ci.lb) == "try-error")
-      { # Check if lower bound could be computed
-        ci.lb <- NA
+      ### Estimate effect size with maximum likelihood
+      est <- optimize(f = ml, interval = c(est.int-0.25, est.int+0.25), yi = yi,
+                      vi = vi, zcv = zcv, maximum=TRUE)$maximum
+
+      ### Function for estimating profile likelihood confidence interval
+      get.LR.ci <- function(d, yi, vi, zcv, est)
+      {
+        LR.test(d.alt = est, d.null = d, yi = yi, vi = vi, zcv = zcv)-qchisq(0.95, df=1)
       }
 
-      ### Upper bound confidence interval
-      ci.ub <- try(uniroot(get.LR.ci, interval = c(est, bo$ub), yi = yi,
-                           vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
-      if (class(ci.ub) == "try-error")
-      { # Check if upper bound could be estimated
-        ci.ub <- NA
+      ### Creating interval for optimization
+      int <- seq(est-100/(5*ksig), est+10/(0.5*ksig), 0.5/ksig)
+      out <- sapply(int, function(int) get.LR.ci(d = int, yi = yi, vi = vi, zcv = zcv, est = est))
+      bo <- try(data.frame(lb = int[min(which(out < 0))-1], ub = int[max(which(out < 0))+1]), silent = TRUE)
+
+      if (class(bo) == "try-error")
+      { # Extend interval for estimating confidence interval
+        int <- seq(est-5000/(5*ksig), est+60/(0.5*ksig), 0.5/ksig)
+        out <- sapply(int, function(int) get.LR.ci(d = int, yi = yi, vi = vi, zcv = zcv, est = est))
+        bo <- try(data.frame(lb = int[min(which(out < 0))-1], ub = int[max(which(out < 0))+1]), silent = TRUE)
+      }
+
+      if (class(bo) == "try-error")
+      { # If only one bound can be estimated and search interval cannot be created, return NA
+        ci.lb <- ci.ub <- NA
+      } else {
+
+        ### Lower bound confidence interval
+        ci.lb <- try(uniroot(get.LR.ci, interval = c(bo$lb, est), yi = yi,
+                             vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
+        if (class(ci.lb) == "try-error")
+        { # Check if lower bound could be computed
+          ci.lb <- NA
+        }
+
+        ### Upper bound confidence interval
+        ci.ub <- try(uniroot(get.LR.ci, interval = c(est, bo$ub), yi = yi,
+                             vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
+        if (class(ci.ub) == "try-error")
+        { # Check if upper bound could be estimated
+          ci.ub <- NA
+        }
+
       }
 
     }
