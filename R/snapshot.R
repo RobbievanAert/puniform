@@ -17,6 +17,8 @@
 #' for the original study and replication for two-independent means
 #' @param ri A vector of length two containing the raw correlation coefficients
 #' of the orignal study and replication
+#' @param ni A vector of length two containing the sample size of the original 
+#' study and replication for the raw correlation coefficient
 #' @param tobs A vector of length two containing the t-values of the original
 #' study and replication
 #' @param alpha An integer specifying the alpha level as used in the original

@@ -18,4 +18,3 @@ correlation coefficients and vice versa.
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
 }
-

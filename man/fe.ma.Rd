@@ -29,4 +29,3 @@ Function that conducts fixed-effect meta-analysis
 The \code{fe.ma} function can be used for conducting fixed-effect meta-analysis
 on a set of studies
 }
-

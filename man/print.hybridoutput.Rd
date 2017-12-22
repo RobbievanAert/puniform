@@ -4,10 +4,12 @@
 \alias{print.hybridoutput}
 \title{print.hybridoutput}
 \usage{
-\method{print}{hybridoutput}(w)
+\method{print}{hybridoutput}(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{hybridoutput}}
+
+\item{...}{Additional arguments that can be passed to the function}
 }
 \value{
 The \code{print.hybridoutput} function does not return an object.
@@ -18,4 +20,3 @@ Print method for objecs of class \code{hybridoutput}
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
 }
-

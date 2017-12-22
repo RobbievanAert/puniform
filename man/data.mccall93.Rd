@@ -19,4 +19,3 @@ their later cognitive ability (IQ).
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
 }
 \keyword{data}
-

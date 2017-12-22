@@ -3,6 +3,7 @@
 #' Print method for objecs of class \code{puniformoutput}
 #'
 #' @param x an object of class \code{puniformoutput}
+#' @param ... Additional arguments that can be passed to the function
 #'
 #' @return The \code{print.puniformoutput} function does not return an object.
 #'
@@ -10,7 +11,7 @@
 #'
 #' @export
 
-print.puniformoutput <- function(x) {
+print.puniformoutput <- function(x, ...) {
   cat("\n")
   cat("Method:", x$method)
   cat("\n")

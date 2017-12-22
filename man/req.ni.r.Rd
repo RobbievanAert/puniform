@@ -11,6 +11,9 @@ req.ni.r(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tobs.o, alpha,
 \item{ri.o}{An integer containing the raw correlation coefficient
 of the orignal study}
 
+\item{ni.o}{An integer containing the sample size for the raw correlation 
+coefficient}
+
 \item{m1i.o}{An integer containing the mean in group 1 of the original
 study for two-independent means}
 
@@ -83,12 +86,11 @@ of .05, an alpha of 0.1 has to be submitted to \code{req.ni.r}.
 req.ni.r(ri.o = 0.243, ni.o = 80, alpha = .05, des.pprob = 0.75, des.pow = 0.8)
 
 }
-\author{
-Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
-}
 \references{
 van Aert, R.C.M. & van Assen, M.A.L.M. (2016). Bayesian evaluation
 of effect size after replicating an original study. Manuscript submitted for
 publication.
 }
-
+\author{
+Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
+}

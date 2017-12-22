@@ -4,10 +4,12 @@
 \alias{print.puniformoutput}
 \title{print.puniformoutput}
 \usage{
-\method{print}{puniformoutput}(x)
+\method{print}{puniformoutput}(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{puniformoutput}}
+
+\item{...}{Additional arguments that can be passed to the function}
 }
 \value{
 The \code{print.puniformoutput} function does not return an object.
@@ -18,4 +20,3 @@ Print method for objecs of class \code{puniformoutput}
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
 }
-

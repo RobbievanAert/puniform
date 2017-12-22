@@ -1,3 +1,7 @@
+#' hy
+#' 
+#' @keywords internal
+
 ### Function for applying hybrid method
 hy <- function(es, measure, side, alpha) {
   

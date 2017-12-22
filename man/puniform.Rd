@@ -74,8 +74,8 @@ fixed-effect meta-analysis}
 }
 \description{
 Function to apply p-uniform method for one-sample mean, two-independent means,
-and one raw correlation coefficient as described in Van Assen, Van Aert, and
-Wicherts (2015) and Van Aert, Wicherts, and Van Assen (2016).
+and one raw correlation coefficient as described in van Assen, van Aert, and
+Wicherts (2015) and van Aert, Wicherts, and van Assen (2016).
 \cr
 \cr
 Please note that this package is still under development and that this is a beta
@@ -132,12 +132,13 @@ for testing whether the (conditional) p-values follow a uniform distribution.
 ### Load data from meta-analysis by McCall and Carriger (1993)
 data(data.mccall93)
 
-### Apply p-uniform method to get the same results as in Van Assen et al. (2015)
-puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "right", method = "LNP", plot = TRUE)
+### Apply p-uniform method to get the same results as in van Assen et al. (2015)
+puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "right", 
+method = "LNP", plot = TRUE)
 
 ### Note that the results of p-uniform's publication bias test are not exactly equal
-### to the results as stated in Van Assen et al. (2015).
-### This is caused by a small mistake in the analyses of Van Assen et al. (2015).
+### to the results as stated in van Assen et al. (2015).
+### This is caused by a small mistake in the analyses of van Assen et al. (2015).
 
 ### Generate some example data for one-sample means design
 set.seed(123)
@@ -153,9 +154,6 @@ puniform(mi = mi, ni = ni, sdi = sdi, alpha = 0.05, side = "right", method = "P"
 puniform(ni = ni, tobs = tobs, alpha = 0.05, side = "right", method = "P", plot = FALSE)
 
 }
-\author{
-Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
-}
 \references{
 Anderson, T. W., & Darling, D. A. (1954). A test of goodness of fit.
 Journal of the American Statistical Association, 49(268), 765-769.
@@ -166,12 +164,14 @@ London: Oliver & Boyd.
 Massey, F. J. (1951). The Kolmogorov-Smirnov test for goodness of fit.
 Journal of the American Statistical Association, 46(253), 68-78.
 
-Van Aert, R. C. M., Wicherts, J. M., & Van Assen, M. A. L. M. (2016).
+Van Aert, R. C. M., Wicherts, J. M., & van Assen, M. A. L. M. (2016).
 Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve.
 Perspectives on Psychological Science, 11(5), 713-729. doi:10.1177/1745691616650874
 
-Van Assen, M. A. L. M., Van Aert, R. C. M., & Wicherts, J. M. (2015).
+Van Assen, M. A. L. M., van Aert, R. C. M., & Wicherts, J. M. (2015).
 Meta-analysis using effect size distributions of only statistically significant studies.
 Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
 }
-
+\author{
+Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
+}

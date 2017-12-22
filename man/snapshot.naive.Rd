@@ -10,6 +10,9 @@ snapshot.naive(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs)
 \item{ri}{A vector of length two containing the raw correlation coefficients
 of the orignal study and replication}
 
+\item{ni}{A vector of length two containing the sample size of the original 
+study and replication for the raw correlation coefficient}
+
 \item{m1i}{A vector of length two containing the means in group 1 for the original
 study and replication for two-independent means}
 
@@ -60,12 +63,11 @@ and \code{ni} to the \code{snapshot.naive}.
 snapshot.naive(ri = c(0.243, 0.114), ni = c(80, 172))
 
 }
-\author{
-Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
-}
 \references{
 van Aert, R.C.M. & van Assen, M.A.L.M. (2016). Bayesian evaluation
 of effect size after replicating an original study. Manuscript submitted for
 publication.
 }
-
+\author{
+Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
+}

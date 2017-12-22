@@ -1,3 +1,7 @@
+#' optim.ni.r
+#' 
+#' @keywords internal
+
 ### Function that is optimized to obtain required sample size in replication
 optim.ni.r <- function(ni.r, perc, true.es, yi.o, vi.o, cv.o, measure, des.pprob, des.pow) {
 

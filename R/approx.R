@@ -1,3 +1,7 @@
+#' approx
+#' 
+#' @keywords internal
+
 ### Function for z-value approximation
 approx <- function(zd, zval, zcv, method) {
   

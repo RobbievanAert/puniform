@@ -1,3 +1,7 @@
+#' bounds
+#' 
+#' @keywords internal
+
 ### Function for obtaining search interval for bisection function
 bounds <- function(yi, vi, zval, zcv, ext) {
 

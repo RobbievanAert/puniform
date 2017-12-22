@@ -86,8 +86,8 @@ null-hypothesis of no effect}
 }
 \description{
 Function to statistically combine an original study and replication by means
-of the hybrid methods and fixed-effect meta-analysis as described in Van Aert
-and Van Assen (2016).
+of the hybrid methods and fixed-effect meta-analysis as described in van Aert
+and van Assen (2017).
 \cr
 \cr
 Please note that this package is still under development and that this is a
@@ -119,17 +119,16 @@ one-tailed hypothesis test was conducted with an alpha level of .05, an alpha
  of 0.1 has to be entered into the \code{hybrid} function.
 }
 \examples{
-### Apply hybrid function to example on page 5 of Van Aert and Van Assen (2016).
+### Apply hybrid function to example on page 5 of van Aert and van Assen (2017).
 
 hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), alpha = .05, side = "right")
 
 }
-\author{
-Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
-}
 \references{
-Van Aert, R. C. M., & Van Assen, M. A. L. M. (2016). Examining
+van Aert, R. C. M., & van Assen, M. A. L. M. (2017). Examining
 reproducibility in psychology: A hybrid method for statistically combining a
 biased original study and replication. Manuscript submitted for publication.
 }
-
+\author{
+Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
+}

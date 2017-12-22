@@ -1,3 +1,7 @@
+#' LR.test
+#' 
+#' @keywords internal
+
 ### Function for likelihood ratio test with puniform and method ML
 LR.test <- function (d.alt, d.null, yi, vi, zcv)
 {

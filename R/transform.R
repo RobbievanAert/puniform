@@ -1,3 +1,7 @@
+#' transform
+#' 
+#' @keywords internal
+
 ##############################################################
 ##### FUNCTION FOR TRANSFORMING FISHER Z CORRELATIONS TO #####
 ##### RAW CORRELATIONS AND RE-MIRRORING IN CASE OF LEFT  #####

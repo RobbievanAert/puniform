@@ -1,3 +1,7 @@
+#' ml
+#' 
+#' @keywords internal
+
 ### Log likelihood function for puniform with ML method
 ml <- function(d, yi, vi, zcv)
 {

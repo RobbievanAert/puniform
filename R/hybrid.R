@@ -1,8 +1,8 @@
 #' hybrid
 #'
 #' Function to statistically combine an original study and replication by means
-#' of the hybrid methods and fixed-effect meta-analysis as described in Van Aert
-#' and Van Assen (2016).
+#' of the hybrid methods and fixed-effect meta-analysis as described in van Aert
+#' and van Assen (2017).
 #' \cr
 #' \cr
 #' Please note that this package is still under development and that this is a
@@ -99,12 +99,12 @@
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
-#' @references Van Aert, R. C. M., & Van Assen, M. A. L. M. (2016). Examining
+#' @references van Aert, R. C. M., & van Assen, M. A. L. M. (2017). Examining
 #' reproducibility in psychology: A hybrid method for statistically combining a
 #' biased original study and replication. Manuscript submitted for publication.
 #'
 #' @examples
-#' ### Apply hybrid function to example on page 5 of Van Aert and Van Assen (2016).
+#' ### Apply hybrid function to example on page 5 of van Aert and van Assen (2017).
 #'
 #' hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), alpha = .05, side = "right")
 #'
@@ -192,7 +192,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
     zval.fe <- res4$zval.fe
   }
 
-  w <- list(est.hy = res1$est, ci.lb.hy = res1$ci.lb, ci.ub.hy = res1$ci.ub,
+  x <- list(est.hy = res1$est, ci.lb.hy = res1$ci.lb, ci.ub.hy = res1$ci.ub,
             x.hy = res1$x, pval.hy = res1$pval, measure = measure, est.hyr = res2$est.hyr,
             ci.lb.hyr = res2$ci.lb.hyr, ci.ub.hyr = res2$ci.ub.hyr, stat.hyr = res2$stat.hyr,
             pval.hyr = res2$pval.hyr, pval.o = res2$pval.o, est.hy0 = res3$est.hy0,
@@ -202,6 +202,6 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
             pval.fe = res4$pval.fe, est.repl = res.repl$est.repl, se.repl = res.repl$se.repl,
             ci.lb.repl = res.repl$ci.lb.repl, ci.ub.repl = res.repl$ci.ub.repl,
             stat.repl = res.repl$stat.repl, pval.repl = res.repl$pval.repl)
-  class(w) <- "hybridoutput"
-  return(w)
+  class(x) <- "hybridoutput"
+  return(x)
 }

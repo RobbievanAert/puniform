@@ -40,12 +40,11 @@ prior <- c(0.4, 0.2, 0.2, 0.2)
 diffprior(prior = prior, res.snap = res.snap)
 
 }
-\author{
-Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
-}
 \references{
 van Aert, R.C.M. & van Assen, M.A.L.M. (2016). Bayesian evaluation
 of effect size after replicating an original study. Manuscript submitted for
 publication.
 }
-
+\author{
+Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
+}

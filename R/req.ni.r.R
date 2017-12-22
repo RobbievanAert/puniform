@@ -18,6 +18,8 @@
 #' of the original study for two-independent means
 #' @param ri.o An integer containing the raw correlation coefficient
 #' of the orignal study
+#' @param ni.o An integer containing the sample size for the raw correlation 
+#' coefficient
 #' @param tobs.o An integer containing the t-value of the original
 #' study
 #' @param alpha An integer specifying the alpha level as used in the original study

@@ -60,4 +60,3 @@ The \code{measure} argument has to be used to specify the desired effect size an
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
 }
-

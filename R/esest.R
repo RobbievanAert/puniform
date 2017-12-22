@@ -1,3 +1,7 @@
+#' esest
+#' 
+#' @keywords internal
+
 esest <- function(yi, vi, zval, zcv, ksig, method) {
 
   if (any(method == c("LNP", "LN1MINP", "P", "KS", "AD")))

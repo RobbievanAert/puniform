@@ -1,6 +1,9 @@
+#' testeffect
+#' 
+#' @keywords internal
+
 ####################################################
 ##### FUNCTION FOR TEST OF AN EFFECT P-UNIFORM #####
-##### MODIFIED: WORKS NOW FOR MULTIPLE STUDIES #####
 ####################################################
 
 testeffect <- function(yi, vi, zval, zcv, ksig, method, est) {
