@@ -205,7 +205,7 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
   }
 
   ##### MIRROR OR TRANSFORM RESULTS #####
-  res5 <- transform(res.fe = res.fe, res.es = res.es, side = side, measure = measure)
+  res5 <- transform_puni(res.fe = res.fe, res.es = res.es, side = side, measure = measure)
 
   ##### CREATE OUTPUT #####
   x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub,

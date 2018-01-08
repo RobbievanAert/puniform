@@ -8,7 +8,7 @@
 ##### TAILED TESTS                                       #####
 ##############################################################
 
-transform <- function(res.fe, res.es, side, measure) {
+transform_puni <- function(res.fe, res.es, side, measure) {
 
   ### Tranform to raw correlations
   if(measure == "COR") {

@@ -27,7 +27,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
                            log.p = TRUE))
           q[i] <- ph1/pmarg
         } else { # Approximate P(Z>=zval) and P(Z>=zcv)
-          q[i] <- approx(zd[i], zval[i], zcv[i], method = method)
+          q[i] <- approx_puni(zd[i], zval[i], zcv[i], method = method)
         }
       }
 
