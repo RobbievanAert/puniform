@@ -83,16 +83,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _puniform_rcpp_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_puniform_ml_est", (DL_FUNC) &_puniform_ml_est, 5},
@@ -100,7 +90,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_puniform_approx_C", (DL_FUNC) &_puniform_approx_C, 4},
     {"_puniform_pdist_nsig", (DL_FUNC) &_puniform_pdist_nsig, 9},
     {"_puniform_trq", (DL_FUNC) &_puniform_trq, 5},
-    {"_puniform_rcpp_hello_world", (DL_FUNC) &_puniform_rcpp_hello_world, 0},
     {NULL, NULL, 0}
 };
 

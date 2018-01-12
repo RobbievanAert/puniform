@@ -1,7 +1,3 @@
-#' hyr.R
-#' 
-#' @keywords internal
-
 ### Function for estimation based on only replication
 hyr <- function(es, m1i, m2i, mi, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, measure, side) {
   

@@ -1,7 +1,4 @@
-#' bisect
-#' 
-#' @keywords internal
-
+### Function for applying the bisection method
 bisect <- function(func, lo, hi, tol = 0.0001, verbose = FALSE, ...) { 
   
   flo <- func(lo, ...) 

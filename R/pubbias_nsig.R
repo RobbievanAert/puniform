@@ -1,11 +1,4 @@
-#' pubbias_nsig
-#' 
-#' @keywords internal
-
-##########################################################
-##### FUNCTION FOR PUBLICATION BIAS TEST P-UNIFORM*  #####
-##########################################################
-
+### Function for publication bias test p-uniform*
 pubbias_nsig <- function(yi, vi, ycv, est, tau.est, method) 
 {
   

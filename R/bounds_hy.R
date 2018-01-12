@@ -1,9 +1,5 @@
-#' bounds.hy
-#' 
-#' @keywords internal
-
 ### Function for computing search interval
-bounds.hy <- function(yi, vi, zval, zcv, ext) {
+bounds_hy <- function(yi, vi, zval, zcv, ext) {
   
   ub <- max(yi + 1)
   

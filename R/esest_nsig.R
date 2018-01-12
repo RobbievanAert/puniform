@@ -1,3 +1,4 @@
+### Function for estimation with p-uniform*
 esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con) 
 {
   
@@ -18,11 +19,15 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       old <- est
       tau.old <- tau.est
       
-      ### Optimize profile likelihood function of delta
-      est <- optimize(ml_est, con$int, tau.est, yi, vi, ycv, maximum = TRUE)$maximum
+      ### Optimize profile likelihood function of delta 
+      # (suppressWarnings() in order to be able to specify wide search intervals)
+      est <- suppressWarnings(optimize(ml_est, con$int, tau.est, yi, vi, ycv, 
+                                       maximum = TRUE)$maximum)
       
       ### Optimize profile likelihood function of tau
-      tau.est <- optimize(ml_tau, con$tau.int, est, yi, vi, ycv, maximum = TRUE)$maximum
+      # (suppressWarnings() in order to be able to specify wide search intervals)
+      tau.est <- suppressWarnings(optimize(ml_tau, con$tau.int, est, yi, vi, ycv, 
+                                           maximum = TRUE)$maximum)
       
       ### Print intermediate steps if requested
       if (con$verbose == TRUE)
@@ -50,16 +55,16 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       tau.ub <- NA
     } else 
     {
-      ### Estimation CI 
-      tmp.lb <- try(uniroot(get_LR_est, interval = c(est-con$est.ci[1], est), yi = yi, 
-                            vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
-                    silent = TRUE)
+      ### Estimation CI (suppressWarnings() in order to be able to specify wide search intervals)
+      tmp.lb <- suppressWarnings(try(uniroot(get_LR_est, interval = c(est-con$est.ci[1], est), 
+                                             yi = yi, vi = vi, est = est, tau.est = tau.est, 
+                                             ycv = ycv)$root, silent = TRUE))
       
       lb <- ifelse(class(tmp.lb) == "try-error", NA, tmp.lb) # Return NA if lower bound could not be estimated
       
-      tmp.ub <- try(uniroot(get_LR_est, interval = c(est, est+con$est.ci[2]), yi = yi, 
-                            vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
-                    silent = TRUE)
+      tmp.ub <- suppressWarnings(try(uniroot(get_LR_est, interval = c(est, est+con$est.ci[2]), 
+                                             yi = yi, vi = vi, est = est, tau.est = tau.est, 
+                                             ycv = ycv)$root, silent = TRUE))
       
       ub <- ifelse(class(tmp.ub) == "try-error", NA, tmp.ub) # Return NA if upper bound could not be estimated
       
@@ -68,16 +73,17 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       { # If lower bound is smaller than zero, set estimate lower bound to zero
         tau.lb <- 0
       } else {
-        tmp.lb <- try(uniroot(get_LR_tau, interval = c(max(0, tau.est-con$tau.ci[1]), tau.est), 
-                              yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
-                      silent = TRUE)
+        tmp.lb <- suppressWarnings(try(uniroot(get_LR_tau, interval = c(max(0, tau.est-con$tau.ci[1]), 
+                                                                        tau.est), yi = yi, 
+                                               vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
+                      silent = TRUE))
         
         tau.lb <- ifelse(class(tmp.lb) == "try-error", NA, tmp.lb) # Return NA if lower bound could not be estimated
       }
       
-      tmp.ub <- try(uniroot(get_LR_tau, interval = c(tau.est, tau.est+con$tau.ci[2]), 
+      tmp.ub <- suppressWarnings(try(uniroot(get_LR_tau, interval = c(tau.est, tau.est+con$tau.ci[2]), 
                             yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
-                    silent = TRUE)
+                    silent = TRUE))
       
       tau.ub <- ifelse(class(tmp.ub) == "try-error", NA, tmp.ub) # Return NA if upper bound could not be estimated
     }
@@ -222,10 +228,10 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       if (method == "P")
       {
         
-        if (pdist_nsig(est, 0, yi, vi, "tau", ycv, method, "ci.ub", get.cv.P(length(yi))) > 0)
+        if (pdist_nsig(est, 0, yi, vi, "tau", ycv, method, "ci.ub", get_cv_P(length(yi))) > 0)
         {
           tau.lb <- tau.ub <- 0 # Return 0 (null set) if lower and upper bound are negative
-        } else if (pdist_nsig(est, 0, yi, vi, "tau", ycv, method, "ci.lb", get.cv.P(length(yi))) > 0) 
+        } else if (pdist_nsig(est, 0, yi, vi, "tau", ycv, method, "ci.lb", get_cv_P(length(yi))) > 0) 
         {
           tau.lb <- 0 # Truncate lower bound to zero if it is negative
           

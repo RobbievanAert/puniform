@@ -76,9 +76,9 @@ snapshot(ri = c(0.243, 0.114), ni = c(80, 172), alpha = .05)
 
 }
 \references{
-van Aert, R.C.M. & van Assen, M.A.L.M. (2016). Bayesian evaluation
-of effect size after replicating an original study. Manuscript submitted for
-publication.
+van Aert, R.C.M. & van Assen, M.A.L.M. (2017). Bayesian evaluation
+of effect size after replicating an original study. PLoS ONE, 12(4), e0175302. 
+doi:10.1371/journal.pone.0175302
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

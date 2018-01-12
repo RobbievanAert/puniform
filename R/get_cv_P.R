@@ -1,12 +1,5 @@
-#' get.cv.P
-#' 
-#' @keywords internal
-
-##############################################################
-##### FUNCTION FOR GETTING CRITICAL VALUE FOR METHOD = P #####
-##############################################################
-
-get.cv.P <- function(ksig) {
+### Function for getting critical value for method = P
+get_cv_P <- function(ksig) {
   
   ### Critical values based on Irwin-Hall distribution (obtained with Mathematica)
   cv.irwin <- c(0.025, 0.2236068, 0.5313293, 0.8801117, 1.2461056, 1.624144, 
@@ -27,9 +20,11 @@ get.cv.P <- function(ksig) {
                 40.1051829, 40.5755946, 41.0461668, 41.516897, 41.9877825, 42.4588211, 
                 42.9300102, 43.4013476, 43.872831, 44.3444582)
   
-  if (ksig <= 100) { # Select critical value from prespecified vector
+  if (ksig <= 100) 
+  { # Select critical value from prespecified vector
     cv.P <- cv.irwin[ksig]
-  } else { # Else approximate the critical value with the normal distribution
+  } else 
+  { # Else approximate the critical value with the normal distribution
     cv.P <- qnorm(0.025, mean = ksig * 0.5, sd = sqrt(ksig/12))
   }
   

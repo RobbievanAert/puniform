@@ -1,7 +1,3 @@
-#' approx
-#' 
-#' @keywords internal
-
 ### Function for z-value approximation
 approx_puni <- function(zd, zval, zcv, method) {
   

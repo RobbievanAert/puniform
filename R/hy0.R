@@ -1,7 +1,3 @@
-#' hy0
-#' 
-#' @keywords internal
-
 ### Function for applying hybrid^0 method
 hy0 <- function(es, res1, alpha) {
   ### Compute average conditional probability

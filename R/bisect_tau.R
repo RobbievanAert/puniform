@@ -5,7 +5,7 @@ bisect_tau <- function(func, lo, hi, tol, verbose = FALSE, est, yi, vi, param,
   
   if (method == "P")
   {
-    cv_P <- get.cv.P(length(yi))
+    cv_P <- get_cv_P(length(yi))
   } else if (method == "LNP")
   {
     cv_P <- 0

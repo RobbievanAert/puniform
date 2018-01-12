@@ -1,4 +1,4 @@
-#' req.ni.r
+#' req_ni_r
 #'
 #' Function for computing the required sample size for a replication based on the
 #' Snapshot Bayesian Hybrid Meta-Analysis Method for two-independent
@@ -64,11 +64,11 @@
 #' publication.
 #'
 #' @examples ### Example as presented on page 491 in Maxwell, Lau, and Howard (2015)
-#' req.ni.r(ri.o = 0.243, ni.o = 80, alpha = .05, des.pprob = 0.75, des.pow = 0.8)
+#' req_ni_r(ri.o = 0.243, ni.o = 80, alpha = .05, des.pprob = 0.75, des.pow = 0.8)
 #'
 #' @export
 
-req.ni.r <- function(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tobs.o,
+req_ni_r <- function(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tobs.o,
                      alpha, des.pprob, des.pow, lo=4, hi=100000) {
 
   alpha <- alpha/2 # Compute alpha in two-tailed tests with results reported in predicted direction
@@ -77,7 +77,7 @@ req.ni.r <- function(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tob
   if (!missing(ri.o) & !missing(ni.o)) { # Correlation
     measure <- "COR"
     es <- escompute(ri = ri.o, ni = ni.o, alpha = alpha, side = "right", measure = measure)
-    true.es <- c(0, fis.trans(r=0.1), fis.trans(r=0.3), fis.trans(r=0.5)) # True effect sizes
+    true.es <- c(0, fis_trans(r=0.1), fis_trans(r=0.3), fis_trans(r=0.5)) # True effect sizes
   } else if (!missing(m1i.o) & !missing(m2i.o) & !missing(n1i.o) & !missing(n2i.o) &
              !missing(sd1i.o) & !missing(sd2i.o)) { # Mean difference unknown sigma
     measure <- "MD"
@@ -110,12 +110,12 @@ req.ni.r <- function(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tob
     if (es$zval < es$zcv) { # If original study is not significant return NA
       ni.r.o[i] <- NA
     } else {
-      if(optim.ni.r(ni.r=4, perc=perc, true.es=true.es[i], yi.o=yi.o, vi.o=vi.o,
+      if(optim_ni_r(ni.r=4, perc=perc, true.es=true.es[i], yi.o=yi.o, vi.o=vi.o,
                     cv.o=cv.o, measure=measure, des.pprob=des.pprob, des.pow=des.pow) > 0) {
         ### If required sample size is smaller than 4 return "< 4" (sampling variance cannot be computed for correlation)
         ni.r.o[i] <- "< 4"
       } else { # Apply bisection to search for required sample size with original study
-        tmp <- try(ceiling(bisect(optim.ni.r, lo=lo, hi=hi, perc=perc, true.es=true.es[i],
+        tmp <- try(ceiling(bisect(optim_ni_r, lo=lo, hi=hi, perc=perc, true.es=true.es[i],
                                   yi.o=yi.o, vi.o=vi.o, cv.o=cv.o, measure=measure,
                                   des.pprob=des.pprob, des.pow=des.pow)))
 
@@ -126,7 +126,7 @@ req.ni.r <- function(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tob
     }
 
     ### Apply bisection to search for required sample size without original study
-    tmp <- try(ceiling(bisect(optim.ni.r, lo=lo, hi=hi, perc=perc, true.es=true.es[i],
+    tmp <- try(ceiling(bisect(optim_ni_r, lo=lo, hi=hi, perc=perc, true.es=true.es[i],
                               measure=measure, des.pprob=des.pprob,
                               des.pow=des.pow)))
 

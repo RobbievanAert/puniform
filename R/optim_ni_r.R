@@ -1,16 +1,12 @@
-#' optim.ni.r
-#' 
-#' @keywords internal
-
 ### Function that is optimized to obtain required sample size in replication
-optim.ni.r <- function(ni.r, perc, true.es, yi.o, vi.o, cv.o, measure, des.pprob, des.pow) {
+optim_ni_r <- function(ni.r, perc, true.es, yi.o, vi.o, cv.o, measure, des.pprob, des.pow) {
 
   if (measure == "COR") { # If measure is correlation coefficient
     vi.r.0 <- vi.r.sm <- vi.r.me <- vi.r.la <- 1/(ni.r-3) # Compute sampling variance
 
-    es.sm <- fis.trans(r=0.1)
-    es.me <- fis.trans(r=0.3)
-    es.la <- fis.trans(r=0.5)
+    es.sm <- fis_trans(r=0.1)
+    es.me <- fis_trans(r=0.3)
+    es.la <- fis_trans(r=0.5)
 
   } else if (measure == "MD" | measure == "MDT") { # If measure is mean difference
 
@@ -51,9 +47,9 @@ optim.ni.r <- function(ni.r, perc, true.es, yi.o, vi.o, cv.o, measure, des.pprob
 
   ### Posterior probabilities of hypotheses
   if (true.es == 0) { pprob <- f.0/(f.0+f.sm+f.me+f.la)
-  } else if (true.es == fis.trans(r=0.1) | true.es == 0.2) { pprob <- f.sm/(f.0+f.sm+f.me+f.la)
-  } else if (true.es == fis.trans(r=0.3) | true.es == 0.5) { pprob <- f.me/(f.0+f.sm+f.me+f.la)
-  } else if (true.es == fis.trans(r=0.5) | true.es == 0.8) { pprob <- f.la/(f.0+f.sm+f.me+f.la) }
+  } else if (true.es == fis_trans(r=0.1) | true.es == 0.2) { pprob <- f.sm/(f.0+f.sm+f.me+f.la)
+  } else if (true.es == fis_trans(r=0.3) | true.es == 0.5) { pprob <- f.me/(f.0+f.sm+f.me+f.la)
+  } else if (true.es == fis_trans(r=0.5) | true.es == 0.8) { pprob <- f.la/(f.0+f.sm+f.me+f.la) }
 
   mean(pprob > des.pprob)-des.pow
 }

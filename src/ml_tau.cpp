@@ -1,9 +1,6 @@
-
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//' @param x An integer vector
-//' @export
 // [[Rcpp::export]]
 double ml_tau(double tau, double d, NumericVector yi, NumericVector vi, NumericVector ycv)
 {

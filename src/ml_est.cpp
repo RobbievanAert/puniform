@@ -1,9 +1,6 @@
-
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//' @param x An integer vector
-//' @export
 // [[Rcpp::export]]
 double ml_est(double est, double tau, NumericVector yi, NumericVector vi, NumericVector ycv)
 {

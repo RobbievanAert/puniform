@@ -1,6 +1,6 @@
 #' p-uniform
 #'
-#' Function to apply p-uniform method for one-sample mean, two-independent means,
+#' Function to apply the p-uniform method for one-sample mean, two-independent means,
 #' and one raw correlation coefficient as described in van Assen, van Aert, and
 #' Wicherts (2015) and van Aert, Wicherts, and van Assen (2016).
 #' \cr
@@ -21,13 +21,13 @@
 #' @param tobs A vector of t-values
 #' @param yi A vector of standardized effect sizes (see Details)
 #' @param vi A vector of sampling variances belonging to the standardized effect
-#' sizes (\code{yi})
+#' sizes (see Details)
 #' @param alpha A integer specifying the alpha level as used in primary studies
 #' (default is 0.05).
 #' @param side A character indicating whether the effect sizes in the primary studies
 #' are in the right-tail of the distribution (i.e., positive)  or in the left-tail
 #' of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})
-#' @param method A character indicating the method to be used (\code{"P"} (default),
+#' @param method A character indicating the method to be used \code{"P"} (default),
 #' \code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, or \code{"AD"})
 #' @param plot A logical indicating whether a plot showing the relation between
 #' observed and expected p-values has to be rendered (default is \code{TRUE})
@@ -67,14 +67,14 @@
 #'
 #' Six different estimators can be used when applying p-uniform. The \code{P} method
 #' is based on the distribution of the sum of independent uniformly distributed random
-#' variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2016).
+#' variables (Irwin-Hall distribution) and is the recommended estimator (van Aert et al., 2016).
 #' The \code{ML} estimator refers to effect size estimation with maximum likelihood.
 #' Profile likelihood confidence intervals are computed, and likelihood ratio tests are
 #' used for the test of no effect and publication bias test if \code{ML} is used.
 #' The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
 #' for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
 #' study before applying Fisher’s method on these transformed p-values
-#' (Van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
+#' (van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
 #' test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
 #' for testing whether the (conditional) p-values follow a uniform distribution.
 #'
@@ -120,15 +120,11 @@
 #' @examples ### Load data from meta-analysis by McCall and Carriger (1993)
 #' data(data.mccall93)
 #'
-#' ### Apply p-uniform method to get the same results as in van Assen et al. (2015)
+#' ### Apply p-uniform method
 #' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "right", 
 #' method = "LNP", plot = TRUE)
 #'
-#' ### Note that the results of p-uniform's publication bias test are not exactly equal
-#' ### to the results as stated in van Assen et al. (2015).
-#' ### This is caused by a small mistake in the analyses of van Assen et al. (2015).
-#'
-#' ### Generate some example data for one-sample means design
+#' ### Generate example data for one-sample means design
 #' set.seed(123)
 #' ni <- 100
 #' sdi <- 1
@@ -145,7 +141,7 @@
 
 puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
                      alpha = 0.05, side, method, plot = FALSE) {
-
+  
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
   if (!missing("mi") & !missing("ni") & !missing("sdi")) { # Mean unknown sigma
     measure <- "M"
@@ -170,10 +166,10 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
     measure <- "SPE"
     es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, measure = measure)
   }
-
+  
   ##### FIXED-EFFECT META-ANALYSIS #####
-  res.fe <- fe.ma(yi = es$yi, vi = es$vi)
-
+  res.fe <- fe_ma(yi = es$yi, vi = es$vi)
+  
   ### Create a subset of significant studies
   sub <- subset(es, es$pval < alpha/2)
   yi <- sub$yi
@@ -181,32 +177,32 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
   zval <- sub$zval
   zcv <- sub$zcv
   ksig <- nrow(sub)
-
+  
   if (ksig == 0)
-    { # If there are no significant studies return an error message
+  { # If there are no significant studies return an error message
     stop("No significant studies on the specified side")
   }
-
+  
   ##### EFFECT SIZE ESTIMATION #####
   res.es <- esest(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig, method = method)
-
+  
   ##### PUBLICATION BIAS TEST #####
   res.pub <- pubbias(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
-                  alpha = alpha/2, method = method, est.fe = res.fe$est.fe, est = res.es$est)
-
+                     alpha = alpha/2, method = method, est.fe = res.fe$est.fe, est = res.es$est)
+  
   ##### TEST OF AN EFFECT #####
   res.null <- testeffect(yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
-                     method = method, est = res.es$est)
-
+                         method = method, est = res.es$est)
+  
   ##### PLOT ILLUSTRATING RELATIONSHIP BETWEEN OBSERVED AND EXPECTED P-VALUES #####
   if (plot == TRUE & any(method == c("LNP", "LN1MINP", "P", "KS", "AD")))
-    {
+  {
     plottrans(tr.q = res.es$tr.q, ksig = ksig)
   }
-
+  
   ##### MIRROR OR TRANSFORM RESULTS #####
-  res5 <- transform_puni(res.fe = res.fe, res.es = res.es, side = side, measure = measure)
-
+  res5 <- transform_puni(res.fe = res.fe, res.es = res.es, side = side)
+  
   ##### CREATE OUTPUT #####
   x <- list(method = method, est = res5$est, ci.lb = res5$ci.lb, ci.ub = res5$ci.ub,
             ksig = ksig, approx.est = res.es$approx.est, approx.ci.lb = res.es$approx.ci.lb,
@@ -215,8 +211,8 @@ puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, 
             approx.pb = res.pub$approx.pb, est.fe = res5$est.fe, se.fe = res5$se.fe,
             zval.fe = res5$zval.fe, pval.fe = res.fe$pval.fe.one, ci.lb.fe = res5$ci.lb.fe,
             ci.ub.fe = res5$ci.ub.fe, Qstat = res.fe$Qstat, Qpval = res.fe$Qpval)
-
+  
   class(x) <- "puniformoutput"
   return(x)
-
+  
 }

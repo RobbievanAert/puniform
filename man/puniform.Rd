@@ -33,7 +33,7 @@ puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
 \item{yi}{A vector of standardized effect sizes (see Details)}
 
 \item{vi}{A vector of sampling variances belonging to the standardized effect
-sizes (\code{yi})}
+sizes (see Details)}
 
 \item{alpha}{A integer specifying the alpha level as used in primary studies
 (default is 0.05).}
@@ -42,7 +42,7 @@ sizes (\code{yi})}
 are in the right-tail of the distribution (i.e., positive)  or in the left-tail
 of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})}
 
-\item{method}{A character indicating the method to be used (\code{"P"} (default),
+\item{method}{A character indicating the method to be used \code{"P"} (default),
 \code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, or \code{"AD"})}
 
 \item{plot}{A logical indicating whether a plot showing the relation between
@@ -73,7 +73,7 @@ fixed-effect meta-analysis}
 \item{Qpval}{one-tailed p-value of the Q-test}
 }
 \description{
-Function to apply p-uniform method for one-sample mean, two-independent means,
+Function to apply the p-uniform method for one-sample mean, two-independent means,
 and one raw correlation coefficient as described in van Assen, van Aert, and
 Wicherts (2015) and van Aert, Wicherts, and van Assen (2016).
 \cr
@@ -117,14 +117,14 @@ including different effect size measures is therefore not recommended.
 
 Six different estimators can be used when applying p-uniform. The \code{P} method
 is based on the distribution of the sum of independent uniformly distributed random
-variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2016).
+variables (Irwin-Hall distribution) and is the recommended estimator (van Aert et al., 2016).
 The \code{ML} estimator refers to effect size estimation with maximum likelihood.
 Profile likelihood confidence intervals are computed, and likelihood ratio tests are
 used for the test of no effect and publication bias test if \code{ML} is used.
 The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
 for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
 study before applying Fisher’s method on these transformed p-values
-(Van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
+(van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
 test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
 for testing whether the (conditional) p-values follow a uniform distribution.
 }
@@ -132,15 +132,11 @@ for testing whether the (conditional) p-values follow a uniform distribution.
 ### Load data from meta-analysis by McCall and Carriger (1993)
 data(data.mccall93)
 
-### Apply p-uniform method to get the same results as in van Assen et al. (2015)
+### Apply p-uniform method
 puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "right", 
 method = "LNP", plot = TRUE)
 
-### Note that the results of p-uniform's publication bias test are not exactly equal
-### to the results as stated in van Assen et al. (2015).
-### This is caused by a small mistake in the analyses of van Assen et al. (2015).
-
-### Generate some example data for one-sample means design
+### Generate example data for one-sample means design
 set.seed(123)
 ni <- 100
 sdi <- 1

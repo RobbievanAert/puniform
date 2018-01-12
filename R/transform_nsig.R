@@ -1,12 +1,4 @@
-#' transform_nsig
-#' 
-#' @keywords internal
-
-#####################################################
-##### FUNCTION FOR RE-MIRRORING IN CASE OF LEFT #####
-##### TAILED TESTS                              #####
-#####################################################
-
+### Function for re-mirroring in case of left-tailed tests with p-uniform*
 transform_nsig <- function(res.es, side) 
 {
   

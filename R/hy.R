@@ -1,12 +1,8 @@
-#' hy
-#' 
-#' @keywords internal
-
 ### Function for applying hybrid method
 hy <- function(es, measure, side, alpha) {
   
   ### Compute bounds for effect size estimation
-  bo <- bounds.hy(yi = es$yi, vi = es$vi, zval = es$zval, zcv = es$zcv, ext = FALSE)
+  bo <- bounds_hy(yi = es$yi, vi = es$vi, zval = es$zval, zcv = es$zcv, ext = FALSE)
   
   ### Apply bisection method for effect size
   est.hy <- try(bisect(func = pdist.hy, lo = bo[1], hi = bo[2], 
@@ -14,7 +10,7 @@ hy <- function(es, measure, side, alpha) {
                        k = 1, val = "est"), silent = TRUE)
   if (class(est.hy) == "try-error") {
     ### Apply bisection method with extended search interval
-    bo.ext <- bounds.hy(yi = es$yi, vi = es$vi, zval = es$zval, 
+    bo.ext <- bounds_hy(yi = es$yi, vi = es$vi, zval = es$zval, 
                         zcv = es$zcv, ext = TRUE)
     est.hy <- try(bisect(func = pdist.hy, lo = bo.ext[1], 
                          hi = bo.ext[2], yi = es$yi, vi = es$vi, zval = es$zval, 
@@ -31,7 +27,7 @@ hy <- function(es, measure, side, alpha) {
                          k = nrow(es), val = "ci.lb", cv.P = 0.2236068), silent = TRUE)
   if (class(ci.lb.hy) == "try-error") {
     ### Apply bisection method with extended search interval
-    bo.ext <- bounds.hy(yi = es$yi, vi = es$vi, zval = es$zval, 
+    bo.ext <- bounds_hy(yi = es$yi, vi = es$vi, zval = es$zval, 
                         zcv = es$zcv, ext = TRUE)
     ci.lb.hy <- try(bisect(func = pdist.hy, lo = bo.ext[1], 
                            hi = est.hy, yi = es$yi, vi = es$vi, zval = es$zval, 

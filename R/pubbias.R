@@ -1,13 +1,6 @@
-#' pubbias
-#' 
-#' @keywords internal
-
-#########################################################
-##### FUNCTION FOR PUBLICATION BIAS TEST P-UNIFORM  #####
-#########################################################
-
+### Function for publication bias test p-uniform
 pubbias <- function(yi, vi, zval, zcv, ksig, alpha, method, est.fe, est) {
-
+  
   ### Check if there are significant studies
   if (ksig == 0)
   {
@@ -21,8 +14,14 @@ pubbias <- function(yi, vi, zval, zcv, ksig, alpha, method, est.fe, est) {
       L.pb <- NA
       pval.pb <- NA
       approx.pb <- 0 # Create object for notification in output
-    } else { # Transform est.fe to zd for approximation
-      zd <- est.fe/sqrt(vi)
+    } else if (method == "ML")
+    { # Likelihood-ratio test
+      L.pb <- LR_test(d.alt = est, d.null = est.fe, yi = yi, vi = vi, zcv = zcv)
+      pval.pb <- pchisq(L.pb, df = 1, lower.tail = FALSE)
+      approx.pb <- 0 # Create object for notification in output
+    } else 
+    { 
+      zd <- est.fe/sqrt(vi) # Transform est.fe to zd for approximation
       q <- numeric(ksig)  # Empty object for storing transformed p-values
       ### Loop for computing transformed p-values
       for (i in 1:length(yi))
@@ -58,14 +57,10 @@ pubbias <- function(yi, vi, zval, zcv, ksig, alpha, method, est.fe, est) {
         {
           L.pb <- (sum(q)-ksig*0.5)/sqrt(ksig/12)
           pval.pb <- pnorm(L.pb, lower.tail = FALSE)
-        } else if (method == "ML")
-        {
-          L.pb <- LR.test(d.alt = est, d.null = est.fe, yi = yi, vi = vi, zcv = zcv)
-          pval.pb <- pchisq(L.pb, df = 1, lower.tail = FALSE)
-        }
+        } 
       }
     }
   }
-
+  
   return(list(L.pb = L.pb, pval.pb = pval.pb, ksig = ksig, approx.pb = max(approx.pb)))
 }

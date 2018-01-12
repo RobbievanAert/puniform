@@ -101,7 +101,7 @@
 #'
 #' @references van Aert, R. C. M., & van Assen, M. A. L. M. (2017). Examining
 #' reproducibility in psychology: A hybrid method for statistically combining a
-#' biased original study and replication. Manuscript submitted for publication.
+#' biased original study and replication. Behavior Research Methods. doi:10.3758/s13428-017-0967-6
 #'
 #' @examples
 #' ### Apply hybrid function to example on page 5 of van Aert and van Assen (2017).
@@ -161,7 +161,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
 
   res3 <- hy0(es = es, res1 = res1, alpha = alpha/2)
 
-  res4 <- fe.ma(yi = es$yi, vi = es$vi)
+  res4 <- fe_ma(yi = es$yi, vi = es$vi)
 
   ### Transform results of fixed-effect meta-analysis
   if (measure == "COR") { # Back transform Fisher z to correlation

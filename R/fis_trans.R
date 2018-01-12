@@ -1,4 +1,4 @@
-#' fis.trans
+#' fis_trans
 #'
 #' Function for transforming raw correlation coefficients to Fisher-z transformed
 #' correlation coefficients and vice versa.
@@ -10,12 +10,15 @@
 #'
 #' @export
 
-fis.trans <- function(r, fis) {
-  if (!missing("r")) {
+fis_trans <- function(r, fis) 
+{
+  if (!missing("r")) 
+  {
     out <- 0.5*log((1+r)/(1-r))
   }
-
-  if (!missing("fis")) {
+  
+  if (!missing("fis")) 
+  {
     out <- (exp(2*fis) - 1)/(exp(2*fis) + 1)
   }
   return(out)

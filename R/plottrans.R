@@ -1,11 +1,4 @@
-#' plottrans
-#' 
-#' @keywords internal
-
-#############################################################
-##### FUNCTION TO GENERATE PLOT OF TRANSFORMED P-VALUES #####
-#############################################################
-
+### Function to generate plot of transformed p-values
 plottrans <- function(tr.q, ksig) {
   plot(x = seq(0,1,1/(ksig+1))[2:(ksig+1)], y = sort(tr.q), ylim = c(0,1), 
        xlim = c(0,1), xlab = expression(paste("Expected conditional ", italic(p), "-values")), 

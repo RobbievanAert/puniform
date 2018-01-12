@@ -1,8 +1,7 @@
-#' p-uniform
+#' p-uniform*
 #'
-#' Function to apply p-uniform method for one-sample mean, two-independent means,
-#' and one raw correlation coefficient as described in van Assen, van Aert, and
-#' Wicherts (2015) and van Aert, Wicherts, and van Assen (2016).
+#' Function to apply the p-uniform* method for one-sample mean, two-independent means,
+#' and one raw correlation coefficient as described in van Aert and van Assen (2018).
 #' \cr
 #' \cr
 #' Please note that this package is still under development and that this is a beta
@@ -21,18 +20,21 @@
 #' @param tobs A vector of t-values
 #' @param yi A vector of standardized effect sizes (see Details)
 #' @param vi A vector of sampling variances belonging to the standardized effect
-#' sizes (\code{yi})
+#' sizes (see Details)
 #' @param alpha A integer specifying the alpha level as used in primary studies
 #' (default is 0.05).
 #' @param side A character indicating whether the effect sizes in the primary studies
 #' are in the right-tail of the distribution (i.e., positive)  or in the left-tail
 #' of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})
-#' @param method A character indicating the method to be used (\code{"P"} (default),
-#' \code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, or \code{"AD"})
-#' @param plot A logical indicating whether a plot showing the relation between
-#' observed and expected p-values has to be rendered (default is \code{TRUE})
+#' @param method A character indicating the method to be used \code{"ML"} (default),
+#' \code{"P"}, or \code{"LNP"}
+#' @param boot A logical indicating whether the p-value of testing whether the 
+#' between-study variance is zero for methods \code{P} and \code{LNP} should be 
+#' obtained by means of a parametric bootstrap. The default value is FALSE.
+#' @param control An optional list of elements that give the user more control 
+#' over the optimization and root-finding algorithms (see Note) 
 #'
-#' @details Three different effect size measures can be used as input for the \code{puniform}
+#' @details Three different effect size measures can be used as input for the \code{puni_star}
 #' function: one-sample means, two-independent means, and raw correlation coefficients.
 #' Analyzing one-sample means and two-independent means can be done by either providing
 #' the function group means (\code{mi} or \code{m1i} and \code{m2i}), standard deviations
@@ -41,7 +43,7 @@
 #' or \code{n1i} and \code{n2i}). Both options should be accompanied with input
 #' for the arguments \code{side}, \code{method}, and \code{alpha}. See the Example section for
 #' examples. Raw correlation coefficients can be analyzed by supplying \code{ri}
-#' and \code{ni} to the \code{puniform} function next to input for the arguments
+#' and \code{ni} to the \code{puni_star} function next to input for the arguments
 #' \code{side}, \code{method}, and \code{alpha}.
 #'
 #' It is also possible to specify the standardized effect sizes and its sampling
@@ -51,99 +53,136 @@
 #' not recommended to be used if the p-values in the primary studies are not computed
 #' with a z-test. In case the p-values in the primary studies were computed with,
 #' for instance, a t-test, the p-values of a z-test and t-test do not exactly
-#' coincide and studies may be incorrectly included in the analyses. Furthermore,
-#' critical values in the primary studies cannot be transformed to critical z-values
-#' if \code{yi} and \code{vi} are used as input. This yields less accurate results.
+#' coincide and studies may be incorrectly included as a statistically significant or 
+#' nonsignificant effect size. Furthermore, critical values in the primary studies 
+#' are not transformed to critical z-values if \code{yi} and \code{vi} are used 
+#' as input. This yields less accurate results.
 #'
-#' The \code{puniform} function assumes that two-tailed hypothesis tests were conducted
-#' in the primary studies. In case one-tailed hypothesis tests were conducted in the primary studies,
-#' the alpha level has to be multiplied by two. For example, if one-tailed hypothesis
-#' tests were conducted with an alpha level of .05, an alpha of 0.1 has to be
-#' submitted to p-uniform.
+#' The \code{puni_star} function assumes that two-tailed hypothesis tests were conducted
+#' in the primary studies. In case one-tailed hypothesis tests were conducted in 
+#' the primary studies, the submitted \code{alpha} argument to the \code{puni_star} 
+#' function has to be multiplied by two. For example, if one-tailed hypothesis tests were 
+#' conducted with an alpha level of .05, an alpha of 0.1 has to be submitted to 
+#' the \code{puni_star} function.
 #'
 #' Note that only one effect size measure can be specified at a time. A combination
 #' of effect size measures usually causes true heterogeneity among effect sizes and
 #' including different effect size measures is therefore not recommended.
 #'
-#' Six different estimators can be used when applying p-uniform. The \code{P} method
-#' is based on the distribution of the sum of independent uniformly distributed random
-#' variables (Irwin-Hall distribution) and is the recommended estimator (Van Aert et al., 2016).
-#' The \code{ML} estimator refers to effect size estimation with maximum likelihood.
-#' Profile likelihood confidence intervals are computed, and likelihood ratio tests are
-#' used for the test of no effect and publication bias test if \code{ML} is used.
-#' The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
-#' for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
-#' study before applying Fisher’s method on these transformed p-values
-#' (Van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
-#' test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
-#' for testing whether the (conditional) p-values follow a uniform distribution.
+#' \bold{Selecting a method}
+#'
+#' Three different methods are currently implemented in the \code{puni_star} function. 
+#' The \code{ML} method refers to maximum likelihood estimation of the effect size 
+#' and the between-study variance. Profile likelihood confidence intervals around 
+#' the estimates are computed by means of inverting the likelihood-ratio test. 
+#' Likelihood-ratio tests are used for the publication bias test and testing the 
+#' null hypotheses of no effect and no between-study variance. The \code{ML} method 
+#' is the recommended method for applying p-uniform*. 
+#' 
+#' The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
+#' The method \code{P} is based on the distribution of the sum of independent 
+#' uniformly distributed random variables (Irwin-Hall distribution) and the 
+#' \code{LNP} method refers to Fisher's method (1950, Chapter 4). For these methods, 
+#' a p-value for testing the null hypothesis of no between-study variance can also be 
+#' obtained by means of a parametric bootstrap. This is necessary since the data 
+#' is otherwise first used for estimating the effect size in the procedure for testing 
+#' the null hypothesis of no between-study variance and then also used for computing 
+#' a p-value. The test of no effect is not available for methods \code{P} and \code{LNP} 
+#' and the publication bias test for these methods is not yet implemented.    
 #'
 #' @return
-#' \item{est}{p-uniform's effect size estimate}
-#' \item{ci.lb}{lower bound of p-uniform's confidence interval}
-#' \item{ci.ub}{upper bound of p-uniform's confidence interval}
-#' \item{ksig}{number of significant studies}
-#' \item{L.0}{test statistic of p-uniform's test of null-hypothesis of no effect
-#' (for method \code{"P"} a z-value)}
-#' \item{pval.0}{one-tailed p-value of p-uniform's test of null-hypothesis of no effect}
-#' \item{L.pb}{test statistic of p-uniform's publication bias test}
-#' \item{pval.pb}{one-tailed p-value of p-uniform's publication bias test}
-#' \item{est.fe}{effect size estimate based on traditional fixed-effect meta-analysis}
-#' \item{se.fe}{standard error of effect size estimate based on traditional
-#' fixed-effect meta-analysis}
-#' \item{zval.fe}{test statistic of the null-hypothesis of no effect based on traditional
-#' fixed-effect meta-analysis}
-#' \item{pval.fe}{one-tailed p-value of the null-hypothesis of no effect based on
-#' traditional fixed-effect meta-analysis}
-#' \item{ci.lb.fe}{lower bound of confidence interval based on traditional fixed-effect
-#' meta-analysis}
-#' \item{ci.ub.fe}{ci.ub.fe upper bound of confidence interval based on traditional
-#' fixed-effect meta-analysis}
-#' \item{Qstat}{test statistic of the Q-test for testing the null-hypothesis of homogeneity}
-#' \item{Qpval}{one-tailed p-value of the Q-test}
+#' \item{est}{p-uniform*'s effect size estimate}
+#' \item{ci.lb}{lower bound of p-uniform*'s 95\% confidence interval of the effect size}
+#' \item{ci.ub}{upper bound of p-uniform*'s 95\% confidence interval of the effect size}
+#' \item{L.0}{test statistic of p-uniform*'s test of the null hypothesis of no effect}
+#' \item{pval.0}{one-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
+#' \item{tau2}{p-uniform*'s estimate of the between-study variance}
+#' \item{tau2.lb}{lower bound of p-uniform*'s 95\% confidence interval of the 
+#' between-study variance}
+#' \item{tau2.ub}{upper bound of p-uniform*'s 95\% confidence interval of the 
+#' between-study variance}
+#' \item{L.het}{test statistic of p-uniform*'s test of the null hypothesis of no 
+#' between-study variance}
+#' \item{pval.het}{one-tailed p-value of p-uniform*'s test of null hypothesis of 
+#' no between-study variance}
+#' \item{pval.boot}{one-tailed p-value of p-uniform*'s test of null hypothesis 
+#' of no between-study variance obtained with a parametric bootstrap}
+#' \item{L.pb}{test statistic of p-uniform*'s publication bias test}
+#' \item{pval.pb}{one-tailed p-value of p-uniform*'s publication bias test}
+#' \item{...}{a number of additional elements}
+#'
+#' @note The \code{control} argument in the \code{puni_star} function is an optional 
+#' argument that gives the user more control over the optimzation and root-finding 
+#' algorithms. This can be especially useful if estimation of the method does not 
+#' converge and NAs are returned by the function. The \code{control} argument should 
+#' be specified as a list containing one or more elements. For example, 
+#' \code{control = list(verbose = TRUE)} Default values are used if an element is 
+#' not specified. The following elements can be specified by the user:
+#' 
+#' \itemize{
+#' \item{\code{stval.tau:}}{ An integer that is the starting value of tau for estimation.
+#' This starting value is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
+#' its default value is 0.}
+#' \item{\code{int:}}{ A vector of length two that indicates the lower and upper 
+#' bound of the interval that is used for estimating the effect size. The effect 
+#' size estimate should be included in this interval. This interval is used for the 
+#' methods \code{ML}, \code{P}, and \code{LNP} and its default values are (-2, 2).}
+#' \item{\code{tau.int:}}{ A vector of length two that indicates the lower and upper 
+#' bound of the interval that is used for estimating the between-study variance. 
+#' The estimate of the between-study variance should be included in this interval. 
+#' This #' interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
+#' and its default values are (0, 2).}
+#' \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
+#' added to the estimate of the effect size for computing the 95\% confidence 
+#' intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
+#' and its default values are (4, 3). To give an example, estimates for the lower 
+#' and upper bound around the effect size estimate are searched on the interval 
+#' (est-4, est) and (est, est+3), respectively.}
+#' \item{\code{tau.ci:}}{ A vector of length two indicating the values that are 
+#' added to the estimate of the between-study variance for computing the 95\% confidence 
+#' intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
+#' and its default values are (1, 3).}
+#' \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
+#' This number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its 
+#' default value is 0.001.} 
+#' \item{\code{max.iter:}}{ An integer indicating the maximum number of iterations 
+#' that is used for estimating the effect size and between-study variance. This 
+#' number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its default 
+#' value is 1000.}
+#' \item{\code{verbose:}}{ A logical indicating whether information should be printed 
+#' about the algorithm for estimating the effect size and between-study variance. 
+#' This logical is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
+#' its default value is FALSE.}
+#' \item{\code{reps:}}{ An integer indicating the number of bootstrap replications
+#' for computing the bootstrapped p-value for the test of no between-study variance.
+#' This integer is used for the methods \code{P} and \code{LNP} and its default value 
+#' is 1000.}
+#' } 
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
-#' @references Anderson, T. W., & Darling, D. A. (1954). A test of goodness of fit.
-#' Journal of the American Statistical Association, 49(268), 765-769.
-#' @references Fisher, R. A. (1950). Statistical methods for research workers (11th ed.).
+#' @references Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 #' London: Oliver & Boyd.
-#' @references Massey, F. J. (1951). The Kolmogorov-Smirnov test for goodness of fit.
-#' Journal of the American Statistical Association, 46(253), 68-78.
-#' @references Van Aert, R. C. M., Wicherts, J. M., & van Assen, M. A. L. M. (2016).
-#' Conducting meta-analyses on p-values: Reservations and recommendations for applying p-uniform and p-curve.
-#' Perspectives on Psychological Science, 11(5), 713-729. doi:10.1177/1745691616650874
-#' @references Van Assen, M. A. L. M., van Aert, R. C. M., & Wicherts, J. M. (2015).
-#' Meta-analysis using effect size distributions of only statistically significant studies.
-#' Psychological Methods, 20(3), 293-309. doi: http://dx.doi.org/10.1037/met0000025
+#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2016). Manuscript in preparation.
 #'
-#' @examples ### Load data from meta-analysis by McCall and Carriger (1993)
-#' data(data.mccall93)
-#'
-#' ### Apply p-uniform method to get the same results as in van Assen et al. (2015)
-#' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "right", method = "LNP", plot = TRUE)
-#'
-#' ### Note that the results of p-uniform's publication bias test are not exactly equal
-#' ### to the results as stated in van Assen et al. (2015).
-#' ### This is caused by a small mistake in the analyses of van Assen et al. (2015).
-#'
-#' ### Generate some example data for one-sample means design
+#' @examples ### Generate data for one-sample mean with mu = 0.2 and tau^2 = 0.01
 #' set.seed(123)
-#' ni <- 100
-#' sdi <- 1
-#' mi <- rnorm(8, mean = 0.2, sd = sdi/sqrt(ni))
+#' ni <- rep(50, 25)
+#' sdi <- rep(1, 25)
+#' ui <- rnorm(25, mean = 0.2, sd = 0.1)
+#' mi <- rnorm(25, mean = ui, sd = sdi/sqrt(ni))
 #' tobs <- mi/(sdi/sqrt(ni))
 #'
-#' ### Apply p-uniform method based on sample means
-#' puniform(mi = mi, ni = ni, sdi = sdi, alpha = 0.05, side = "right", method = "P", plot = FALSE)
+#' ### Apply p-uniform* method using sample means
+#' puni_star(mi = mi, ni = ni, sdi = sdi, alpha = 0.05, side = "right", method = "ML")
 #'
-#' ### Apply p-uniform method based on t-values
-#' puniform(ni = ni, tobs = tobs, alpha = 0.05, side = "right", method = "P", plot = FALSE)
+#' ### Apply p-uniform* method using t-values
+#' puni_star(tobs = tobs, ni = ni, alpha = 0.05, side = "right", method = "ML")
 #'
 #' @export
 
-puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-                      alpha = 0.05, side, method, reps = 1000, boot = FALSE, control)
+puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
+                      alpha = 0.05, side, method = "ML", boot = FALSE, control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####

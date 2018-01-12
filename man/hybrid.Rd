@@ -127,7 +127,7 @@ hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), alpha = .05, side =
 \references{
 van Aert, R. C. M., & van Assen, M. A. L. M. (2017). Examining
 reproducibility in psychology: A hybrid method for statistically combining a
-biased original study and replication. Manuscript submitted for publication.
+biased original study and replication. Behavior Research Methods. doi:10.3758/s13428-017-0967-6
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

@@ -1,4 +1,4 @@
-#' fe.ma
+#' fe_ma
 #'
 #' Function that conducts fixed-effect meta-analysis
 #'
@@ -22,7 +22,7 @@
 #' @export
 
 ### Function for fixed-effect meta-analysis
-fe.ma <- function(yi, vi) {
+fe_ma <- function(yi, vi) {
   wi <- 1/vi # Weight per study
   est.fe <- sum(yi*wi)/sum(wi) # FE meta-analytic estimate
   se.fe <- sqrt(1/sum(wi)) # Standard error of meta-analytic estimate

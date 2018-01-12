@@ -1,4 +1,4 @@
-#' snapshot.naive
+#' snapshot_naive
 #'
 #' Function for applying Snapshot Bayesian Meta-Analysis Method (snapshot naive)
 #' for two-independent means and raw correlation coefficients.
@@ -42,17 +42,17 @@
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
-#' @references van Aert, R.C.M. & van Assen, M.A.L.M. (2016). Bayesian evaluation
-#' of effect size after replicating an original study. Manuscript submitted for
-#' publication.
+#' @references van Aert, R.C.M. & van Assen, M.A.L.M. (2017). Bayesian evaluation
+#' of effect size after replicating an original study. PLoS ONE, 12(4), e0175302. 
+#' doi:10.1371/journal.pone.0175302
 #'
 #' @examples ### Example as presented on page 491 in Maxwell, Lau, and Howard (2015)
-#' snapshot.naive(ri = c(0.243, 0.114), ni = c(80, 172))
+#' snapshot_naive(ri = c(0.243, 0.114), ni = c(80, 172))
 #'
 #' @export
 
 
-snapshot.naive <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs)
+snapshot_naive <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs)
 {
 
   alpha <- 0.05/2 # Compute alpha in two-tailed tests with results reported in predicted direction
@@ -61,7 +61,7 @@ snapshot.naive <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs)
   if (!missing(ri) & !missing(ni)) { # Correlation
     measure <- "COR"
     es <- escompute(ri = ri, ni = ni, alpha = alpha, side = "right", measure = measure)
-    true.es <- c(0, fis.trans(r=0.1), fis.trans(r=0.3), fis.trans(r=0.5)) # True effect sizes
+    true.es <- c(0, fis_trans(r=0.1), fis_trans(r=0.3), fis_trans(r=0.5)) # True effect sizes
   } else if (!missing(m1i) & !missing(m2i) & !missing(n1i) & !missing(n2i) &
              !missing(sd1i) & !missing(sd2i)) { # Mean difference unknown sigma
     measure <- "MD"

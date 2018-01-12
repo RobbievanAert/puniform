@@ -1,7 +1,3 @@
-#' pdist.hy
-#' 
-#' @keywords internal
-
 ### Function used as input for the bisection method
 pdist.hy <- function(d, yi, vi, zval, zcv, k, val, cv.P) { 
   

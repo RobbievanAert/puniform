@@ -1,4 +1,5 @@
-testhetero <- function(yi, vi, est, tau.est, ycv, method, boot = boot, con)
+### Function for testing the null hypothesis of no between-study variance
+testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
 {
   
   if (method == "ML")
@@ -7,13 +8,14 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot = boot, con)
     pval.boot <- NA # P-value is not bootstrapped with method == ML
     
     ### Optimize profile likelihood function of delta
-    est0 <- try(optimize(ml_est, c(-1,1), 0, yi, vi, ycv, maximum = TRUE)$maximum, 
-              silent = TRUE)
+    # (suppressWarnings() in order to be able to specify wide search intervals)
+    est0 <- suppressWarnings(try(optimize(ml_est, c(-1,1), 0, yi, vi, ycv, 
+                                          maximum = TRUE)$maximum, silent = TRUE))
     
     if (class(est0) == "try-error" | any(est0 > 0.95 | est0 < -0.95))
     {
-      est0 <- try(optimize(ml_est, c(-5,5), 0, yi, vi, ycv, maximum = TRUE)$maximum, 
-                silent = TRUE)
+      est0 <- suppressWarnings(try(optimize(ml_est, c(-5,5), 0, yi, vi, ycv, 
+                                            maximum = TRUE)$maximum, silent = TRUE))
     }
     
     if (class(est0) == "try-error" | any(est0 > 4.95 | est0 < -4.95))
@@ -66,7 +68,7 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot = boot, con)
                                                       con = con))
         
         ### Compute p-value with bootstrapping
-        pval.boot <- length(L.het.boot[L.het.boot > L.het & !is.na(L.het.boot)])/reps
+        pval.boot <- length(L.het.boot[L.het.boot > L.het & !is.na(L.het.boot)])/con$reps
         
       } else 
       {
