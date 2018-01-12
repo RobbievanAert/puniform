@@ -135,7 +135,7 @@ a p-value for testing the null hypothesis of no between-study variance can also 
 obtained by means of a parametric bootstrap. This is necessary since the data 
 is otherwise first used for estimating the effect size in the procedure for testing 
 the null hypothesis of no between-study variance and then also used for computing 
-a p-value. The test of no effect is not available for methods \code{P} and \code{LNP} 
+a p-value. The test of no effect is not available for the methods \code{P} and \code{LNP} 
 and the publication bias test for these methods is not yet implemented.
 }
 \note{
