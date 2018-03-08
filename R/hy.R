@@ -5,14 +5,14 @@ hy <- function(es, measure, side, alpha) {
   bo <- bounds_hy(yi = es$yi, vi = es$vi, zval = es$zval, zcv = es$zcv, ext = FALSE)
   
   ### Apply bisection method for effect size
-  est.hy <- try(bisect(func = pdist.hy, lo = bo[1], hi = bo[2], 
+  est.hy <- try(bisect(func = pdist_hy, lo = bo[1], hi = bo[2], 
                        yi = es$yi, vi = es$vi, zval = es$zval, zcv = es$zcv, 
                        k = 1, val = "est"), silent = TRUE)
   if (class(est.hy) == "try-error") {
     ### Apply bisection method with extended search interval
     bo.ext <- bounds_hy(yi = es$yi, vi = es$vi, zval = es$zval, 
                         zcv = es$zcv, ext = TRUE)
-    est.hy <- try(bisect(func = pdist.hy, lo = bo.ext[1], 
+    est.hy <- try(bisect(func = pdist_hy, lo = bo.ext[1], 
                          hi = bo.ext[2], yi = es$yi, vi = es$vi, zval = es$zval, 
                          zcv = es$zcv, k = 1, val = "est"), silent = TRUE)
     ### If estimate cannot be computed, return NA
@@ -22,14 +22,14 @@ hy <- function(es, measure, side, alpha) {
   }
   
   ### Apply bisection method for lower bound
-  ci.lb.hy <- try(bisect(func = pdist.hy, lo = bo[1], hi = est.hy, 
+  ci.lb.hy <- try(bisect(func = pdist_hy, lo = bo[1], hi = est.hy, 
                          yi = es$yi, vi = es$vi, zval = es$zval, zcv = es$zcv, 
                          k = nrow(es), val = "ci.lb", cv.P = 0.2236068), silent = TRUE)
   if (class(ci.lb.hy) == "try-error") {
     ### Apply bisection method with extended search interval
     bo.ext <- bounds_hy(yi = es$yi, vi = es$vi, zval = es$zval, 
                         zcv = es$zcv, ext = TRUE)
-    ci.lb.hy <- try(bisect(func = pdist.hy, lo = bo.ext[1], 
+    ci.lb.hy <- try(bisect(func = pdist_hy, lo = bo.ext[1], 
                            hi = est.hy, yi = es$yi, vi = es$vi, zval = es$zval, 
                            zcv = es$zcv, k = nrow(es), val = "ci.lb", cv.P = 0.2236068), 
                     silent = TRUE)
@@ -39,7 +39,7 @@ hy <- function(es, measure, side, alpha) {
   }
   
   ### Apply bisection method for upper bound
-  ci.ub.hy <- try(bisect(func = pdist.hy, lo = est.hy, hi = bo[2], 
+  ci.ub.hy <- try(bisect(func = pdist_hy, lo = est.hy, hi = bo[2], 
                          yi = es$yi, vi = es$vi, zval = es$zval, zcv = es$zcv, 
                          k = nrow(es), val = "ci.ub", cv.P = 2 - 0.2236068), silent = TRUE)
   if (class(ci.ub.hy) == "try-error") {

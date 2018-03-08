@@ -1,5 +1,5 @@
 ### Function used as input for the bisection method
-pdist.hy <- function(d, yi, vi, zval, zcv, k, val, cv.P) { 
+pdist_hy <- function(d, yi, vi, zval, zcv, k, val, cv.P) { 
   
   ### Transform d to zd for approximation
   zd <- d/sqrt(vi)
