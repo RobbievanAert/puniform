@@ -121,9 +121,9 @@ variables (Irwin-Hall distribution) and is the recommended estimator (van Aert e
 The \code{ML} estimator refers to effect size estimation with maximum likelihood.
 Profile likelihood confidence intervals are computed, and likelihood ratio tests are
 used for the test of no effect and publication bias test if \code{ML} is used.
-The \code{LNP} estimator refers to Fisher’s method (1950, Chapter 4)
-for combining p-values and the \code{LN1MINP} estimator first computes 1 – p-value in each
-study before applying Fisher’s method on these transformed p-values
+The \code{LNP} estimator refers to Fisher's method (1950, Chapter 4)
+for combining p-values and the \code{LN1MINP} estimator first computes 1 - p-value in each
+study before applying Fisher's method on these transformed p-values
 (van Assen et al., 2015). \code{KS} and \code{AD} respectively use the Kolmogorov-Smirnov
 test (Massey, 1951) and the Anderson-Darling test (Anderson & Darling, 1954)
 for testing whether the (conditional) p-values follow a uniform distribution.

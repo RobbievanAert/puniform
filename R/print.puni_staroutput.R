@@ -1,14 +1,3 @@
-#' print.puni_staroutput
-#'
-#' Print method for objecs of class \code{puni_staroutput}
-#'
-#' @param x an object of class \code{puni_staroutput}
-#' @param ... Additional arguments that can be passed to the function
-#'
-#' @return The \code{print.puni_staroutput} function does not return an object.
-#'
-#' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
-#'
 #' @export
 
 print.puni_staroutput <- function(x, ...) {

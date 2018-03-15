@@ -1,14 +1,3 @@
-#' print.puniformoutput
-#'
-#' Print method for objecs of class \code{puniformoutput}
-#'
-#' @param x an object of class \code{puniformoutput}
-#' @param ... Additional arguments that can be passed to the function
-#'
-#' @return The \code{print.puniformoutput} function does not return an object.
-#'
-#' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
-#'
 #' @export
 
 print.puniformoutput <- function(x, ...) {

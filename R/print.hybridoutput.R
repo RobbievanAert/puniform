@@ -1,14 +1,3 @@
-#' print.hybridoutput
-#'
-#' Print method for objecs of class \code{hybridoutput}
-#'
-#' @param x an object of class \code{hybridoutput}
-#' @param ... Additional arguments that can be passed to the function
-#'
-#' @return The \code{print.hybridoutput} function does not return an object.
-#'
-#' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
-#'
 #' @export
 
 print.hybridoutput <- function(x, ...) {

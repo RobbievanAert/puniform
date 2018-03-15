@@ -1,9 +1,9 @@
 Package: puniform
 Type: Package
-Title: Meta-analysis methods correcting for publication bias
+Title: Meta-Analysis Methods Correcting for Publication Bias
 Version: 0.1.0
-Date: 2017-12-21  
-Author: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
+Date: 2018-03-14
+Author: Robbie C.M. van Aert
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: The puniform package provides meta-analysis methods that correct for
     publication bias. Three methods are currently included in the package.
@@ -22,9 +22,7 @@ Description: The puniform package provides meta-analysis methods that correct fo
     to power analysis in null hypothesis significance testing. Please note that the
     package is still in development and that this is a beta version. If you
     suspect a bug, please send me an email.
-License: GPL-2
-Imports: Rcpp (>= 0.12.14), ADGofTest (>= 0.3), stats, metafor
+License: GPL (>= 2)
+Imports: Rcpp (>= 0.12.15), ADGofTest (>= 0.3), stats, metafor
 LinkingTo: Rcpp
-LazyData: TRUE
-Encoding: UTF-8
 RoxygenNote: 6.0.1
