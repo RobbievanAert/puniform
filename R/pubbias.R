@@ -38,7 +38,7 @@ pubbias <- function(yi, vi, zval, zcv, ksig, alpha, method, est.fe, est) {
         {
           ### If statement above is TRUE: approximate P(Z>=zval) and P(Z>=zcv)
           approx.pb <- 1 # Create object for notification in output
-          q[i] <- approx_puni(zd[i], zval[i], zcv[i])
+          q[i] <- approx_puni(zd[i], zval[i], zcv[i], method = method)
         } else { # Use maximum bound to calculate q
           approx.pb <- 2 # Create object for notification in output
           zx <- -(700-0.5*(zval[i]-zcv[i])^2)/(zval[i]-zcv[i])+zcv[i]

@@ -26,7 +26,7 @@ testeffect <- function(yi, vi, zval, zcv, ksig, method, est) {
       } else { # Use maximum bound to calculate q
         approx.0.imp <- 1 # Create object for notification in output
         zx <- sqrt(1400 + zcv[i]^2)
-        q[i] <- approx_puni(0, zx, zcv[i])
+        q[i] <- approx_puni(0, zx, zcv[i], method = method)
       }
       ### Calculate test statistic and p-value
       if (method == "LNP")
