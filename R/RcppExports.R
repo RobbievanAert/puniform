@@ -17,7 +17,7 @@ pdist_nsig <- function(est, tau, yi, vi, param, ycv, method, val, cv_P) {
     .Call(`_puniform_pdist_nsig`, est, tau, yi, vi, param, ycv, method, val, cv_P)
 }
 
-trq <- function(est, tau, yi, vi, ycv) {
-    .Call(`_puniform_trq`, est, tau, yi, vi, ycv)
+trq <- function(est, tau, yi, vi, ycv, param) {
+    .Call(`_puniform_trq`, est, tau, yi, vi, ycv, param)
 }
 

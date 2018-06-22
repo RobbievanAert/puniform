@@ -155,28 +155,33 @@ its default value is 0.}
 bound of the interval that is used for estimating the effect size. The effect 
 size estimate should be included in this interval. This interval is used for the 
 methods \code{ML}, \code{P}, and \code{LNP} and its default values are (-2, 2).}
+\item{\code{bounds.int}}{ A vector of length two that is used for determining the 
+bounds for estimating the effect size with \code{P} and \code{LNP}. The default 
+values are a function of the \code{yi}. The lower bound is the minimum \code{yi} 
+minus 1 and the upper bound is the maximum \code{yi} plus 1. The effect size 
+has to be between the lower and upper bound.}
 \item{\code{tau.int:}}{ A vector of length two that indicates the lower and upper 
 bound of the interval that is used for estimating the between-study variance. 
 The estimate of the between-study variance should be included in this interval. 
-This #' interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
+This interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
 and its default values are (0, 2).}
 \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
 added to the estimate of the effect size for computing the 95\% confidence 
 intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-and its default values are (4, 3). To give an example, estimates for the lower 
+and its default values are (3, 3). To give an example, estimates for the lower 
 and upper bound around the effect size estimate are searched on the interval 
-(est-4, est) and (est, est+3), respectively.}
+(est-3, est) and (est, est+3), respectively.}
 \item{\code{tau.ci:}}{ A vector of length two indicating the values that are 
 added to the estimate of the between-study variance for computing the 95\% confidence 
 intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-and its default values are (1, 3).}
+and its default values are (3, 1).}
 \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
 This number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its 
 default value is 0.001.} 
 \item{\code{max.iter:}}{ An integer indicating the maximum number of iterations 
 that is used for estimating the effect size and between-study variance. This 
 number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its default 
-value is 1000.}
+value is 300.}
 \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 about the algorithm for estimating the effect size and between-study variance. 
 This logical is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
@@ -207,7 +212,9 @@ puni_star(tobs = tobs, ni = ni, alpha = 0.05, side = "right", method = "ML")
 Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 London: Oliver & Boyd.
 
-van Aert, R.C.M., & van Assen, M.A.L.M. (2016). Manuscript in preparation.
+van Aert, R.C.M., & van Assen, M.A.L.M. (2018). Correcting for 
+publication bias in a meta-analysis with the p-uniform* method. Manuscript in 
+preparation.
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

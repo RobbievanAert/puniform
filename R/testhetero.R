@@ -1,6 +1,7 @@
 ### Function for testing the null hypothesis of no between-study variance
 testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
 {
+  reps <- con$reps
   
   if (method == "ML")
   {
@@ -18,7 +19,7 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
                                             maximum = TRUE)$maximum, silent = TRUE))
     }
     
-    if (class(est0) == "try-error" | any(est0 > 4.95 | est0 < -4.95))
+    if (class(est0) == "try-error" | any(est0 > 4.95 | est0 < -4.95) | is.na(est))
     { # If effect size could not be estimated, return NA
       L.het <- NA
       pval.het <- NA
@@ -34,15 +35,17 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
     k <- length(yi) # Number of effect sizes
     
     ### Estimate effect size with tau=0
-    est0 <- try(bisect_est(pdist_nsig, lo = -4, hi = 4, tol = con$tol, tau.est = 0, 
-                           yi = yi, vi = vi, param = "est", ycv = ycv, method = method, 
-                           val = "es"), silent = TRUE)
+    est0 <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(-4, 4), tau = 0, 
+                                         yi = yi, vi = vi, param = "est", ycv = ycv, 
+                                         method = method, val = "es", cv_P = 0)$root, 
+                                 silent = TRUE))
     
     if (class(est0) == "try-error")
     {
-      est0 <- try(bisect_est(pdist_nsig, lo = -10, hi = 10, tol = con$tol, tau.est = 0,
-                             yi = yi, vi = vi, param = "est", ycv = ycv, method = method, 
-                             val = "es"), silent = TRUE)
+      est0 <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(-10, 10), tau = 0, 
+                                           yi = yi, vi = vi, param = "est", ycv = ycv, 
+                                           method = method, val = "es", cv_P = 0)$root, 
+                                   silent = TRUE))
     }
     
     if (class(est0) == "try-error")
@@ -53,7 +56,7 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
     } else 
     {
       ### Compute conditional probabilities at est0
-      tr.q <- trq(est0, 0, yi, vi, ycv)
+      tr.q <- trq(est = est0, tau = 0, yi = yi, vi = vi, ycv = ycv, param = "est")
       
       het.q <- 2*abs(tr.q-0.5) # Compute heterogeneity statistic
       L.het <- sum(-log(1-het.q))
@@ -63,12 +66,12 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
       { # If boot == TRUE, bootstrapped p-value is computed
         
         ### Conduct bootstrapping
-        L.het.boot <- replicate(con$reps, expr = boot_het(k = k, est0 = est0, vi = vi, 
-                                                      ycv = ycv, method = method,
-                                                      con = con))
+        L.het.boot <- replicate(reps, expr = boot_het(k = k, est0 = est0, vi = vi, 
+                                                          ycv = ycv, method = method,
+                                                          con = con))
         
         ### Compute p-value with bootstrapping
-        pval.boot <- length(L.het.boot[L.het.boot > L.het & !is.na(L.het.boot)])/con$reps
+        pval.boot <- length(L.het.boot[L.het.boot > L.het & !is.na(L.het.boot)])/reps
         
       } else 
       {

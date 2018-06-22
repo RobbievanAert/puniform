@@ -127,28 +127,33 @@
 #' bound of the interval that is used for estimating the effect size. The effect 
 #' size estimate should be included in this interval. This interval is used for the 
 #' methods \code{ML}, \code{P}, and \code{LNP} and its default values are (-2, 2).}
+#' \item{\code{bounds.int}}{ A vector of length two that is used for determining the 
+#' bounds for estimating the effect size with \code{P} and \code{LNP}. The default 
+#' values are a function of the \code{yi}. The lower bound is the minimum \code{yi} 
+#' minus 1 and the upper bound is the maximum \code{yi} plus 1. The effect size 
+#' has to be between the lower and upper bound.}
 #' \item{\code{tau.int:}}{ A vector of length two that indicates the lower and upper 
 #' bound of the interval that is used for estimating the between-study variance. 
 #' The estimate of the between-study variance should be included in this interval. 
-#' This #' interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
+#' This interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
 #' and its default values are (0, 2).}
 #' \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
 #' added to the estimate of the effect size for computing the 95\% confidence 
 #' intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-#' and its default values are (4, 3). To give an example, estimates for the lower 
+#' and its default values are (3, 3). To give an example, estimates for the lower 
 #' and upper bound around the effect size estimate are searched on the interval 
-#' (est-4, est) and (est, est+3), respectively.}
+#' (est-3, est) and (est, est+3), respectively.}
 #' \item{\code{tau.ci:}}{ A vector of length two indicating the values that are 
 #' added to the estimate of the between-study variance for computing the 95\% confidence 
 #' intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-#' and its default values are (1, 3).}
+#' and its default values are (3, 1).}
 #' \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
 #' This number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its 
 #' default value is 0.001.} 
 #' \item{\code{max.iter:}}{ An integer indicating the maximum number of iterations 
 #' that is used for estimating the effect size and between-study variance. This 
 #' number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its default 
-#' value is 1000.}
+#' value is 300.}
 #' \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 #' about the algorithm for estimating the effect size and between-study variance. 
 #' This logical is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
@@ -163,7 +168,9 @@
 #'
 #' @references Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 #' London: Oliver & Boyd.
-#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2016). Manuscript in preparation.
+#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2018). Correcting for 
+#' publication bias in a meta-analysis with the p-uniform* method. Manuscript in 
+#' preparation.
 #'
 #' @examples ### Generate data for one-sample mean with mu = 0.2 and tau^2 = 0.01
 #' set.seed(123)
@@ -186,43 +193,50 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
-  if (!missing("mi") & !missing("ni") & !missing("sdi")) { # Mean unknown sigma
+  if (!missing("mi") & !missing("ni") & !missing("sdi")) 
+  { # Mean unknown sigma
     measure <- "M"
     es <- escompute(mi = mi, ni = ni, sdi = sdi, alpha = alpha/2, side = side,
                     measure = measure)
-  } else if (!missing("ni") & !missing("tobs")) {
+  } else if (!missing("ni") & !missing("tobs")) 
+  {
     measure <- "MT"
     es <- escompute(ni = ni, tobs = tobs, alpha = alpha/2, side = side, measure = measure)
   } else if (!missing("m1i") & !missing("m2i") & !missing("n1i") & !missing("n2i") &
-             !missing("sd1i") & !missing("sd2i")) { # Mean difference unknown sigma
+             !missing("sd1i") & !missing("sd2i")) 
+  { # Mean difference unknown sigma
     measure <- "MD"
     es <- escompute(m1i = m1i, m2i = m2i, n1i = n1i, n2i = n2i, sd1i = sd1i,
                     sd2i = sd2i, alpha = alpha/2, side = side, measure = measure)
-  } else if (!missing("n1i") & !missing("n2i") & !missing("tobs")) { # Mean difference unknown sigma with observed t-value
+  } else if (!missing("n1i") & !missing("n2i") & !missing("tobs")) 
+  { # Mean difference unknown sigma with observed t-value
     measure <- "MDT"
     es <- escompute(n1i = n1i, n2i = n2i, tobs = tobs, alpha = alpha/2, side = side,
                     measure = measure)
-  } else if (!missing("ri") & !missing("ni")) { # Correlation
+  } else if (!missing("ri") & !missing("ni")) 
+  { # Correlation
     measure <- "COR"
     es <- escompute(ri = ri, ni = ni, alpha = alpha/2, side = side, measure = measure)
-  } else if (!missing("yi") & !missing("vi")) { # User-specified standardized effect sizes
+  } else if (!missing("yi") & !missing("vi")) 
+  { # User-specified standardized effect sizes
     measure <- "SPE"
     es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, measure = measure)
   }
   
   ### Default values for optimizing (ML) and root-finding procedures (P and LNP)
-  con <- list(stval.tau = 0,     # Starting value of tau for estimation (ML, P, LNP)
-              int = c(-2, 2),    # Interval that is used for estimating ES (ML, P, LNP)
+  con <- list(stval.tau = 0,     # Starting value of tau for estimation (ML)
+              int = c(-2, 2),    # Interval that is used for estimating ES (ML)
+              bounds.int = c(min(es$yi)-1,max(es$yi)+1), # Interval that is used for determining bounds for estimating ES (P, LNP)            
               tau.int = c(0, 2), # Interval that is used for estimating tau (ML, P, LNP)
               ### Values that are added to the estimates of the ES and tau for estimating 
               # CIs. For example, for CIs around ES estimate lb is searched for on the 
-              # interval c(est-4, est) and ub c(est, est+3)
-              est.ci = c(4, 3),
-              tau.ci = c(1, 3),
+              # interval c(est-3, est) and ub c(est, est+3)
+              est.ci = c(3, 3),
+              tau.ci = c(3, 1),
               tol = 0.001,       # Desired accuracy for the optimizing (ML) and root-finding procedures (P, LNP)
-              max.iter = 1000,   # Maximum number of iterations for the optimizing (ML) and root-finding procedures (P, LNP)
+              max.iter = 300,   # Maximum number of iterations for the optimizing (ML) and root-finding procedures (P, LNP)
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
-              reps = 1000)       # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              reps = 1000) # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
