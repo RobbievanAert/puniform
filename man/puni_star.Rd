@@ -140,7 +140,7 @@ and the publication bias test for these methods is not yet implemented.
 }
 \note{
 The \code{control} argument in the \code{puni_star} function is an optional 
-argument that gives the user more control over the optimzation and root-finding 
+argument that gives the user more control over the optimization and root-finding 
 algorithms. This can be especially useful if estimation of the method does not 
 converge and NAs are returned by the function. The \code{control} argument should 
 be specified as a list containing one or more elements. For example, 

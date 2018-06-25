@@ -17,18 +17,18 @@
 #' @param sd2i.o An integer containing the standard deviation in group 2
 #' of the original study for two-independent means
 #' @param ri.o An integer containing the raw correlation coefficient
-#' of the orignal study
+#' of the original study
 #' @param ni.o An integer containing the sample size for the raw correlation 
 #' coefficient
 #' @param tobs.o An integer containing the t-value of the original
 #' study
 #' @param alpha An integer specifying the alpha level as used in the original study
-#' @param des.pprob An integer specifying the posterior probablity that an user
+#' @param des.pprob An integer specifying the posterior probability that an user
 #' desires to obtain for one of the four true effect sizes
 #' @param des.pow An integer specifying the probability of observing a posterior
 #' probability larger than des.pprob that an user desires to obtain for one of the
 #' four true effect sizes
-#' @param lo An integer specifiying the lower bound of the search interval that is
+#' @param lo An integer specifying the lower bound of the search interval that is
 #' used for the optimization procedure (default is 4)
 #' @param hi An integer specifiying the upper bound of the search interval that is
 #' used for the optimization procedure (default is 100,000)
@@ -40,7 +40,7 @@
 #' referring to no (0), small (S), medium (M), and large (L) true effect size and \eqn{a}
 #' the desired posterior probability, and \eqn{b} the desired probability of observing
 #' a posterior probability larger than \eqn{a}. The required sample size for the
-#' replication is computed with and without including information of the originial
+#' replication is computed with and without including information of the original
 #' study. Computing the required sample size with the Snapshot Bayesian Hybrid
 #' Meta-Analysis Method is akin to computing the required sample size with a power
 #' analysis in null hypothesis significance testing. For more information see van
