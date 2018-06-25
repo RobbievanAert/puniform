@@ -8,7 +8,7 @@ snapshot_naive(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs)
 }
 \arguments{
 \item{ri}{A vector of length two containing the raw correlation coefficients
-of the orignal study and replication}
+of the original study and replication}
 
 \item{ni}{A vector of length two containing the sample size of the original 
 study and replication for the raw correlation coefficient}

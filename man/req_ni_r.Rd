@@ -47,7 +47,7 @@ four true effect sizes}
 \item{lo}{An integer specifying the lower bound of the search interval that is
 used for the optimization procedure (default is 4)}
 
-\item{hi}{An integer specifiying the upper bound of the search interval that is
+\item{hi}{An integer specifying the upper bound of the search interval that is
 used for the optimization procedure (default is 100,000)}
 }
 \value{
