@@ -4,7 +4,13 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs. 
+There were no ERRORs and WARNINGs.
+
+There was 1 NOTE:
+
+* New submission
+
+	This is the initial submission of the package.
 
 ## Downstream dependencies
 I ran reverse dependency checks and all packages passed the checks.
