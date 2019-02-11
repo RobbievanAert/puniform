@@ -6,13 +6,16 @@ draw_plot_or <- function(dat, ylim, alpha = alpha, prop_sig, main, cex.pch = cex
   with(dat, plot(x = preci, y = est_cum, type = "p", pch = 16, 
                  ylim = ylim, xlim = c(0.17, 7.2), xaxt = "n", yaxt = "n", 
                  bty = "n", xlab = "", cex = cex.pch, cex.lab = par()$cex.lab,
-                 ylab = "Effect size (OR)"))
+                 ylab = ""))
   
   ### Add title to plot
   title(main, line = 2.5)
   
   ### Add label x-axis
   mtext(expression(italic(N)), side = 1, cex = par()$cex.lab, line = 3.8)
+  
+  ### Add label y-axis
+  mtext("Effect size (OR)", side = 2, cex = par()$cex.lab, line = par()$mgp[1])     
   
   ### Draw confidence intervals
   with(dat[nrow(dat), ], arrows(x0 = preci, y0 = lb_cum, y1 = ub_cum, 

@@ -6,13 +6,17 @@ draw_plot_g <- function(dat, ylim, alpha = alpha, prop_sig, main, cex.pch = cex.
   with(dat, plot(x = stand_info, y = est_cum, type = "p", pch = 16, 
                  ylim = ylim, xlim = c(0, 1), xaxt = "n", yaxt = "n", bty = "n", 
                  xlab = "", las = 1, cex = cex.pch, cex.lab = par()$cex.lab,
-                 ylab = expression(paste("Effect size (", italic(g), ")"), sep = "")))
+                 ylab = ""))
   
   ### Add title to plot
   title(main, line = 2.5)
   
   ### Add label x-axis
   mtext(expression(italic(N)), side = 1, cex = par()$cex.lab, line = 3.8)
+  
+  ### Add label y-axis
+  mtext(expression(paste("Effect size (", italic(g), ")"), sep = ""), side = 2, 
+        cex = par()$cex.lab, line = par()$mgp[1])     
   
   ### Draw confidence intervals
   with(dat[nrow(dat), ], arrows(x0 = stand_info, y0 = lb_cum, y1 = ub_cum, code = 3, 
