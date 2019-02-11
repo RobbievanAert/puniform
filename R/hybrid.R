@@ -3,11 +3,6 @@
 #' Function to statistically combine an original study and replication by means
 #' of the hybrid methods and fixed-effect meta-analysis as described in van Aert
 #' and van Assen (2017).
-#' \cr
-#' \cr
-#' Please note that this package is still under development and that this is a
-#' beta version. If you suspect a bug, please send me an email
-#' (\email{R.C.M.vanAert@@tilburguniversity.edu}).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations

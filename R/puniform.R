@@ -3,10 +3,6 @@
 #' Function to apply the p-uniform method for one-sample mean, two-independent means,
 #' and one raw correlation coefficient as described in van Assen, van Aert, and
 #' Wicherts (2015) and van Aert, Wicherts, and van Assen (2016).
-#' \cr
-#' \cr
-#' Please note that this package is still under development and that this is a beta
-#' version. If you suspect a bug, please send me an email (\email{R.C.M.vanAert@@tilburguniversity.edu}).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations
