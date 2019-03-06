@@ -4,7 +4,8 @@
 \alias{hybrid}
 \title{hybrid}
 \usage{
-hybrid(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, alpha, side)
+hybrid(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
+  alpha = 0.05, side)
 }
 \arguments{
 \item{m1i}{A vector of means in group 1 for two-independent means}
@@ -32,7 +33,7 @@ means}
 \item{tobs}{A vector of t-values}
 
 \item{alpha}{A integer specifying the alpha level as used in the original
-study (default is 0.05).}
+study (default is 0.05, see Details).}
 
 \item{side}{A character indicating whether the observed effect size of the
 original study is in the right-tail of the distribution (i.e., positive) or
@@ -87,12 +88,7 @@ null-hypothesis of no effect}
 \description{
 Function to statistically combine an original study and replication by means
 of the hybrid methods and fixed-effect meta-analysis as described in van Aert
-and van Assen (2017).
-\cr
-\cr
-Please note that this package is still under development and that this is a
-beta version. If you suspect a bug, please send me an email
-(\email{R.C.M.vanAert@tilburguniversity.edu}).
+and van Assen (2018).
 }
 \details{
 Three different effect sizes can be used as input for the
@@ -119,15 +115,16 @@ one-tailed hypothesis test was conducted with an alpha level of .05, an alpha
  of 0.1 has to be entered into the \code{hybrid} function.
 }
 \examples{
-### Apply hybrid function to example on page 5 of van Aert and van Assen (2017).
+### Apply hybrid function to example on page 5 of van Aert and van Assen (2018).
 
-hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), alpha = .05, side = "right")
+hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), side = "right")
 
 }
 \references{
-van Aert, R. C. M., & van Assen, M. A. L. M. (2017). Examining
+van Aert, R. C. M., & van Assen, M. A. L. M. (2018). Examining
 reproducibility in psychology: A hybrid method for statistically combining a
-biased original study and replication. Behavior Research Methods. doi:10.3758/s13428-017-0967-6
+biased original study and replication. Behavior Research Methods, 50(4): 1515-1539.
+doi:10.3758/s13428-017-0967-6
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

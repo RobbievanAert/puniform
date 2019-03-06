@@ -4,7 +4,7 @@
 \alias{snapshot}
 \title{snapshot}
 \usage{
-snapshot(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha)
+snapshot(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05)
 }
 \arguments{
 \item{ri}{A vector of length two containing the raw correlation coefficients
@@ -35,7 +35,7 @@ for the original study and replication for two-independent means}
 study and replication}
 
 \item{alpha}{An integer specifying the alpha level as used in the original
-study}
+study (default is 0.05, see Details)}
 }
 \value{
 The \code{snapshot} function returns a data frame with posterior probabilities
@@ -72,7 +72,7 @@ of .05, an alpha of 0.1 has to be submitted to \code{snapshot}.
 }
 \examples{
 ### Example as presented on page 491 in Maxwell, Lau, and Howard (2015)
-snapshot(ri = c(0.243, 0.114), ni = c(80, 172), alpha = .05)
+snapshot(ri = c(0.243, 0.114), ni = c(80, 172))
 
 }
 \references{

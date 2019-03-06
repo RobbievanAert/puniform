@@ -2,12 +2,7 @@
 #'
 #' Function to statistically combine an original study and replication by means
 #' of the hybrid methods and fixed-effect meta-analysis as described in van Aert
-#' and van Assen (2017).
-#' \cr
-#' \cr
-#' Please note that this package is still under development and that this is a
-#' beta version. If you suspect a bug, please send me an email
-#' (\email{R.C.M.vanAert@@tilburguniversity.edu}).
+#' and van Assen (2018).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations
@@ -23,7 +18,7 @@
 #' means
 #' @param tobs A vector of t-values
 #' @param alpha A integer specifying the alpha level as used in the original
-#' study (default is 0.05).
+#' study (default is 0.05, see Details).
 #' @param side A character indicating whether the observed effect size of the
 #' original study is in the right-tail of the distribution (i.e., positive) or
 #' in the left-tail of the distribution (i.e., negative) (either \code{"right"}
@@ -99,19 +94,21 @@
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
-#' @references van Aert, R. C. M., & van Assen, M. A. L. M. (2017). Examining
+#' @references van Aert, R. C. M., & van Assen, M. A. L. M. (2018). Examining
 #' reproducibility in psychology: A hybrid method for statistically combining a
-#' biased original study and replication. Behavior Research Methods. doi:10.3758/s13428-017-0967-6
+#' biased original study and replication. Behavior Research Methods, 50(4): 1515-1539.
+#' doi:10.3758/s13428-017-0967-6
 #'
 #' @examples
-#' ### Apply hybrid function to example on page 5 of van Aert and van Assen (2017).
+#' ### Apply hybrid function to example on page 5 of van Aert and van Assen (2018).
 #'
-#' hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), alpha = .05, side = "right")
+#' hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), side = "right")
 #'
 #' @export
 
 hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
-                   alpha, side) {
+                   alpha = 0.05, side) 
+  {
 
   if (!missing("mi") & !missing("ni") & !missing("sdi")) {
     measure <- "M"

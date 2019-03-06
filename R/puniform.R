@@ -3,10 +3,6 @@
 #' Function to apply the p-uniform method for one-sample mean, two-independent means,
 #' and one raw correlation coefficient as described in van Assen, van Aert, and
 #' Wicherts (2015) and van Aert, Wicherts, and van Assen (2016).
-#' \cr
-#' \cr
-#' Please note that this package is still under development and that this is a beta
-#' version. If you suspect a bug, please send me an email (\email{R.C.M.vanAert@@tilburguniversity.edu}).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations
@@ -23,7 +19,7 @@
 #' @param vi A vector of sampling variances belonging to the standardized effect
 #' sizes (see Details)
 #' @param alpha A integer specifying the alpha level as used in primary studies
-#' (default is 0.05).
+#' (default is 0.05, see Details).
 #' @param side A character indicating whether the effect sizes in the primary studies
 #' are in the right-tail of the distribution (i.e., positive)  or in the left-tail
 #' of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})
@@ -121,7 +117,7 @@
 #' data(data.mccall93)
 #'
 #' ### Apply p-uniform method
-#' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, alpha = .05, side = "right", 
+#' puniform(ri = data.mccall93$ri, ni = data.mccall93$ni, side = "right", 
 #' method = "LNP", plot = TRUE)
 #'
 #' ### Generate example data for one-sample means design
@@ -132,15 +128,16 @@
 #' tobs <- mi/(sdi/sqrt(ni))
 #'
 #' ### Apply p-uniform method based on sample means
-#' puniform(mi = mi, ni = ni, sdi = sdi, alpha = 0.05, side = "right", method = "P", plot = FALSE)
+#' puniform(mi = mi, ni = ni, sdi = sdi, side = "right", plot = FALSE)
 #'
 #' ### Apply p-uniform method based on t-values
-#' puniform(ni = ni, tobs = tobs, alpha = 0.05, side = "right", method = "P", plot = FALSE)
+#' puniform(ni = ni, tobs = tobs, side = "right", plot = FALSE)
 #'
 #' @export
 
 puniform <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-                     alpha = 0.05, side, method, plot = FALSE) {
+                     alpha = 0.05, side, method = "P", plot = FALSE) 
+  {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
   if (!missing("mi") & !missing("ni") & !missing("sdi")) { # Mean unknown sigma

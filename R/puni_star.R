@@ -1,11 +1,7 @@
 #' p-uniform*
 #'
 #' Function to apply the p-uniform* method for one-sample mean, two-independent means,
-#' and one raw correlation coefficient as described in van Aert and van Assen (2018).
-#' \cr
-#' \cr
-#' Please note that this package is still under development and that this is a beta
-#' version. If you suspect a bug, please send me an email (\email{R.C.M.vanAert@@tilburguniversity.edu}).
+#' and one raw correlation coefficient as described in van Aert and van Assen (2019).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations
@@ -22,7 +18,7 @@
 #' @param vi A vector of sampling variances belonging to the standardized effect
 #' sizes (see Details)
 #' @param alpha A integer specifying the alpha level as used in primary studies
-#' (default is 0.05).
+#' (default is 0.05, see Details).
 #' @param side A character indicating whether the effect sizes in the primary studies
 #' are in the right-tail of the distribution (i.e., positive)  or in the left-tail
 #' of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})
@@ -168,9 +164,9 @@
 #'
 #' @references Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 #' London: Oliver & Boyd.
-#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2018). Correcting for 
-#' publication bias in a meta-analysis with the p-uniform* method. Manuscript in 
-#' preparation.
+#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2019). Correcting for 
+#' publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
+#' for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
 #'
 #' @examples ### Generate data for one-sample mean with mu = 0.2 and tau^2 = 0.01
 #' set.seed(123)

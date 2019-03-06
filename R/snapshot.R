@@ -22,7 +22,7 @@
 #' @param tobs A vector of length two containing the t-values of the original
 #' study and replication
 #' @param alpha An integer specifying the alpha level as used in the original
-#' study
+#' study (default is 0.05, see Details)
 #'
 #' @details The function computes posterior probabilities (assuming a uniform prior
 #' distribution) for four true effect sizes (no, small, medium, and large) based
@@ -58,11 +58,11 @@
 #' doi:10.1371/journal.pone.0175302
 #'
 #' @examples ### Example as presented on page 491 in Maxwell, Lau, and Howard (2015)
-#' snapshot(ri = c(0.243, 0.114), ni = c(80, 172), alpha = .05)
+#' snapshot(ri = c(0.243, 0.114), ni = c(80, 172))
 #'
 #' @export
 
-snapshot <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha)
+snapshot <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05)
 {
 
   alpha <- alpha/2 # Compute alpha in two-tailed tests with results reported in predicted direction
