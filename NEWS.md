@@ -1,4 +1,11 @@
-Changes in puniform 0.1.0
--------------------------
+# Changes in puniform 0.1.1 (2019-03-06)
 
-x First release on CRAN
+- Updated and improved documentation
+
+- Setting default parameters in puniform(), hybrid(), snapshot(), and puni_star() without
+losing backwards compatibility
+
+
+# Changes in puniform 0.1.0
+
+- First release on CRAN
