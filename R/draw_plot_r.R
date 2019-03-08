@@ -1,6 +1,7 @@
 ### Function for creating plot when correlation coefficient is the effect 
 # size measure
-draw_plot_r <- function(dat, ylim, alpha = alpha, prop_sig, main, cex.pch = cex.pch) 
+draw_plot_r <- function(dat, ylim, alpha = alpha, pub_bias = pub_bias, prop_sig, 
+                        main, cex.pch = cex.pch) 
 {
   
   ### Create plot
@@ -35,7 +36,7 @@ draw_plot_r <- function(dat, ylim, alpha = alpha, prop_sig, main, cex.pch = cex.
   ### Create y-axis
   axis(2, at = round(seq(ylim[1], ylim[2], length.out = 8), 2), las = 1)
   
-  if (prop_sig > 0.8)
+  if (prop_sig > 0.8 & pub_bias == TRUE)
   { ### Add points for cumulative meta-analysis based on Mill's ratios if
     # proportion statistically significant effect sizes is larger than 0.8
     with(dat, points(x = sqrt(ni), y = pub_est, cex = cex.pch, pch = 8))  

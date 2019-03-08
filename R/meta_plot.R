@@ -20,13 +20,18 @@
 #' @param ci A vector of frequencies in lower left cell of 2x2 frequency table
 #' @param di A vector of frequencies in lower right cell of 2x2 frequency table
 #' @param alpha A integer specifying the alpha level as used in primary studies
-#' (default is 0.05 but see Details).
+#' (default is 0.05 but see Details)
 #' @param method_tau2 A character indicating the estimation method for the 
 #' between-study variance in true effect size in the meta-analysis 
-#' (default is \code{"PM"}, but see Details).
+#' (default is \code{"PM"}, but see Details)
 #' @param nr_lines A character indicating whether all primary study's effect sizes
 #' (\code{"all"}, default) or a selection of primary study's effect sizes 
 #' (\code{"summary"}) are plotted (see Details)
+#' @param pub_bias A logical indicating whether the expected results of the cumulative 
+#' meta-analysis based on a zero true effect in combination with extreme publication 
+#' bias should be plotted (default is TRUE). Note that these results are only 
+#' included if at least 80\% of the primary studies is statistically significant 
+#' regardless of the \code{pub_bias} parameter  
 #' @param main A character indicating the title of the plot (default is no title)
 #' @param cex.pch An integer to control the size of the points in the plot 
 #' 
@@ -91,7 +96,7 @@
 
 meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi, 
                       ci, di, alpha = .05, method_tau2 = "PM", nr_lines = "all", 
-                      main = "", cex.pch = 1)
+                      pub_bias = TRUE, main = "", cex.pch = 1)
 {
   ### Necessary to pass R CMD check otherwise the following warning will be present:
   # no visible binding for global variable yi vi
@@ -195,8 +200,8 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     
     if (nr_lines == "all")
     {
-      draw_plot_g(dat = dat_uniq, ylim = ylim, alpha = alpha, prop_sig = prop_sig, 
-                  main = main, cex.pch = cex.pch)
+      draw_plot_g(dat = dat_uniq, ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
+                  prop_sig = prop_sig, main = main, cex.pch = cex.pch)
     } else if (nr_lines == "summary")
     {
       ##### Plot summary results #####
@@ -213,7 +218,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
       
       ind <- unique(ind) # Select only unique values in the vector
       
-      draw_plot_g(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, 
+      draw_plot_g(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
                   prop_sig = prop_sig, main = main, cex.pch = cex.pch)
     }
     
@@ -308,8 +313,8 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     
     if (nr_lines == "all")
     {
-      draw_plot_r(dat = dat_uniq, ylim = ylim, alpha = alpha, prop_sig = prop_sig, 
-                  main = main, cex.pch = cex.pch)
+      draw_plot_r(dat = dat_uniq, ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
+                  prop_sig = prop_sig, main = main, cex.pch = cex.pch)
     } else if (nr_lines == "summary")
     {
       ##### Plot summary results #####
@@ -323,7 +328,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
       
       ind <- unique(ind) # Select only unique values in the vector
       
-      draw_plot_r(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, 
+      draw_plot_r(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, pub_bias = pub_bias,
                   prop_sig = prop_sig, main = main, cex.pch = cex.pch)
     }
     
@@ -419,8 +424,8 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     
     if (nr_lines == "all")
     {
-      draw_plot_or(dat = dat_uniq, ylim = ylim, alpha = alpha, prop_sig = prop_sig, 
-                   main = main, cex.pch = cex.pch)
+      draw_plot_or(dat = dat_uniq, ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
+                   prop_sig = prop_sig, main = main, cex.pch = cex.pch)
     } else if (nr_lines == "summary")
     {
       ##### Plot summary results #####
@@ -435,7 +440,8 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
       ind <- unique(ind) # Select only unique values in the vector
       
       draw_plot_or(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, 
-                   prop_sig = prop_sig, main = main, cex.pch = cex.pch)
+                   pub_bias = pub_bias, prop_sig = prop_sig, main = main, 
+                   cex.pch = cex.pch)
     }
     
     ### Text presenting percentage of studies particular statistical power

@@ -5,8 +5,8 @@
 \title{Meta-plot}
 \usage{
 meta_plot(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi, ci, di,
-  alpha = 0.05, method_tau2 = "PM", nr_lines = "all", main = "",
-  cex.pch = 1)
+  alpha = 0.05, method_tau2 = "PM", nr_lines = "all",
+  pub_bias = TRUE, main = "", cex.pch = 1)
 }
 \arguments{
 \item{m1i}{A vector of means in group 1 for two-independent means}
@@ -40,15 +40,21 @@ if group means and standard deviations are not available}
 \item{di}{A vector of frequencies in lower right cell of 2x2 frequency table}
 
 \item{alpha}{A integer specifying the alpha level as used in primary studies
-(default is 0.05 but see Details).}
+(default is 0.05 but see Details)}
 
 \item{method_tau2}{A character indicating the estimation method for the 
 between-study variance in true effect size in the meta-analysis 
-(default is \code{"PM"}, but see Details).}
+(default is \code{"PM"}, but see Details)}
 
 \item{nr_lines}{A character indicating whether all primary study's effect sizes
 (\code{"all"}, default) or a selection of primary study's effect sizes 
 (\code{"summary"}) are plotted (see Details)}
+
+\item{pub_bias}{A logical indicating whether the expected results of the cumulative 
+meta-analysis based on a zero true effect in combination with extreme publication 
+bias should be plotted (default is TRUE). Note that these results are only 
+included if at least 80\% of the primary studies is statistically significant 
+regardless of the \code{pub_bias} parameter}
 
 \item{main}{A character indicating the title of the plot (default is no title)}
 
