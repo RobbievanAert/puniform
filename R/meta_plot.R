@@ -16,9 +16,13 @@
 #' @param ri A vector of raw correlations
 #' @param ni A vector of sample sizes if raw correlations are the effect size measure
 #' @param ai A vector of frequencies in upper left cell of 2x2 frequency table
+#' (see Details)
 #' @param bi A vector of frequencies in upper right cell of 2x2 frequency table
+#' (see Details)
 #' @param ci A vector of frequencies in lower left cell of 2x2 frequency table
+#' (see Details)
 #' @param di A vector of frequencies in lower right cell of 2x2 frequency table
+#' (see Details)
 #' @param alpha A integer specifying the alpha level as used in primary studies
 #' (default is 0.05 but see Details)
 #' @param method_tau2 A character indicating the estimation method for the 
@@ -57,7 +61,18 @@
 #' medium true effect size (middle), and small true effect size (right). Note 
 #' that the summary meta-plot is just the meta-plot with many meta-analyses and 
 #' confidence intervals left out, and keeping the leftmost meta-analysis and 
-#' those just immediately to the right of the vertical lines. 
+#' those just immediately to the right of the vertical lines.
+#' 
+#' For creating a meta-plot based on odds ratios as effect size measure, the 2x2 
+#' frequency table should follow a specific format. The reason for this is that 
+#' the probability for the outcome of interest in the control conditions has 
+#' to be estimated. Hence, the 2x2 frequency table should look like this:
+#' 
+#' \tabular{lcc}{
+#' \tab outcome 1 \tab outcome 2 \cr
+#' control group \tab \code{ai} \tab \code{bi} \cr
+#' experimental group \tab \code{ci} \tab \code{di}
+#' }  
 #' 
 #' @return An invisibly returned data frame consisting of the submitted data and
 #' \item{yi}{Standardized effect sizes used in the analyses}
@@ -130,25 +145,27 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
       pval <- pt(tval, df = n1i+n2i-2, lower.tail = FALSE)
     }
     
-    ### Information per study
-    dat$info <- with(dat, n1i*n2i/(n1i+n2i))
+    ### Get relative positions on the x-axis for small, medium, and large effect 
+    # (80% power) and small effect (95% power)
+    pos_95 <- (sqrt(650*650/(650+650))-sqrt(2))/(sqrt(325)-sqrt(2))
+    pos_sm <- (sqrt(392*392/(392+392))-sqrt(2))/(sqrt(325)-sqrt(2))
+    pos_me <- (sqrt(64*64/(64+64))-sqrt(2))/(sqrt(325)-sqrt(2))
+    pos_la <- (sqrt(26*26/(26+26))-sqrt(2))/(sqrt(325)-sqrt(2))
+    
+    ### Get relative position on the x-axis of observerd effect sizes
+    dat$posi <- (sqrt(dat$n1i*dat$n2i/(dat$n1i+dat$n2i))-sqrt(2))/(sqrt(325)-sqrt(2))
     
     ### Proportion of statistically significant effect sizes
     prop_sig <- mean(pval < alpha)
     
-    ### Square root of standardized information per study divided by 400 because 
-    # 650*650/(650+650) = 325 and total information that can be obtained if maximum 
-    # total sample size is 1300
-    dat$stand_info <- sqrt(dat$info/325)
-    
     ### Order data based on stand_info from large to small
-    dat <- dat[order(dat$stand_info, decreasing = TRUE), ]
+    dat <- dat[order(dat$posi, decreasing = TRUE), ]
     
     ### Random-effects meta-analysis
     res <- metafor::rma(yi = yi, vi = vi, method = method_tau2, data = dat)
     
     ### Cumulative meta-analysis starting with the most precise effect size
-    cum_dat <- metafor::cumul(res, order(dat$stand_info, decreasing = TRUE))
+    cum_dat <- metafor::cumul(res, order(dat$posi, decreasing = TRUE))
     
     ### Store estimates of cumulative meta-analysis start with a meta-analysis based 
     # on the most precise effect size and end with a meta-analysis based on all
@@ -157,16 +174,17 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     dat$lb_cum <- cum_dat$ci.lb
     dat$ub_cum <- cum_dat$ci.ub
     
-    ### Select the rows of dat such that there are no equal values of stand_info in 
+    ### Select the rows of dat such that there are no equal values of posi in 
     # the data. Taking into account that the rows that are kept are the ones where the 
     # most effect sizes are included in the cumulative meta-analysis.
-    dat_uniq <- dat[rev(duplicated(rev(dat$stand_info)) == FALSE), ]
+    dat_uniq <- dat[rev(duplicated(rev(dat$posi)) == FALSE), ]
     
     ### Compute Mill's ratio (expected value of truncated normal distribution) based 
     # on sampling variance of each effect size 
     m <- dat_uniq$n1i + dat_uniq$n2i - 2 # Degrees of freedom
     J <- exp(lgamma(m/2) - log(sqrt(m/2)) - lgamma((m-1)/2)) # Hedges' g correction factor
-    ex_vi <- (m*J^2)/((m-2)*dat_uniq$info) # Exact variance of g (See (23) in Viechtbauer, 2007)
+    ex_vi <- sqrt((dat_uniq$n1i+dat_uniq$n2i)/(dat_uniq$n1i*dat_uniq$n2i)) * 
+      sqrt(m/(m-2)) * J # Exact variance of g (See (22) in Viechtbauer, 2007)
     ev <- sqrt(ex_vi)*(1/alpha)*dnorm(qnorm(1-alpha))
     
     ### Cumulative meta-analysis based on Mill's ratios starting with all Mill's ratios  
@@ -191,57 +209,49 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     ylim[1] <- ifelse(ylim[1] > 0, 0, ylim[1])
     
     ### Group results of studies together if information is larger than 650*650/(650+650)
-    if (any(dat_uniq$stand_info > sqrt((650*650/(650+650))/325)) == TRUE)
+    if (any(dat_uniq$posi > 1) == TRUE)
     {
-      ind <- which(dat_uniq$stand_info > sqrt((650*650/(650+650))/325))
+      ind <- which(dat_uniq$posi > 1)
       dat_uniq <- dat_uniq[tail(ind, n = 1):nrow(dat_uniq), ]
-      dat_uniq[1,"stand_info"] <- 1
+      dat_uniq[1,"posi"] <- 1
     }
     
     if (nr_lines == "all")
     {
       draw_plot_g(dat = dat_uniq, ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
-                  prop_sig = prop_sig, main = main, cex.pch = cex.pch)
+                  prop_sig = prop_sig, pos_sm = pos_sm, pos_me = pos_me, 
+                  pos_la = pos_la, main = main, cex.pch = cex.pch)
     } else if (nr_lines == "summary")
     {
       ##### Plot summary results #####
       ### Indexes of cumulative meta-analyses with all effect sizes, the most precise 
       # effect size and the largest number of effect sizes in the regions of the plot 
       # created by the vertical lines
-      ind <- c(tail(which(dat_uniq$stand_info >= sqrt((651*651/(651+651))/325)), n = 1), 
-               tail(which(dat_uniq$stand_info > sqrt((64*64/(64+64))/325) & 
-                            dat_uniq$stand_info <= sqrt((392*392/(392+392))/325)), n = 1), 
-               tail(which(dat_uniq$stand_info > sqrt((26*26/(26+26))/325) & 
-                            dat_uniq$stand_info <= sqrt((64*64/(64+64))/325)), n = 1),
-               tail(which(dat_uniq$stand_info <= sqrt((26*26/(26+26))/325)), n = 1), 
-               nrow(dat_uniq))
+      ind <- c(tail(which(dat_uniq$posi > pos_sm), n = 1), 
+               tail(which(dat_uniq$posi > pos_me & dat_uniq$posi <= pos_sm), n = 1), 
+               tail(which(dat_uniq$posi > pos_la & dat_uniq$posi <= pos_me), n = 1), 
+               tail(which(dat_uniq$posi <= pos_sm), n = 1), nrow(dat_uniq))
       
       ind <- unique(ind) # Select only unique values in the vector
       
       draw_plot_g(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
-                  prop_sig = prop_sig, main = main, cex.pch = cex.pch)
+                  prop_sig = prop_sig, pos_sm = pos_sm, pos_me = pos_me, 
+                  pos_la = pos_la, main = main, cex.pch = cex.pch)
     }
     
     ### Text presenting percentage of studies particular statistical power
-    txt1 <- round(sum(dat$stand_info <= sqrt((26*26/(26+26))/325))/length(dat$n1i)*100) # Less than 80% for detecting large effect
-    txt2 <- round(sum(dat$stand_info > sqrt((26*26/(26+26))/325))/length(dat$n1i)*100) # More than 80% for detecting large effect
-    txt3 <- round(sum(dat$stand_info >= sqrt((64*64/(64+64))/325))/length(dat$n1i)*100) # More than 80% for detecting medium effect
-    txt4 <- round(sum(dat$stand_info >= sqrt((392*392/(392+392))/325))/length(dat$n1i)*100) # More than 80% for detecting small effect
-    mtext(paste(txt1, sep = ""), side = 3, at = sqrt((26*26/(26+26))/325)/2, 
-          line = -1, cex = par()$cex.lab)
-    mtext(paste(txt2, sep = ""), side = 3, at = (sqrt((64*64/(64+64))/325)+
-                                                   sqrt((26*26/(26+26))/325))/2, 
-          line = -1, cex = par()$cex.lab)
-    mtext(paste(txt3, sep = ""), side = 3, at = (sqrt((392*392/(392+392))/325)+
-                                                   sqrt((64*64/(64+64))/325))/2, 
-          line = -1, cex = par()$cex.lab)
-    mtext(paste(txt4, sep = ""), side = 3, at = (sqrt((650*650/(650+650))/325)+
-                                                   sqrt((392*392/(392+392))/325))/2, 
-          line = -1, cex = par()$cex.lab)
+    txt1 <- round(sum(dat$posi <= pos_la)/nrow(dat)*100) # Less than 80% for detecting large effect
+    txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
+    txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
+    txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
+    mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
     
     ### Text presenting percentage of statistically significant effect sizes
     mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
-          at = sqrt((190*190/(190+190))/325), line = -3, cex = par()$cex.lab)
+          at = 0.5, line = -3, cex = par()$cex.lab)
     
   } 
   else if (!missing("ri") & !missing("ni"))
@@ -253,17 +263,27 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     ### Compute Fisher-z transformed correlations and their sampling variances
     dat <- metafor::escalc(ri = ri, ni = ni, data = dat, measure = "ZCOR")
     
+    ### Get relative positions on the x-axis for small, medium, and large effect 
+    # (80% power) and small effect (95% power)
+    pos_95 <- (sqrt(1293)-2)/(sqrt(1300)-2)
+    pos_sm <- (sqrt(782)-2)/(sqrt(1300)-2)
+    pos_me <- (sqrt(84)-2)/(sqrt(1300)-2)
+    pos_la <- (sqrt(29)-2)/(sqrt(1300)-2)
+    
+    ### Get relative position on the x-axis of observerd effect sizes
+    dat$posi <- (sqrt(dat$ni)-2)/(sqrt(1300)-2)
+    
     ### Proportion of statistically significant effect sizes
     prop_sig <- mean(pnorm(dat$yi/sqrt(dat$vi), lower.tail = FALSE) < alpha)
     
     ### Order data based on vi from large to small
-    dat <- dat[order(dat$vi), ]
+    dat <- dat[order(dat$posi, decreasing = TRUE), ]
     
     ### Random-effects meta-analysis
     res <- metafor::rma(yi = yi, vi = vi, method = method_tau2, data = dat)
     
     ### Cumulative meta-analysis starting with the most precise effect size
-    cum_dat <- metafor::cumul(res, order(dat$vi))
+    cum_dat <- metafor::cumul(res, order(dat$posi, decreasing = TRUE))
     
     ### Store estimates of cumulative meta-analysis start with a meta-analysis based 
     # on the most precise effect size and end with a meta-analysis based on all
@@ -275,7 +295,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     ### Select the rows of dat such that there are no equal values of vi in 
     # the data. Taking into account that the rows that are kept are the ones where the 
     # most effect sizes are included in the cumulative meta-analysis.
-    dat_uniq <- dat[rev(duplicated(rev(dat$vi)) == FALSE), ]
+    dat_uniq <- dat[rev(duplicated(rev(dat$posi)) == FALSE), ]
     
     ### Compute Mill's ratio (expected value of truncated normal distribution) based 
     # on sampling variance of each effect size 
@@ -304,47 +324,49 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     
     ### Group results of studies together if study's sample size is larger than 
     # 1293 (95% power for detecting a small effect)
-    if (any(dat_uniq$ni > 1293) == TRUE) 
+    if (any(dat_uniq$posi > 1) == TRUE) 
     {
-      ind <- which(dat_uniq$ni > 1293)
+      ind <- which(dat_uniq$posi > 1)
       dat_uniq <- dat_uniq[tail(ind, n = 1):nrow(dat_uniq), ]
-      dat_uniq[1,"ni"] <- 1293
+      dat_uniq[1,"posi"] <- 1
     }
     
     if (nr_lines == "all")
     {
       draw_plot_r(dat = dat_uniq, ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
-                  prop_sig = prop_sig, main = main, cex.pch = cex.pch)
+                  prop_sig = prop_sig, pos_sm = pos_sm, pos_me = pos_me, 
+                  pos_la = pos_la, main = main, cex.pch = cex.pch)
     } else if (nr_lines == "summary")
     {
       ##### Plot summary results #####
       ### Indexes of cumulative meta-analyses with all effect sizes, the most precise 
       # effect size and the largest number of effect sizes in the regions of the plot 
       # created by the vertical lines
-      ind <- c(tail(which(dat_uniq$ni > 782), n = 1), 
-               tail(which(dat_uniq$ni > 84 & dat_uniq$ni <= 782), n = 1), 
-               tail(which(dat_uniq$ni > 29 & dat_uniq$ni <= 84), n = 1), 
-               tail(which(dat_uniq$ni <= 29), n = 1), nrow(dat_uniq))
+      ind <- c(tail(which(dat_uniq$posi > pos_sm), n = 1), 
+               tail(which(dat_uniq$posi > pos_me & dat_uniq$posi <= pos_sm), n = 1), 
+               tail(which(dat_uniq$posi > pos_la & dat_uniq$posi <= pos_me), n = 1), 
+               tail(which(dat_uniq$posi <= pos_sm), n = 1), nrow(dat_uniq))
       
       ind <- unique(ind) # Select only unique values in the vector
       
       draw_plot_r(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, pub_bias = pub_bias,
-                  prop_sig = prop_sig, main = main, cex.pch = cex.pch)
+                  prop_sig = prop_sig, pos_sm = pos_sm, pos_me = pos_me, pos_la = pos_la, 
+                  main = main, cex.pch = cex.pch)
     }
     
     ### Text presenting percentage of studies particular statistical power
-    txt1 <- round(sum(dat$ni <= 29)/length(dat$ni)*100) # Less than 80% for detecting large effect
-    txt2 <- round(sum(dat$ni > 29)/length(dat$ni)*100) # More than 80% for detecting large effect
-    txt3 <- round(sum(dat$ni >= 84)/length(dat$ni)*100) # More than 80% for detecting medium effect
-    txt4 <- round(sum(dat$ni >= 782)/length(dat$ni)*100) # More than 80% for detecting small effect
-    mtext(paste(txt1, sep = ""), side = 3, at = sqrt(29)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt2, sep = ""), side = 3, at = (sqrt(84)+sqrt(29))/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt3, sep = ""), side = 3, at = (sqrt(782)+sqrt(84))/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt4, sep = ""), side = 3, at = (sqrt(1300)+sqrt(782))/2, line = -1, cex = par()$cex.lab)
+    txt1 <- round(sum(dat$posi <= pos_la)/nrow(dat)*100) # Less than 80% for detecting large effect
+    txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
+    txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
+    txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
+    mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
     
     ### Text presenting percentage of statistically significant effect sizes
     mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
-          at = sqrt(335), line = -3, cex = par()$cex.lab)
+          at = 0.5, line = -3, cex = par()$cex.lab)
     
   }
   
@@ -358,22 +380,64 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     
     ### Compute log odds ratios and their sampling variances
     dat <- metafor::escalc(ai = ai, bi = bi, ci = ci, di = di, data = dat, 
-                           measure = "OR")
+                           measure = "OR", to = "all")
     
-    ### Compute precision (1/se)
-    dat$preci <- 1/sqrt(dat$vi)
+    ### Conduct meta-analysis based on proportions in order to estimate pi_C
+    ma_prop <- rma(xi = ai, ni = ai+bi, method = method_tau2, data = dat, 
+                measure = "PLO", to = "all")
+    
+    ### Back-transform to get median probability of outcome in control group
+    pi_c <- transf.ilogit(ma_prop$b[1]) 
+    
+    ### Compute probability and odds ratio of outcome in control group if effect 
+    # size is small
+    pi_e <- pnorm(qnorm(pi_c) + 0.2)
+    sm <- 1/((pi_c/(1-pi_c))/(pi_e/(1-pi_e)))
+    
+    ### Compute probability and odds ratio of outcome in control group if effect 
+    # size is medium
+    pi_e <- pnorm(qnorm(pi_c) + 0.5)
+    me <- 1/((pi_c/(1-pi_c))/(pi_e/(1-pi_e)))
+    
+    ### Compute probability and odds ratio of outcome in control group if effect 
+    # size is large
+    pi_e <- pnorm(qnorm(pi_c) + 0.8)
+    la <- 1/((pi_c/(1-pi_c))/(pi_e/(1-pi_e)))
+    
+    ### Function to get standard error given a particular effect size and power
+    get_se <- function(se, es, pow)
+    {
+      pnorm(qnorm(.975, sd = se), mean = log(es), sd = se, lower.tail = FALSE)+
+        pnorm(qnorm(.025, sd = se), mean = log(es), sd = se, lower.tail = TRUE)-pow
+    }
+    
+    ### Get precision for 95% power and small effect and 80% power for small, 
+    # medium, and large effect
+    prec_95 <- 1/uniroot(get_se, interval = c(0, 100), es = sm, pow = 0.95)$root
+    prec_sm <- 1/uniroot(get_se, interval = c(0, 100), es = sm, pow = 0.8)$root
+    prec_me <- 1/uniroot(get_se, interval = c(0, 100), es = me, pow = 0.8)$root
+    prec_la <- 1/uniroot(get_se, interval = c(0, 100), es = la, pow = 0.8)$root
+    
+    ### Get relative position on the x-axis
+    pos_95 <- (prec_95 - 1/sqrt(4/2.5))/(prec_95 - 1/sqrt(4/2.5))
+    pos_sm <- (prec_sm - 1/sqrt(4/2.5))/(prec_95 - 1/sqrt(4/2.5))
+    pos_me <- (prec_me - 1/sqrt(4/2.5))/(prec_95 - 1/sqrt(4/2.5))
+    pos_la <- (prec_la - 1/sqrt(4/2.5))/(prec_95 - 1/sqrt(4/2.5))
+    
+    ### Get relative position on the x-axis of observerd effect sizes
+    dat$posi <- (1/sqrt(dat$vi) - 1/sqrt(4/2.5))/(prec_95 - 1/sqrt(4/2.5))
     
     ### Proportion of statistically significant effect sizes
     prop_sig <- mean(pnorm(dat$yi/sqrt(dat$vi), lower.tail = FALSE) < alpha)
     
     ### Order data based on vi from large to small
-    dat <- dat[order(dat$vi), ]
+    dat <- dat[order(dat$posi, decreasing = TRUE), ]
     
     ### Random-effects meta-analysis
     res <- metafor::rma(yi = yi, vi = vi, method = method_tau2, data = dat)
     
     ### Cumulative meta-analysis starting with the most precise effect size
-    cum_dat <- metafor::cumul(res, order(dat$vi))
+    cum_dat <- metafor::cumul(res, order(dat$posi, decreasing = TRUE))
     
     ### Store estimates of cumulative meta-analysis start with a meta-analysis based 
     # on the most precise effect size and end with a meta-analysis based on all
@@ -382,10 +446,10 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     dat$lb_cum <- exp(cum_dat$ci.lb)
     dat$ub_cum <- exp(cum_dat$ci.ub)
     
-    ### Select the rows of dat such that there are no equal values of vi in 
+    ### Select the rows of dat such that there are no equal values of posi in 
     # the data. Taking into account that the rows that are kept are the ones where the 
     # most effect sizes are included in the cumulative meta-analysis.
-    dat_uniq <- dat[rev(duplicated(rev(dat$vi)) == FALSE), ]
+    dat_uniq <- dat[rev(duplicated(rev(dat$posi)) == FALSE), ]
     
     ### Compute Mill's ratio (expected value of truncated normal distribution) based 
     # on sampling variance of each effect size 
@@ -413,50 +477,51 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     ### Make sure that y-axis always start at least at no effect
     ylim[1] <- ifelse(ylim[1] > 1, 1, ylim[1])
     
-    ### Group results of studies together if study's precision is larger than 
-    # 6.949 (95% power for detecting a small effect)
-    if (any(dat_uniq$preci > 6.949) == TRUE) 
+    ### Group results of studies together if study's relative position is larger 
+    # than 1 (95% power for detecting a small effect)
+    if (any(dat_uniq$posi > 1) == TRUE) 
     {
-      ind <- which(dat_uniq$preci > 6.949)
+      ind <- which(dat_uniq$posi > 1)
       dat_uniq <- dat_uniq[tail(ind, n = 1):nrow(dat_uniq), ]
-      dat_uniq[1,"preci"] <- 6.949
+      dat_uniq[ind,"posi"] <- 1
     }
     
     if (nr_lines == "all")
     {
       draw_plot_or(dat = dat_uniq, ylim = ylim, alpha = alpha, pub_bias = pub_bias, 
-                   prop_sig = prop_sig, main = main, cex.pch = cex.pch)
+                   prop_sig = prop_sig, pos_sm = pos_sm, pos_me = pos_me, 
+                   pos_la = pos_la, main = main, cex.pch = cex.pch)
     } else if (nr_lines == "summary")
     {
       ##### Plot summary results #####
       ### Indexes of cumulative meta-analyses with all effect sizes, the most precise 
       # effect size and the largest number of effect sizes in the regions of the plot 
       # created by the vertical lines
-      ind <- c(tail(which(dat_uniq$preci > 5.4), n = 1), 
-               tail(which(dat_uniq$preci > 2.252 & dat_uniq$preci <= 5.4), n = 1), 
-               tail(which(dat_uniq$preci > 1.472 & dat_uniq$preci <= 5.4), n = 1), 
-               tail(which(dat_uniq$preci <= 1.472), n = 1), nrow(dat_uniq))
+      ind <- c(tail(which(dat_uniq$posi > pos_sm), n = 1), 
+               tail(which(dat_uniq$posi > pos_me & dat_uniq$posi <= pos_sm), n = 1), 
+               tail(which(dat_uniq$posi > pos_la & dat_uniq$posi <= pos_me), n = 1), 
+               tail(which(dat_uniq$posi <= pos_sm), n = 1), nrow(dat_uniq))
       
       ind <- unique(ind) # Select only unique values in the vector
       
       draw_plot_or(dat = dat_uniq[ind, ], ylim = ylim, alpha = alpha, 
-                   pub_bias = pub_bias, prop_sig = prop_sig, main = main, 
-                   cex.pch = cex.pch)
+                   pub_bias = pub_bias, prop_sig = prop_sig, pos_sm = pos_sm, 
+                   pos_me = pos_me, pos_la = pos_la, main = main, cex.pch = cex.pch)
     }
     
     ### Text presenting percentage of studies particular statistical power
-    txt1 <- round(sum(dat$preci <= 1.472)/nrow(dat)*100) # Less than 80% for detecting large effect
-    txt2 <- round(sum(dat$preci > 1.472)/nrow(dat)*100) # More than 80% for detecting large effect
-    txt3 <- round(sum(dat$preci >= 2.252)/nrow(dat)*100) # More than 80% for detecting medium effect
-    txt4 <- round(sum(dat$preci >= 5.4)/nrow(dat)*100) # More than 80% for detecting small effect
-    mtext(paste(txt1, sep = ""), side = 3, at = (0.17+1.472)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt2, sep = ""), side = 3, at = (1.472+2.252)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt3, sep = ""), side = 3, at = (2.252+5.4)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt4, sep = ""), side = 3, at = (5.4+6.949)/2, line = -1, cex = par()$cex.lab)
+    txt1 <- round(sum(dat$posi <= pos_la)/nrow(dat)*100) # Less than 80% for detecting large effect
+    txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
+    txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
+    txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
+    mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
+    mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
     
     ### Text presenting percentage of statistically significant effect sizes
     mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
-          at = (2.252+5.4)/2, line = -3, cex = par()$cex.lab)
+          at = 0.5, line = -3, cex = par()$cex.lab)
     
   }
   

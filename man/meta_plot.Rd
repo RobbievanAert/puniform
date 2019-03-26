@@ -31,13 +31,17 @@ if group means and standard deviations are not available}
 
 \item{ni}{A vector of sample sizes if raw correlations are the effect size measure}
 
-\item{ai}{A vector of frequencies in upper left cell of 2x2 frequency table}
+\item{ai}{A vector of frequencies in upper left cell of 2x2 frequency table
+(see Details)}
 
-\item{bi}{A vector of frequencies in upper right cell of 2x2 frequency table}
+\item{bi}{A vector of frequencies in upper right cell of 2x2 frequency table
+(see Details)}
 
-\item{ci}{A vector of frequencies in lower left cell of 2x2 frequency table}
+\item{ci}{A vector of frequencies in lower left cell of 2x2 frequency table
+(see Details)}
 
-\item{di}{A vector of frequencies in lower right cell of 2x2 frequency table}
+\item{di}{A vector of frequencies in lower right cell of 2x2 frequency table
+(see Details)}
 
 \item{alpha}{A integer specifying the alpha level as used in primary studies
 (default is 0.05 but see Details)}
@@ -101,6 +105,17 @@ medium true effect size (middle), and small true effect size (right). Note
 that the summary meta-plot is just the meta-plot with many meta-analyses and 
 confidence intervals left out, and keeping the leftmost meta-analysis and 
 those just immediately to the right of the vertical lines.
+
+For creating a meta-plot based on odds ratios as effect size measure, the 2x2 
+frequency table should follow a specific format. The reason for this is that 
+the probability for the outcome of interest in the control conditions has 
+to be estimated. Hence, the 2x2 frequency table should look like this:
+
+\tabular{lcc}{
+\tab outcome 1 \tab outcome 2 \cr
+control group \tab \code{ai} \tab \code{bi} \cr
+experimental group \tab \code{ci} \tab \code{di}
+}
 }
 \examples{
 ### Load data from meta-analysis by McCall and Carriger (1993)
