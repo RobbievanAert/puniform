@@ -183,8 +183,9 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     # on sampling variance of each effect size 
     m <- dat_uniq$n1i + dat_uniq$n2i - 2 # Degrees of freedom
     J <- exp(lgamma(m/2) - log(sqrt(m/2)) - lgamma((m-1)/2)) # Hedges' g correction factor
-    ex_vi <- sqrt((dat_uniq$n1i+dat_uniq$n2i)/(dat_uniq$n1i*dat_uniq$n2i)) * 
-      sqrt(m/(m-2)) * J # Exact variance of g (See (22) in Viechtbauer, 2007)
+    
+    ### Exact variance of g (See (22) in Viechtbauer, 2007)
+    ex_vi <- (m*J^2)/((m-2)*dat_uniq$n1i*dat_uniq$n2i/(dat_uniq$n1i+dat_uniq$n2i)) 
     ev <- sqrt(ex_vi)*(1/alpha)*dnorm(qnorm(1-alpha))
     
     ### Cumulative meta-analysis based on Mill's ratios starting with all Mill's ratios  
@@ -238,20 +239,6 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
                   prop_sig = prop_sig, pos_sm = pos_sm, pos_me = pos_me, 
                   pos_la = pos_la, main = main, cex.pch = cex.pch)
     }
-    
-    ### Text presenting percentage of studies particular statistical power
-    txt1 <- round(sum(dat$posi <= pos_la)/nrow(dat)*100) # Less than 80% for detecting large effect
-    txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
-    txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
-    txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
-    mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
-    
-    ### Text presenting percentage of statistically significant effect sizes
-    mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
-          at = 0.5, line = -3, cex = par()$cex.lab)
     
   } 
   else if (!missing("ri") & !missing("ni"))
@@ -354,20 +341,6 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
                   main = main, cex.pch = cex.pch)
     }
     
-    ### Text presenting percentage of studies particular statistical power
-    txt1 <- round(sum(dat$posi <= pos_la)/nrow(dat)*100) # Less than 80% for detecting large effect
-    txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
-    txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
-    txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
-    mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
-    
-    ### Text presenting percentage of statistically significant effect sizes
-    mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
-          at = 0.5, line = -3, cex = par()$cex.lab)
-    
   }
   
   ##############################################################################
@@ -384,7 +357,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     
     ### Conduct meta-analysis based on proportions in order to estimate pi_C
     ma_prop <- rma(xi = ai, ni = ai+bi, method = method_tau2, data = dat, 
-                measure = "PLO", to = "all")
+                   measure = "PLO", to = "all")
     
     ### Back-transform to get median probability of outcome in control group
     pi_c <- transf.ilogit(ma_prop$b[1]) 
@@ -509,21 +482,21 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
                    pos_me = pos_me, pos_la = pos_la, main = main, cex.pch = cex.pch)
     }
     
-    ### Text presenting percentage of studies particular statistical power
-    txt1 <- round(sum(dat$posi <= pos_la)/nrow(dat)*100) # Less than 80% for detecting large effect
-    txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
-    txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
-    txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
-    mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
-    mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
-    
-    ### Text presenting percentage of statistically significant effect sizes
-    mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
-          at = 0.5, line = -3, cex = par()$cex.lab)
-    
   }
+  
+  ### Text presenting percentage of studies particular statistical power
+  txt1 <- round(sum(dat$posi <= pos_la)/nrow(dat)*100) # Less than 80% for detecting large effect
+  txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
+  txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
+  txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
+  mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
+  mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
+  mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
+  mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
+  
+  ### Text presenting percentage of statistically significant effect sizes
+  mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
+        at = 0.5, line = -3, cex = par()$cex.lab)
   
   invisible(dat_uniq)
   
