@@ -167,9 +167,9 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     ### Cumulative meta-analysis starting with the most precise effect size
     cum_dat <- metafor::cumul(res, order(dat$posi, decreasing = TRUE))
     
-    ### Store estimates of cumulative meta-analysis start with a meta-analysis based 
-    # on the most precise effect size and end with a meta-analysis based on all
-    # included effect sizes
+    ### Store estimates of cumulative meta-analysis start with a meta-analysis 
+    # based on the most precise effect size and end with a meta-analysis based on 
+    # all included effect sizes
     dat$est_cum <- cum_dat$estimate
     dat$lb_cum <- cum_dat$ci.lb
     dat$ub_cum <- cum_dat$ci.ub
