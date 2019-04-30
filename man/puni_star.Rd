@@ -36,7 +36,7 @@ puni_star(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
 sizes (see Details)}
 
 \item{alpha}{A integer specifying the alpha level as used in primary studies
-(default is 0.05, see Details).}
+(default is 0.05 but see Details).}
 
 \item{side}{A character indicating whether the effect sizes in the primary studies
 are in the right-tail of the distribution (i.e., positive)  or in the left-tail
