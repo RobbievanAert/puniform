@@ -39,7 +39,7 @@ print.hybridoutput <- function(x, ...) {
                             ci.ub = round(x$ci.ub.hyr, 4), row.names = ""), width = 9))
   }
   cat("\n")
-  cat("- Two-tailed p-value original study:", x$pval.o)
+  cat("- Two-tailed p-value FE meta-analysis original studies:", x$pval.o)
   cat("\n")
   cat("\n")
   cat("===")

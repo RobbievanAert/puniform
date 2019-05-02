@@ -4,33 +4,114 @@
 \alias{hybrid}
 \title{hybrid}
 \usage{
-hybrid(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
+hybrid(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi, toobs,
+  mr1i, mr2i, mri, rri, sdr1i, sdr2i, sdri, nr1i, nr2i, nri, trobs, m1i,
+  m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yoi, yri, voi, vri,
   alpha = 0.05, side)
 }
 \arguments{
-\item{m1i}{A vector of means in group 1 for two-independent means}
+\item{mo1i}{A vector of means in group 1 for two-independent means for the 
+original studies}
 
-\item{m2i}{A vector of means in group 2 for two-independent means}
+\item{mo2i}{A vector of means in group 2 for two-independent means for the 
+original studies}
 
-\item{mi}{A vector of group means for one-sample means}
+\item{moi}{A vector of group means for one-sample means for the original studies}
 
-\item{ri}{A vector of raw correlations}
+\item{roi}{A vector of raw correlations for the original studies}
+
+\item{sdo1i}{A vector of standard deviations in group 1 for two-independent
+means for the original studies}
+
+\item{sdo2i}{A vector of standard deviations in group 2 for two-independent
+means for the original studies}
+
+\item{sdoi}{A vector of standard deviations for one-sample means for original 
+studies}
+
+\item{no1i}{A vector of sample sizes in group 1 for two-independent means for 
+the original studies}
+
+\item{no2i}{A vector of sample sizes in group 2 for two-independent means for 
+the original studies}
+
+\item{noi}{A vector of sample sizes for one-sample means and correlations for 
+original studies}
+
+\item{toobs}{A vector of t-values for one-sample means and two-independent means 
+for the original studies}
+
+\item{mr1i}{A vector of means in group 1 for two-independent means for the 
+replications}
+
+\item{mr2i}{A vector of means in group 2 for two-independent means for the 
+replications}
+
+\item{mri}{A vector of group means for one-sample means for the replications}
+
+\item{rri}{A vector of raw correlations for the replications}
+
+\item{sdr1i}{A vector of standard deviations in group 1 for two-independent
+means for the replications}
+
+\item{sdr2i}{A vector of standard deviations in group 2 for two-independent
+means for the replications}
+
+\item{sdri}{A vector of standard deviations for one-sample means for replications}
+
+\item{nr1i}{A vector of sample sizes in group 1 for two-independent means for 
+the replications}
+
+\item{nr2i}{A vector of sample sizes in group 2 for two-independent means for 
+the replications}
+
+\item{nri}{A vector of sample sizes for one-sample means and correlations for 
+replications}
+
+\item{trobs}{A vector of t-values for one-sample means and two-independent means 
+for the replications}
+
+\item{m1i}{A vector of means in group 1 for two-independent means (deprecated, 
+see Details)}
+
+\item{m2i}{A vector of means in group 2 for two-independent means (deprecated, 
+see Details)}
+
+\item{mi}{A vector of group means for one-sample means (deprecated, see Details)}
+
+\item{ri}{A vector of raw correlations (deprecated, see Details)}
 
 \item{sd1i}{A vector of standard deviations in group 1 for two-independent
-means}
+means (deprecated, see Details)}
 
 \item{sd2i}{A vector of standard deviations in group 2 for two-independent
-means}
+means (deprecated, see Details)}
 
-\item{sdi}{A vector of standard deviations for one-sample means}
+\item{sdi}{A vector of standard deviations for one-sample means (deprecated, 
+see Details)}
 
-\item{n1i}{A vector of sample sizes in group 1 for two-independent means}
+\item{n1i}{A vector of sample sizes in group 1 for two-independent means 
+(deprecated, see Details)}
 
-\item{n2i}{A vector of sample sizes in group 2 for two-independent means}
+\item{n2i}{A vector of sample sizes in group 2 for two-independent means 
+(deprecated, see Details)}
 
-\item{ni}{A vector of sample sizes for one-sample means and correlations}
+\item{ni}{A vector of sample sizes for one-sample means and correlations 
+(deprecated, see Details)}
 
-\item{tobs}{A vector of t-values}
+\item{tobs}{A vector of t-values (deprecated, see Details)}
+
+\item{yoi}{A vector of standardized effect sizes of the original studies 
+(see Details)}
+
+\item{yri}{A vector of standardized effect sizes of the replications 
+(see Details)}
+
+\item{voi}{A vector of sampling variances belonging to the standardized effect
+sizes of the original studies (see Details)}
+
+\item{vri}{A vector of sampling variances belonging to the standardized effect
+sizes of the replications (see Details)}
 
 \item{alpha}{A integer specifying the alpha level as used in the original
 study (default is 0.05, see Details).}
@@ -86,38 +167,78 @@ traditional fixed-effect meta-analysis}
 null-hypothesis of no effect}
 }
 \description{
-Function to statistically combine an original study and replication by means
+Function to statistically combine original studies and replications by means
 of the hybrid methods and fixed-effect meta-analysis as described in van Aert
 and van Assen (2018).
 }
 \details{
 Three different effect sizes can be used as input for the
 \code{hybrid} function: one-sample means, two-independent means, and raw
-correlation coefficients. Analyzing one-sample means and two-independent
-means can be done by either providing the function group means (\code{mi} or
-\code{m1i} and \code{m2i}), standard deviations (\code{sdi} or \code{sd1i}
-and \code{sd2i}), and sample sizes (\code{ni} or \code{n1i} and \code{n2i})
-or t-values (\code{tobs}) and sample sizes (\code{ni} or \code{n1i}
-and \code{n2i}). Both options should be accompanied with input for the
-arguments \code{side} and \code{method}. See the Example section for an
-example. Raw correlation coefficients can be analyzed by supplying \code{ri}
- and \code{ni} to the \code{puniform} function next to input for the
-arguments \code{side} and \code{method}. The vectors containing data of the
-original study and replication should always be of length two; the first
-element should contain information about the original study and the second
-element should contain information about the replication.
+correlation coefficients. For each effect size measure, data of the original 
+studies and replications have to be provided separately. For analyzing 
+one-sample means, either the group means (\code{moi} and \code{mri}), standard 
+deviations (\code{sdoi} and \code{sdri}), and sample sizes (\code{noi} and 
+\code{nri}) for the original studies and replications or t-values (\code{toobs} 
+and \code{trobs}) and sample sizes (\code{noi} and \code{nri}) have to be 
+provided. For analyzing two-independent means, either the group means of group 
+1 (\code{mo1i} and \code{mr1i}) and group 2 (\code{mo1i} and \code{mr1i}), 
+standard deviations of group 1 (\code{sdo1i} and \code{sdr1i}) and group 2 
+(\code{sdo2i} and \code{sdr2i}), and sample sizes of group 1 (\code{no1i} and 
+\code{nr1i}) and group 2 (\code{no2i} and \code{nr2i}) for the original studies 
+and replications have to be provided. It is also possible to analyze 
+two-independent means by providing t-values (\code{toobs} and \code{trobs}) in 
+combination with sample sizes of group 1 (\code{no1i} and \code{nr1i}) and group
+2 (\code{no2i} and \code{nr2i}) for the original studies and replications. 
+Correlation coefficients can also be analyzed by supplying the function with 
+raw correlation coefficients (\code{roi} and \code{rri}) and sample sizes 
+(\code{noi} and \code{nri}) of the original studies and replications. The 
+\code{side} argument to specify whether the observed effect size of the
+original study is in the right-tail of the distribution (i.e., positive) or
+in the left-tail of the distribution should also be specified for every effect size 
+measure.
 
-The hybrid methods assume that the original study is statistically
+It is also possible to specify the standardized effect sizes and its sampling
+variances directly via the \code{yoi}, \code{yri}, \code{voi}, and \code{vri} 
+arguments. However, extensive knowledge about computing standardized effect 
+sizes and its sampling variances is required and specifying standardized effect 
+sizes and sampling variances is not recommended to be used if the p-values in 
+the primary studies are not computed with a z-test. In case the p-values in the 
+original studies were computed with, for instance, a t-test, the p-values of a 
+z-test and t-test do not exactly coincide and studies may be not statistically 
+significant according to a z-test.
+
+The usage of a previous version of the \code{hybrid} function was more restricted.
+Users could only apply the method to a single original study and replication. 
+Before the addition of the extra functionality to also analyze multiple original 
+studies and replications, data of the original study and replication were 
+specified in vectors containing #' two elements with the first element being 
+the data of the original study and the second one the data of the replication. 
+In order to maintain backwards compatibility, it is still possible to analyze 
+data like this by using the arguments \code{m1i, m2i, mi, ri, sd1i, sd2i, sdi, 
+n1i, n2i, ni, tobs}. However, using the \code{hybrid} function in this way is 
+now deprecated.
+
+The hybrid methods assume that the original studies are statistically
 significant and a two-tailed hypothesis test was conducted in the original
-study. In case a one-tailed hypothesis tests was conducted in the original
-study, the alpha level has to be multiplied by two. For example, if a
+studies. In case a one-tailed hypothesis tests was conducted in the original
+studies, the alpha level has to be multiplied by two. For example, if a
 one-tailed hypothesis test was conducted with an alpha level of .05, an alpha
- of 0.1 has to be entered into the \code{hybrid} function.
+of 0.1 has to be entered into the \code{hybrid} function.
 }
 \examples{
 ### Apply hybrid function to example on page 5 of van Aert and van Assen (2018).
 
-hybrid(tobs = c(2.211,1.04), n1i = c(40,80), n2i = c(40,80), side = "right")
+pval.o <- 0.03 # p-value original study
+pval.r <- 0.3 # p-value replication
+
+no1i <- no2i <- 40 # Sample size per group in original study
+nr1i <- nr2i <- 80 # Sample size per group in replication
+toobs <- qt(pval.o/2, df = no1i+no2i-2, lower.tail = FALSE) # Observed t-values original study
+trobs <- qt(pval.r/2, df = nr1i+nr2i-2, lower.tail = FALSE) # Observed t-values replication
+
+### Apply hybrid method
+hybrid(toobs = toobs, trobs = trobs, no1i = no1i, no2i = no2i, nr1i = nr1i, 
+nr2i = nr2i, side = "right")
 
 }
 \references{
