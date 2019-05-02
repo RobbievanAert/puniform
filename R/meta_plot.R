@@ -68,12 +68,6 @@
 #' the probability for the outcome of interest in the control conditions has 
 #' to be estimated. Hence, the 2x2 frequency table should look like this:
 #' 
-#' \tabular{lcc}{
-#' \tab outcome 1 \tab outcome 2 \cr
-#' control group \tab \code{ai} \tab \code{bi} \cr
-#' experimental group \tab \code{ci} \tab \code{di}
-#' }  
-#' 
 #' @return An invisibly returned data frame consisting of the submitted data and
 #' \item{yi}{Standardized effect sizes used in the analyses}
 #' \item{vi}{Sampling variances of the standardized effect sizes used in the analyses}
