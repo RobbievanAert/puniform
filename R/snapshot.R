@@ -4,7 +4,7 @@
 #' means and raw correlation coefficients.
 #'
 #' @param m1i A vector of length two containing the means in group 1 for the original
-#' study and replication for two-independent means
+#' study and replication for two-independent means 
 #' @param m2i A vector of length two containing the means in group 2 for the original
 #' and replication for two-independent means
 #' @param n1i A vector of length two containing the sample sizes in group 1 for
