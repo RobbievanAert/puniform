@@ -2,7 +2,7 @@
 
 print.hybridoutput <- function(x, ...) {
   cat("\n")
-  cat("Results Hybrid method")
+  cat("Results Hybrid method (k = ", x$k, "; krep = ", x$krep, ")", sep = "")
   cat("\n")
   cat("\n")
   x$pval.hy <- ifelse(x$pval.hy < 0.001, "  <.001", round(x$pval.hy, 4))
@@ -29,17 +29,11 @@ print.hybridoutput <- function(x, ...) {
   cat("\n")
   x$pval.hyr <- ifelse(x$pval.hyr < 0.001, "  <.001", round(x$pval.hyr, 4))
   x$pval.o <- ifelse(x$pval.o < 0.001, "<.001", round(x$pval.o, 4))
-  if (x$measure == "COR") {
-    print(format(data.frame(est = round(x$est.hyr, 4), zval = round(x$stat.hyr, 4), 
-                            pval = x$pval.hyr, ci.lb = round(x$ci.lb.hyr, 4), 
-                            ci.ub = round(x$ci.ub.hyr, 4), row.names = ""), width = 9))
-  } else {
-    print(format(data.frame(est = round(x$est.hyr, 4), tval = round(x$stat.hyr, 4), 
-                            pval = x$pval.hyr, ci.lb = round(x$ci.lb.hyr, 4), 
-                            ci.ub = round(x$ci.ub.hyr, 4), row.names = ""), width = 9))
-  }
+  print(format(data.frame(est = round(x$est.hyr, 4), x = round(x$x.hyr, 4), 
+                          pval = x$pval.hyr, ci.lb = round(x$ci.lb.hyr, 4), 
+                          ci.ub = round(x$ci.ub.hyr, 4), row.names = ""), width = 9))
   cat("\n")
-  cat("- Two-tailed p-value original study:", x$pval.o)
+  cat("- Two-tailed p-value FE meta-analysis original studies:", x$pval.o)
   cat("\n")
   cat("\n")
   cat("===")
@@ -56,20 +50,13 @@ print.hybridoutput <- function(x, ...) {
   cat("===")
   cat("\n")
   cat("\n")
-  cat("Replication")
+  cat("Replications")
   cat("\n")
   cat("\n")
   x$pval.repl <- ifelse(x$pval.repl < 0.001, "  <.001", round(x$pval.repl, 4))
-  if (x$measure == "COR") {
-    print(format(data.frame(est = round(x$est.repl, 4), se = round(x$se.repl, 4),
-                            zval = round(x$stat.repl, 4), pval = x$pval.repl, 
-                            ci.lb = round(x$ci.lb.repl, 4), ci.ub = round(x$ci.ub.repl, 4), 
-                            row.names = ""), width = 9))
-  } else {
-    print(format(data.frame(est = round(x$est.repl, 4), se = round(x$se.repl, 4), 
-                            tval = round(x$stat.repl, 4), pval = x$pval.repl, 
-                            ci.lb = round(x$ci.lb.repl, 4), ci.ub = round(x$ci.ub.repl, 4), 
-                            row.names = ""), width = 9))
-  }
+  print(format(data.frame(est = round(x$est.repl, 4), se = round(x$se.repl, 4),
+                          stat = round(x$stat.repl, 4), pval = x$pval.repl, 
+                          ci.lb = round(x$ci.lb.repl, 4), ci.ub = round(x$ci.ub.repl, 4), 
+                          row.names = ""), width = 9))
   cat("\n")
 } 
