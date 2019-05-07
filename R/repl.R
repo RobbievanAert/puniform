@@ -10,12 +10,6 @@ repl <- function(es, m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
   se.repl <- tmp$se.fe
   ci.lb.repl <- tmp$ci.lb.fe
   ci.ub.repl <- tmp$ci.ub.fe
-  pval.repl <- tmp$pval.fe
-  
-  ### Conduct FE meta-analysis based on original studies
-  sub <- subset(es, es$ori == 1)
-  tmp <- fe_ma(yi = sub$yi, vi = sub$vi)
-  pval.o <- tmp$pval.fe
   
   if (!missing("mi") | !missing("tobs") | !missing("m1i") | !missing("ri"))
   { # If only two studies are supplied as input
@@ -37,10 +31,20 @@ repl <- function(es, m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
     {
       stat.repl <- es$yi[2]/sqrt(es$vi[2]) # z-value for test of no effect
     }
+    
+    pval.repl <- pnorm(stat.repl, lower.tail = FALSE) # One-tailed p-value
+    pval.repl <- ifelse(pval.repl > 0.5, (1-pval.repl)*2, pval.repl*2) # Two-tailed p-value
+    
   } else
   {
     stat.repl <- tmp$zval.fe
+    pval.repl <- tmp$pval.fe
   }
+  
+  ### Conduct FE meta-analysis based on original studies
+  sub <- subset(es, es$ori == 1)
+  tmp <- fe_ma(yi = sub$yi, vi = sub$vi)
+  pval.o <- tmp$pval.fe
   
   if (measure == "COR") 
   { # Back transform Fisher z to correlation

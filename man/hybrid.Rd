@@ -122,6 +122,8 @@ in the left-tail of the distribution (i.e., negative) (either \code{"right"}
 or \code{"left"})}
 }
 \value{
+\item{k}{total number of effect sizes}
+\item{krep}{number of effect sizes of replications}
 \item{est.hy}{effect size estimate of hybrid method}
 \item{ci.lb.hy}{lower bound of hybrid method's confidence interval}
 \item{ci.ub.hy}{upper bound of hybrid method's confidence interval}
@@ -133,7 +135,7 @@ effect}
 \item{est.hyr}{effect size estimate of hybridR method}
 \item{ci.lb.hyr}{lower bound of hybridR method's confidence interval}
 \item{ci.ub.hyr}{upper bound of hybridR method's confidence interval}
-\item{stat.hyr}{test statistic of hybridR method's test of null-hypothesis of
+\item{x.hyr}{test statistic of hybridR method's test of null-hypothesis of
  no effect}
 \item{pval.hyr}{two-tailed p-value of hybridR method's test of
 null-hypothesis of no effect}
@@ -207,26 +209,30 @@ original studies were computed with, for instance, a t-test, the p-values of a
 z-test and t-test do not exactly coincide and studies may be not statistically 
 significant according to a z-test.
 
+The hybrid methods assume that the original studies are statistically
+significant, so original studies that are not statistically signifcant are 
+discarded from the analysis. Furthermore, it is assumed that two-tailed 
+hypothesis tests were conducted in the original studies. In case one-tailed 
+hypothesis tests were conducted in the original studies, the alpha level has 
+to be multiplied by two. For example, if one-tailed hypothesis tests were 
+conducted with an alpha level of .05, an alpha of 0.1 has to be entered into 
+the \code{hybrid} function.
+
+\strong{Previous version}
+
 The usage of a previous version of the \code{hybrid} function was more restricted.
 Users could only apply the method to a single original study and replication. 
 Before the addition of the extra functionality to also analyze multiple original 
 studies and replications, data of the original study and replication were 
-specified in vectors containing #' two elements with the first element being 
+specified in vectors containing two elements with the first element being 
 the data of the original study and the second one the data of the replication. 
 In order to maintain backwards compatibility, it is still possible to analyze 
 data like this by using the arguments \code{m1i, m2i, mi, ri, sd1i, sd2i, sdi, 
 n1i, n2i, ni, tobs}. However, using the \code{hybrid} function in this way is 
 now deprecated.
-
-The hybrid methods assume that the original studies are statistically
-significant and a two-tailed hypothesis test was conducted in the original
-studies. In case a one-tailed hypothesis tests was conducted in the original
-studies, the alpha level has to be multiplied by two. For example, if a
-one-tailed hypothesis test was conducted with an alpha level of .05, an alpha
-of 0.1 has to be entered into the \code{hybrid} function.
 }
 \examples{
-### Apply hybrid function to example on page 5 of van Aert and van Assen (2018).
+### Apply hybrid method to example on page 5 of van Aert and van Assen (2018).
 
 pval.o <- 0.03 # p-value original study
 pval.r <- 0.3 # p-value replication
@@ -239,6 +245,21 @@ trobs <- qt(pval.r/2, df = nr1i+nr2i-2, lower.tail = FALSE) # Observed t-values 
 ### Apply hybrid method
 hybrid(toobs = toobs, trobs = trobs, no1i = no1i, no2i = no2i, nr1i = nr1i, 
 nr2i = nr2i, side = "right")
+
+### Apply hybrid method to two original studies and two replications
+
+noi <- nri <- 50 # Sample size original studies and replicaitons
+sdoi <- sdri <- 1 
+sei <- sdoi/sqrt(50) # Standard error
+
+### Generate data
+pso <- c(0.025/3, 0.025/3*2)
+psr <- c(1/3, 1/3*2)
+moi <- qnorm(pso, mean = 0, sd = sei, lower.tail = FALSE)
+mri <- qnorm(psr, mean = 0, sd = sei, lower.tail = FALSE)
+
+### Apply hybrid method
+hybrid(moi = moi, noi = noi, sdoi = sdoi, mri = mri, nri = nri, sdri = sdri, side = "right")
 
 }
 \references{
