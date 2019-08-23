@@ -88,7 +88,11 @@ null-hypothesis of no effect}
 \description{
 Function to statistically combine an original study and replication by means
 of the hybrid methods and fixed-effect meta-analysis as described in van Aert
+<<<<<<< HEAD
 and van Assen (2018).
+=======
+and van Assen (2017).
+>>>>>>> meta-plot
 }
 \details{
 Three different effect sizes can be used as input for the

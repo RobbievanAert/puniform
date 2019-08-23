@@ -1,12 +1,12 @@
 Package: puniform
 Type: Package
 Title: Meta-Analysis Methods Correcting for Publication Bias
-Version: 0.1.1
-Date: 2019-03-06
+Version: 0.2.1
+Date: 2019-08-23
 Author: Robbie C.M. van Aert
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: Provides meta-analysis methods that correct for
-    publication bias. Four methods are currently included in the package.
+    publication bias. Four methods and a visual tool are currently included in the package.
     The p-uniform method as described in van Assen, van Aert, and Wicherts (2015) 
     <doi:10.1037/met0000025> can be used for estimating the average effect size,
     testing the null hypothesis of no effect, and testing for publication bias 
@@ -28,7 +28,10 @@ Description: Provides meta-analysis methods that correct for
     and large) based on an original study and replication while taking into account 
     publication bias in the original study. The method can also be used for computing 
     the required sample size of the replication akin to power analysis in null 
-    hypothesis significance testing.
+    hypothesis significance testing. The meta-plot is a visual tool for meta-analysis 
+    that provides informaiton on the primary studies in the meta-analysis, the 
+    results of the meta-analysis, and characteristics of the research on the effect 
+    under study (van Assen et al., 2019).
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.15), ADGofTest (>= 0.3), stats, metafor
 LinkingTo: Rcpp
