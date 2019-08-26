@@ -36,11 +36,7 @@ puni_star(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
 sizes (see Details)}
 
 \item{alpha}{A integer specifying the alpha level as used in primary studies
-<<<<<<< HEAD
-(default is 0.05, see Details).}
-=======
 (default is 0.05 but see Details).}
->>>>>>> meta-plot
 
 \item{side}{A character indicating whether the effect sizes in the primary studies
 are in the right-tail of the distribution (i.e., positive)  or in the left-tail
@@ -79,11 +75,7 @@ of no between-study variance obtained with a parametric bootstrap}
 }
 \description{
 Function to apply the p-uniform* method for one-sample mean, two-independent means,
-<<<<<<< HEAD
 and one raw correlation coefficient as described in van Aert and van Assen (2019).
-=======
-and one raw correlation coefficient as described in van Aert and van Assen (2018).
->>>>>>> meta-plot
 }
 \details{
 Three different effect size measures can be used as input for the \code{puni_star}
@@ -206,25 +198,19 @@ mi <- rnorm(25, mean = ui, sd = sdi/sqrt(ni))
 tobs <- mi/(sdi/sqrt(ni))
 
 ### Apply p-uniform* method using sample means
-puni_star(mi = mi, ni = ni, sdi = sdi, side = "right")
+puni_star(mi = mi, ni = ni, sdi = sdi, alpha = 0.05, side = "right", method = "ML")
 
 ### Apply p-uniform* method using t-values
-puni_star(tobs = tobs, ni = ni, side = "right")
+puni_star(tobs = tobs, ni = ni, alpha = 0.05, side = "right", method = "ML")
 
 }
 \references{
 Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 London: Oliver & Boyd.
 
-<<<<<<< HEAD
 van Aert, R.C.M., & van Assen, M.A.L.M. (2019). Correcting for 
 publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
 for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
-=======
-van Aert, R.C.M., & van Assen, M.A.L.M. (2018). Correcting for 
-publication bias in a meta-analysis with the p-uniform* method. Manuscript 
-submitted for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
->>>>>>> meta-plot
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

@@ -177,10 +177,10 @@
 #' tobs <- mi/(sdi/sqrt(ni))
 #'
 #' ### Apply p-uniform* method using sample means
-#' puni_star(mi = mi, ni = ni, sdi = sdi, side = "right")
+#' puni_star(mi = mi, ni = ni, sdi = sdi, alpha = 0.05, side = "right", method = "ML")
 #'
 #' ### Apply p-uniform* method using t-values
-#' puni_star(tobs = tobs, ni = ni, side = "right")
+#' puni_star(tobs = tobs, ni = ni, alpha = 0.05, side = "right", method = "ML")
 #'
 #' @export
 

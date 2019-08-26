@@ -1,7 +1,7 @@
 ## Test environments
-* Windows 7, R 3.5.2 (local)
-* ubuntu 14.04.5 (on travis-ci), R 3.5.2
-* osx 10.13.3 (on travis-ci), R 3.5.2
+* Windows 10, R 3.6.1 (local)
+* ubuntu 16.04 (on travis-ci), R 3.6.1
+* osx 10.13.3 (on travis-ci), R 3.6.1
 * win-builder (devel and release)
 
 ## R CMD check results

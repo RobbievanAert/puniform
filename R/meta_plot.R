@@ -68,12 +68,6 @@
 #' the probability for the outcome of interest in the control conditions has 
 #' to be estimated. Hence, the 2x2 frequency table should look like this:
 #' 
-#' \tabular{lcc}{
-#' \tab outcome 1 \tab outcome 2 \cr
-#' control group \tab \code{ai} \tab \code{bi} \cr
-#' experimental group \tab \code{ci} \tab \code{di}
-#' }  
-#' 
 #' @return An invisibly returned data frame consisting of the submitted data and
 #' \item{yi}{Standardized effect sizes used in the analyses}
 #' \item{vi}{Sampling variances of the standardized effect sizes used in the analyses}
@@ -356,11 +350,11 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
                            measure = "OR", to = "all")
     
     ### Conduct meta-analysis based on proportions in order to estimate pi_C
-    ma_prop <- rma(xi = ai, ni = ai+bi, method = method_tau2, data = dat, 
-                   measure = "PLO", to = "all")
+    ma_prop <- metafor::rma(xi = ai, ni = ai+bi, method = method_tau2, data = dat, 
+                            measure = "PLO", to = "all")
     
     ### Back-transform to get median probability of outcome in control group
-    pi_c <- transf.ilogit(ma_prop$b[1]) 
+    pi_c <- metafor::transf.ilogit(ma_prop$b[1]) 
     
     ### Compute probability and odds ratio of outcome in control group if effect 
     # size is small
