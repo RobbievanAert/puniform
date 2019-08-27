@@ -6,6 +6,8 @@ output: github_document
 
 # puniform
 
+[![Build Status](https://travis-ci.org/RobbievanAert/puniform.svg?branch=develop)](https://travis-ci.org/RobbievanAert/puniform.svg?branch=develop)
+
 Provides meta-analysis methods that correct for
     publication bias. Four methods and a visual tool are currently included in the package.
     The p-uniform method as described in van Assen, van Aert, and Wicherts (2015) 
@@ -32,7 +34,7 @@ Provides meta-analysis methods that correct for
     hypothesis significance testing. The meta-plot is a visual tool for meta-analysis 
     that provides informaiton on the primary studies in the meta-analysis, the 
     results of the meta-analysis, and characteristics of the research on the effect 
-    under study (van Assen et al., 2019).
+    under study (van Assen and others, 2019).
 
 ## Installation
 
@@ -51,5 +53,5 @@ devtools::install_github("RobbievanAert/puniform")
 
 ## Additional information about the package
 
-The puniform package was written by [Robbie C.M. van Aert](www.robbievanaert.com).
+The puniform package was written by [Robbie C.M. van Aert](http://www.robbievanaert.com).
 If you suspect a bug, please report a report [here](https://github.com/RobbievanAert/puniform/issues).
