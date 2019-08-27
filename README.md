@@ -3,7 +3,8 @@
 
 # puniform
 
-<https://travis-ci.org/RobbievanAert/puniform.svg?branch=master>
+[![Build
+Status](https://travis-ci.org/RobbievanAert/puniform.svg?branch=master)](https://travis-ci.org/RobbievanAert/puniform)
 
 Provides meta-analysis methods that correct for publication bias. Four
 methods and a visual tool are currently included in the package. The
