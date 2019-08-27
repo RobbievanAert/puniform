@@ -31,7 +31,7 @@ Description: Provides meta-analysis methods that correct for
     hypothesis significance testing. The meta-plot is a visual tool for meta-analysis 
     that provides informaiton on the primary studies in the meta-analysis, the 
     results of the meta-analysis, and characteristics of the research on the effect 
-    under study.
+    under study (van Assen and others, 2019).
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.15), ADGofTest (>= 0.3), stats, metafor
 LinkingTo: Rcpp
