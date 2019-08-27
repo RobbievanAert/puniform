@@ -11,8 +11,8 @@ Description: Provides meta-analysis methods that correct for
     <doi:10.1037/met0000025> can be used for estimating the average effect size,
     testing the null hypothesis of no effect, and testing for publication bias 
     using only the statistically significant effect sizes of primary studies. The 
-    second method in the package is the p-uniform* method as described in Chapter 
-    5 of van Aert (2018) <doi:10.31222/osf.io/eqhjd>. This method is an extension 
+    second method in the package is the p-uniform* method as described in van Aert and
+    van Assen (2019) <doi:10.31222/osf.io/zqjr9>. This method is an extension 
     of the p-uniform method that allows for estimation of the average effect size 
     and the between-study variance in a meta-analysis, and uses both the statistically 
     significant and nonsignificant effect sizes. The third method in the package 
@@ -23,13 +23,13 @@ Description: Provides meta-analysis methods that correct for
     are based on the statistical theory that the distribution of p-values is 
     uniform conditional on the population effect size. The fourth method in the 
     package is the Snapshot Bayesian Hybrid Meta-Analysis Method as described in 
-    van Aert and van Assen (2017) <doi:10.1371/journal.pone.0175302>. This method 
+    van Aert and van Assen (2018) <doi:10.1371/journal.pone.0175302>. This method 
     computes posterior probabilities for four true effect sizes (no, small, medium, 
     and large) based on an original study and replication while taking into account 
     publication bias in the original study. The method can also be used for computing 
     the required sample size of the replication akin to power analysis in null 
     hypothesis significance testing. The meta-plot is a visual tool for meta-analysis 
-    that provides informaiton on the primary studies in the meta-analysis, the 
+    that provides information on the primary studies in the meta-analysis, the 
     results of the meta-analysis, and characteristics of the research on the effect 
     under study (van Assen and others, 2019).
 License: GPL (>= 2)
