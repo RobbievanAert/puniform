@@ -1,6 +1,12 @@
+# Changes in puniform 0.2.2 (XXXX-XX-XX)
+
+- Updated and improved documentation
+
+
 # Changes in puniform 0.2.1 (2019-08-23)
 
 - meta-plot() function is added to package
+
 
 # Changes in puniform 0.1.1 (2019-03-06)
 

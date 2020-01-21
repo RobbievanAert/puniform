@@ -43,7 +43,7 @@ are in the right-tail of the distribution (i.e., positive)  or in the left-tail
 of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})}
 
 \item{method}{A character indicating the method to be used \code{"P"} (default),
-\code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, or \code{"AD"})}
+\code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, \code{"AD"}, or \code{"ML"}}
 
 \item{plot}{A logical indicating whether a plot showing the relation between
 observed and expected p-values has to be rendered (default is \code{TRUE})}
