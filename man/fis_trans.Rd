@@ -7,9 +7,9 @@
 fis_trans(r, fis)
 }
 \arguments{
-\item{r}{An integer being a raw correlation coefficient}
+\item{r}{A numerical value being a raw correlation coefficient}
 
-\item{fis}{An integer being a Fisher-z transformed correlation coefficient}
+\item{fis}{A numerical value being a Fisher-z transformed correlation coefficient}
 }
 \description{
 Function for transforming raw correlation coefficients to Fisher-z transformed

@@ -4,33 +4,33 @@
 #' Snapshot Bayesian Hybrid Meta-Analysis Method for two-independent
 #' means and raw correlation coefficients.
 #'
-#' @param m1i.o An integer containing the mean in group 1 of the original
+#' @param m1i.o A numeric value containing the mean in group 1 of the original
 #' study for two-independent means
-#' @param m2i.o An integer containing the mean in group 2 of the original
+#' @param m2i.o A numeric value containing the mean in group 2 of the original
 #' study for two-independent means
-#' @param n1i.o An integer containing the sample size in group 1 of
+#' @param n1i.o A numeric value containing the sample size in group 1 of
 #' the original study for two-independent means
-#' @param n2i.o An integer containing the sample size in group 2 of
+#' @param n2i.o A numeric value containing the sample size in group 2 of
 #' the original study for two-independent means
-#' @param sd1i.o An integer containing the standard deviation in group 1
+#' @param sd1i.o A numeric value containing the standard deviation in group 1
 #' of the original study for two-independent means
-#' @param sd2i.o An integer containing the standard deviation in group 2
+#' @param sd2i.o A numeric value containing the standard deviation in group 2
 #' of the original study for two-independent means
-#' @param ri.o An integer containing the raw correlation coefficient
+#' @param ri.o A numeric value containing the raw correlation coefficient
 #' of the original study
 #' @param ni.o An integer containing the sample size for the raw correlation 
 #' coefficient
-#' @param tobs.o An integer containing the t-value of the original
+#' @param tobs.o A numeric value containing the t-value of the original
 #' study
-#' @param alpha An integer specifying the alpha level as used in the original study
-#' @param des.pprob An integer specifying the posterior probability that an user
+#' @param alpha A numeric value specifying the alpha level as used in the original study
+#' @param des.pprob A numeric value specifying the posterior probability that an user
 #' desires to obtain for one of the four true effect sizes
-#' @param des.pow An integer specifying the probability of observing a posterior
+#' @param des.pow A numeric value specifying the probability of observing a posterior
 #' probability larger than des.pprob that an user desires to obtain for one of the
 #' four true effect sizes
-#' @param lo An integer specifying the lower bound of the search interval that is
+#' @param lo A numeric value specifying the lower bound of the search interval that is
 #' used for the optimization procedure (default is 4)
-#' @param hi An integer specifying the upper bound of the search interval that is
+#' @param hi A numeric value specifying the upper bound of the search interval that is
 #' used for the optimization procedure (default is 100,000)
 #'
 #' @details The function computes the required sample size for the replication based

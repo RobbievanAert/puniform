@@ -43,7 +43,7 @@ if group means and standard deviations are not available}
 \item{di}{A vector of frequencies in lower right cell of 2x2 frequency table
 (see Details)}
 
-\item{alpha}{A integer specifying the alpha level as used in primary studies
+\item{alpha}{A numerical value specifying the alpha level as used in primary studies
 (default is 0.05 but see Details)}
 
 \item{method_tau2}{A character indicating the estimation method for the 
@@ -62,7 +62,7 @@ regardless of the \code{pub_bias} parameter}
 
 \item{main}{A character indicating the title of the plot (default is no title)}
 
-\item{cex.pch}{An integer to control the size of the points in the plot}
+\item{cex.pch}{A numerical value to control the size of the points in the plot}
 }
 \value{
 An invisibly returned data frame consisting of the submitted data and

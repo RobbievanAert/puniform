@@ -113,7 +113,7 @@ sizes of the original studies (see Details)}
 \item{vri}{A vector of sampling variances belonging to the standardized effect
 sizes of the replications (see Details)}
 
-\item{alpha}{A integer specifying the alpha level as used in the original
+\item{alpha}{A numerical value specifying the alpha level as used in the original
 study (default is 0.05, see Details).}
 
 \item{side}{A character indicating whether the observed effect size of the
