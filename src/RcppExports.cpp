@@ -6,29 +6,16 @@
 
 using namespace Rcpp;
 
-// get_var_boot_fis
-double get_var_boot_fis(arma::mat Sigma, int n, int dv, int reps);
-RcppExport SEXP _puniform_get_var_boot_fis(SEXP SigmaSEXP, SEXP nSEXP, SEXP dvSEXP, SEXP repsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type dv(dvSEXP);
-    Rcpp::traits::input_parameter< int >::type reps(repsSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_var_boot_fis(Sigma, n, dv, reps));
-    return rcpp_result_gen;
-END_RCPP
-}
 // mvrnorm_cpp
-arma::vec mvrnorm_cpp(arma::mat Sigma, int dv);
-RcppExport SEXP _puniform_mvrnorm_cpp(SEXP SigmaSEXP, SEXP dvSEXP) {
+arma::mat mvrnorm_cpp(int n, arma::mat Sigma, int dv);
+RcppExport SEXP _puniform_mvrnorm_cpp(SEXP nSEXP, SEXP SigmaSEXP, SEXP dvSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
     Rcpp::traits::input_parameter< int >::type dv(dvSEXP);
-    rcpp_result_gen = Rcpp::wrap(mvrnorm_cpp(Sigma, dv));
+    rcpp_result_gen = Rcpp::wrap(mvrnorm_cpp(n, Sigma, dv));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -42,6 +29,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type dv(dvSEXP);
     Rcpp::traits::input_parameter< int >::type reps(repsSEXP);
     rcpp_result_gen = Rcpp::wrap(get_var_boot_rmd(Sigma, dv, reps));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_var_boot_fis
+double get_var_boot_fis(arma::mat Sigma, int n, int dv, int reps);
+RcppExport SEXP _puniform_get_var_boot_fis(SEXP SigmaSEXP, SEXP nSEXP, SEXP dvSEXP, SEXP repsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type dv(dvSEXP);
+    Rcpp::traits::input_parameter< int >::type reps(repsSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_var_boot_fis(Sigma, n, dv, reps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -126,9 +127,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_puniform_get_var_boot_fis", (DL_FUNC) &_puniform_get_var_boot_fis, 4},
-    {"_puniform_mvrnorm_cpp", (DL_FUNC) &_puniform_mvrnorm_cpp, 2},
+    {"_puniform_mvrnorm_cpp", (DL_FUNC) &_puniform_mvrnorm_cpp, 3},
     {"_puniform_get_var_boot_rmd", (DL_FUNC) &_puniform_get_var_boot_rmd, 3},
+    {"_puniform_get_var_boot_fis", (DL_FUNC) &_puniform_get_var_boot_fis, 4},
     {"_puniform_ml_est", (DL_FUNC) &_puniform_ml_est, 5},
     {"_puniform_ml_tau", (DL_FUNC) &_puniform_ml_tau, 5},
     {"_puniform_approx_C", (DL_FUNC) &_puniform_approx_C, 4},
