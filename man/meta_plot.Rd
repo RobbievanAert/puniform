@@ -4,9 +4,28 @@
 \alias{meta_plot}
 \title{Meta-plot}
 \usage{
-meta_plot(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi, ci, di,
-  alpha = 0.05, method_tau2 = "PM", nr_lines = "all",
-  pub_bias = TRUE, main = "", cex.pch = 1)
+meta_plot(
+  m1i,
+  m2i,
+  sd1i,
+  sd2i,
+  n1i,
+  n2i,
+  gi,
+  vgi,
+  ri,
+  ni,
+  ai,
+  bi,
+  ci,
+  di,
+  alpha = 0.05,
+  method_tau2 = "PM",
+  nr_lines = "all",
+  pub_bias = TRUE,
+  main = "",
+  cex.pch = 1
+)
 }
 \arguments{
 \item{m1i}{A vector of means in group 1 for two-independent means}

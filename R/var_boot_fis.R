@@ -5,7 +5,6 @@
 #'
 #' @param ri A vector with Pearson correlation coefficients in a primary study 
 #' (see Details)
-#' @param sigma2 An integer specifying the variance of the raw data
 #' @param n A numerical value specifying the total sample size of a primary study
 #' @param r A numerical value specifying the Pearson correlation coefficient 
 #' between variables h and m (see Details)
@@ -45,22 +44,25 @@
 #'
 #' @export
 #'
-var_boot_fis <- function(ri, sigma2, n, r, dv = 10, reps = 1000)
+var_boot_fis <- function(ri, n, r, dv = 10, reps = 1000)
 {
   
   ### Mean of the correlation coefficients (best estimate of the effect)
   r_thetai <- mean(ri)
   
   ### Create variance-covariance matrix
-  cov <- r * sqrt(sigma2*sigma2) # Covariance among dependent variables
+  ### Covariance among dependent variables equal r, because variance of scores 
+  # in the population (sigma2) is assumed to be 1 which does not affect the 
+  # results
+  cov <- r 
   Sigma <- matrix(cov, nrow = dv+1, ncol = dv+1)
   
   ### Relationship with variable that will always be included when computing a
   # correlation
-  Sigma[1, ] <- r_thetai * sqrt(sigma2*sigma2)
-  Sigma[ ,1] <- r_thetai * sqrt(sigma2*sigma2)
+  Sigma[1, ] <- r_thetai
+  Sigma[ ,1] <- r_thetai
   
-  diag(Sigma) <- sigma2
+  diag(Sigma) <- 1
   
   ### Bootstrapping using C++ function
   boot_var <- get_var_boot_fis(Sigma, n, dv, reps)

@@ -4,8 +4,22 @@
 \alias{req_ni_r}
 \title{req_ni_r}
 \usage{
-req_ni_r(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tobs.o,
-  alpha, des.pprob, des.pow, lo = 4, hi = 1e+05)
+req_ni_r(
+  ri.o,
+  ni.o,
+  m1i.o,
+  m2i.o,
+  n1i.o,
+  n2i.o,
+  sd1i.o,
+  sd2i.o,
+  tobs.o,
+  alpha,
+  des.pprob,
+  des.pow,
+  lo = 4,
+  hi = 1e+05
+)
 }
 \arguments{
 \item{ri.o}{A numeric value containing the raw correlation coefficient

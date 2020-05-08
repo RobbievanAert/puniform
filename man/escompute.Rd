@@ -4,8 +4,24 @@
 \alias{escompute}
 \title{escompute}
 \usage{
-escompute(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-  alpha, side, measure)
+escompute(
+  mi,
+  ri,
+  ni,
+  sdi,
+  m1i,
+  m2i,
+  n1i,
+  n2i,
+  sd1i,
+  sd2i,
+  tobs,
+  yi,
+  vi,
+  alpha,
+  side,
+  measure
+)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample mean}

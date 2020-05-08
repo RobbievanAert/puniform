@@ -35,4 +35,4 @@ Description: Provides meta-analysis methods that correct for
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.15), ADGofTest (>= 0.3), stats, metafor
 LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

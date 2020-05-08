@@ -5,7 +5,9 @@
 \alias{data.mccall93}
 \title{Data from a meta-analysis infants' habituation to a give stimulus and their later cognitive
 ability (IQ)}
-\format{The data frame contains two columns: ri (raw correlation coefficients) and ni (sample sizes).}
+\format{
+The data frame contains two columns: ri (raw correlation coefficients) and ni (sample sizes).
+}
 \source{
 McCall, R. B., & Carriger, M. S. (1993). A meta-analysis of infant habituation and recognition
 memory performance as predictors of later IQ. Child Development, 64, 57-79.

@@ -4,8 +4,26 @@
 \alias{puni_star}
 \title{p-uniform*}
 \usage{
-puni_star(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-  alpha = 0.05, side, method = "ML", boot = FALSE, control)
+puni_star(
+  mi,
+  ri,
+  ni,
+  sdi,
+  m1i,
+  m2i,
+  n1i,
+  n2i,
+  sd1i,
+  sd2i,
+  tobs,
+  yi,
+  vi,
+  alpha = 0.05,
+  side,
+  method = "ML",
+  boot = FALSE,
+  control
+)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample means}

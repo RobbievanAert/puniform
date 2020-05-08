@@ -4,13 +4,11 @@
 \alias{var_boot_fis}
 \title{var_boot_fis}
 \usage{
-var_boot_fis(ri, sigma2, n, r, dv = 10, reps = 1000)
+var_boot_fis(ri, n, r, dv = 10, reps = 1000)
 }
 \arguments{
 \item{ri}{A vector with Pearson correlation coefficients in a primary study 
 (see Details)}
-
-\item{sigma2}{An integer specifying the variance of the raw data}
 
 \item{n}{A numerical value specifying the total sample size of a primary study}
 
