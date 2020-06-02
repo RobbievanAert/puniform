@@ -41,7 +41,7 @@
 #' reporting bias in a meta-analysis: A meta-regression approach. In preparation.
 #'
 #' @examples ### Compute variance for an artificial example
-#' var_boot_fis(ri = 0, sigma2 = 1, n = 100, r = 0.3)
+#' var_boot_fis(ri = 0, n = 100, r = 0.3)
 #'
 #' @export
 #'
