@@ -1,7 +1,8 @@
 #' var_boot_fis
 #'
-#' Function for non-parametric bootstrapping procedure to compute the variance of 
-#' two overlapping Fisher-z transformed correlation coefficients.
+#' Function for parametric bootstrapping procedure to estimate the variability in 
+#' outcomes' effect size in case of Fisher-z transformed correlations as effect 
+#' size measure.
 #'
 #' @param ri A vector with Pearson correlation coefficients in a primary study 
 #' (see Details)
@@ -10,19 +11,19 @@
 #' between variables h and m (see Details)
 #' @param dv An integer specifying the total number of dependent measures (default 
 #' is 10, see Details) 
-#' @param reps An integer specifying the number of boostrap replications (default 
+#' @param reps An integer specifying the number of bootstrap replications (default 
 #' is 1,000)
 #'
 #' @details In case of three variables (l, h, and m), overlapping Fisher-z 
 #' transformed correlation coefficients can be computed between variables l and h 
 #' and variables l and m. The function computes the variance of the two overlapping 
-#' Fisher-z transformed correlation coefficients using a non-parametric bootstrap 
+#' Fisher-z transformed correlation coefficients using a parametric bootstrap 
 #' procedure. For more information see van Aert & Wicherts (2020).
 #' 
 #' The vector \code{ri} can contain a single Pearson correlation coefficient or 
-#' multiple coefficients if information on more than one dependent measure is 
+#' multiple coefficients if information on more than one outcome is 
 #' available. The integer \code{dv} is an optional argument to specify the expected 
-#' number of dependent measures used in a primary study. This argument can be any 
+#' number of outcomes used in a primary study. This argument can be any 
 #' value between 2 and infinity. Larger values yield more accurate estimates of 
 #' the variance but slow down the bootstrap procedure.
 #'  
@@ -32,7 +33,7 @@
 #' more information.
 #'
 #' @return The \code{var_boot_fis} function returns a numerical value that is the 
-#' variance of two overlapping Fisher-z transformed correlations.
+#' variance of multiple correlated Fisher-z transformed correlations.
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'

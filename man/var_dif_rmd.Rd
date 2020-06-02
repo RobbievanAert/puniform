@@ -7,10 +7,10 @@
 var_dif_rmd(sd1i, sd2i, n1i, n2i, r)
 }
 \arguments{
-\item{sd1i}{A vector of standard deviations of the dependent measures in group 
+\item{sd1i}{A vector of standard deviations of the outcomes in group 
 1 (see Details)}
 
-\item{sd2i}{A vector of standard deviations of the dependent measures in group 
+\item{sd2i}{A vector of standard deviations of the outcomes in group 
 2 (see Details)}
 
 \item{n1i}{An integer specifying the sample size of group 1}
@@ -18,7 +18,7 @@ var_dif_rmd(sd1i, sd2i, n1i, n2i, r)
 \item{n2i}{An integer specifying the sample size of group 2}
 
 \item{r}{A numerical value specifying the Pearson correlation coefficient 
-between participants' scores on the different dependent measures}
+between participants' scores on the different outcomes}
 }
 \value{
 The \code{var_dif_rmd} function returns a numerical value that is the 
@@ -26,17 +26,17 @@ variance of the difference of two raw mean differences given r.
 }
 \description{
 Function for computing the variance of the difference between two raw mean 
-diferences.
+differences.
 }
 \details{
 Multiple raw mean differences can be computed in case of two groups 
-and multiple dependent measures. The function computes the variance of the 
-difference of two raw mean differences given a correlation between the dependent 
-measures. For a derivation of this variance see the supplemental materials of 
+and multiple outcomes. The function computes the variance of the 
+difference of two raw mean differences given a correlation between the outcomes. 
+For a derivation of this variance see the supplemental materials of 
 van Aert & Wicherts (2020).
 
 The vectors \code{sd1i} and \code{sd2i} can contain a single standard deviation 
-or multiple standard deviations if information on more than one dependent 
+or multiple standard deviations if information on more than one outcome 
 measure is available.
 
 The variance that is computed with this function can be used to correct for 

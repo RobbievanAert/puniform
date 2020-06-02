@@ -10,12 +10,12 @@
 #'
 #' @details This function estimates the population variance of the effect size of 
 #' correlated outcomes within a study. That is, it estimates the population 
-#' variance a single draw of a multivariate normal distribution. The function 
+#' variance from a single draw of a multivariate normal distribution. The function 
 #' assumes equal true effect size of all outcomes, equal sampling variances of 
 #' the outcomes' effect size, and equal correlation (i.e., \code{r}) among the 
 #' outcomes. 
 #' 
-#' For a derivation of this estimator see Appendix A of van Aert & Wicherts (2020).
+#' For a derivation of this estimator see van Aert & Wicherts (2020).
 #' 
 #' The variance that is computed with this function can be used to correct for 
 #' outcome reporting bias by including the variance as a moderator in a 
