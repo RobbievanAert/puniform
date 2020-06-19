@@ -27,7 +27,8 @@
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
 #' @references van Aert, R.C.M. & Wicherts, J.M. (2020). Correcting for outcome 
-#' reporting bias in a meta-analysis: A meta-regression approach. In preparation.
+#' reporting bias in a meta-analysis: A meta-regression approach. Manuscript 
+#' submitted for publication.
 #'
 #' @examples ### Compute variance for an artificial example
 #' var_dif_fis(n = 100, r = 0.3, rho = 0.5)

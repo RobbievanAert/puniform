@@ -1,10 +1,11 @@
-# Changes in puniform 0.2.2 (XXXX-XX-XX)
+# Changes in puniform 0.2.2 (2020-06-19)
 
 - Updated and improved documentation
 
-- var_dif_fis(), var_boot_fis(), var_dif_rmd(), and var_boot_rmd() were added to
-estimate dependent measures dispersion for Fisher-z transformed correlation 
-coefficients and raw mean differences
+- var_dif_fis(), var_boot_fis(), var_dif_rmd(), var_boot_rmd(), and var_pop() 
+were added to estimate the variability of the outcomes' effect size. These 
+functions can be used in a meta-regression model to correct for outcome reporting 
+bias with the CORB method.
 
 
 # Changes in puniform 0.2.1 (2019-08-23)
