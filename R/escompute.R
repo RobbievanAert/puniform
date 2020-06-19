@@ -15,7 +15,7 @@
 #' @param tobs A vector of t-values
 #' @param yi A vector of standardized effect sizes
 #' @param vi A vector of sampling variances belonging to the standardized effect sizes (\code{yi})
-#' @param alpha An integer specifying the alpha level as used in primary studies
+#' @param alpha A numerical value specifying the alpha level as used in primary studies
 #' @param side A character indicating the direction of the tested hypothesis in the primary studies (either "\code{right}" or "\code{left}")
 #' @param measure A character indicating what kind of effect size should be computed (Hedges' g or Fisher's r-to-z transformed correlation coefficients) and which arguments are used as input ("\code{M}", "\code{MT}", "\code{MD}", "\code{MDT}", or "\code{COR}"). See Details below.
 #'

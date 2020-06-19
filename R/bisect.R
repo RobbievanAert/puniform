@@ -1,5 +1,6 @@
 ### Function for applying the bisection method
-bisect <- function(func, lo, hi, tol = 0.0001, verbose = FALSE, ...) { 
+bisect <- function(func, lo, hi, tol = 0.0001, verbose = FALSE, ...) 
+{ 
   
   flo <- func(lo, ...) 
   fhi <- func(hi, ...) 
@@ -8,11 +9,13 @@ bisect <- function(func, lo, hi, tol = 0.0001, verbose = FALSE, ...) {
     stop("root is not included in the specified interval") 
   
   chg <- hi - lo 
-  while (abs(chg) > tol) { 
+  while (abs(chg) > tol) 
+  { 
     root <- (lo + hi)/2 
     froot <- func(root, ...) 
     
-    if(verbose == TRUE) { 
+    if(verbose == TRUE) 
+    { 
       cat("root = ", root, "froot =", froot,  "chg = ", chg, fill = TRUE) 
     }
     

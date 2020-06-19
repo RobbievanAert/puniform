@@ -4,8 +4,25 @@
 \alias{puniform}
 \title{p-uniform}
 \usage{
-puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-  alpha = 0.05, side, method = "P", plot = FALSE)
+puniform(
+  mi,
+  ri,
+  ni,
+  sdi,
+  m1i,
+  m2i,
+  n1i,
+  n2i,
+  sd1i,
+  sd2i,
+  tobs,
+  yi,
+  vi,
+  alpha = 0.05,
+  side,
+  method = "P",
+  plot = FALSE
+)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample means}
@@ -35,7 +52,7 @@ puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
 \item{vi}{A vector of sampling variances belonging to the standardized effect
 sizes (see Details)}
 
-\item{alpha}{A integer specifying the alpha level as used in primary studies
+\item{alpha}{A numerical value specifying the alpha level as used in primary studies
 (default is 0.05, see Details).}
 
 \item{side}{A character indicating whether the effect sizes in the primary studies
@@ -43,7 +60,7 @@ are in the right-tail of the distribution (i.e., positive)  or in the left-tail
 of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})}
 
 \item{method}{A character indicating the method to be used \code{"P"} (default),
-\code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, or \code{"AD"})}
+\code{"LNP"}, \code{"LN1MINP"}, \code{"KS"}, \code{"AD"}, or \code{"ML"}}
 
 \item{plot}{A logical indicating whether a plot showing the relation between
 observed and expected p-values has to be rendered (default is \code{TRUE})}

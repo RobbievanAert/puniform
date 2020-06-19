@@ -3,8 +3,8 @@
 #' Function for transforming raw correlation coefficients to Fisher-z transformed
 #' correlation coefficients and vice versa.
 #'
-#' @param r An integer being a raw correlation coefficient
-#' @param fis An integer being a Fisher-z transformed correlation coefficient
+#' @param r A numerical value being a raw correlation coefficient
+#' @param fis A numerical value being a Fisher-z transformed correlation coefficient
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'

@@ -4,8 +4,24 @@
 \alias{escompute}
 \title{escompute}
 \usage{
-escompute(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-  alpha, side, measure)
+escompute(
+  mi,
+  ri,
+  ni,
+  sdi,
+  m1i,
+  m2i,
+  n1i,
+  n2i,
+  sd1i,
+  sd2i,
+  tobs,
+  yi,
+  vi,
+  alpha,
+  side,
+  measure
+)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample mean}
@@ -34,7 +50,7 @@ escompute(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
 
 \item{vi}{A vector of sampling variances belonging to the standardized effect sizes (\code{yi})}
 
-\item{alpha}{An integer specifying the alpha level as used in primary studies}
+\item{alpha}{A numerical value specifying the alpha level as used in primary studies}
 
 \item{side}{A character indicating the direction of the tested hypothesis in the primary studies (either "\code{right}" or "\code{left}")}
 

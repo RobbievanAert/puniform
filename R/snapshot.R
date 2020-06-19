@@ -21,7 +21,7 @@
 #' study and replication for the raw correlation coefficient
 #' @param tobs A vector of length two containing the t-values of the original
 #' study and replication
-#' @param alpha An integer specifying the alpha level as used in the original
+#' @param alpha A numerical value specifying the alpha level as used in the original
 #' study (default is 0.05, see Details)
 #'
 #' @details The function computes posterior probabilities (assuming a uniform prior

@@ -1,5 +1,6 @@
 ### Function for getting critical value for method = P
-get_cv_P <- function(ksig) {
+get_cv_P <- function(ksig) 
+{
   
   ### Critical values based on Irwin-Hall distribution (obtained with Mathematica)
   cv.irwin <- c(0.025, 0.2236068, 0.5313293, 0.8801117, 1.2461056, 1.624144, 

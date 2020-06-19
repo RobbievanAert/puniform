@@ -14,15 +14,15 @@
 #' \code{uncor.snapshot} function for another than a uniform prior. For more
 #' information see van Aert and van Assen (2016).
 #'
-#' @return The \code{snapshot} function returns a data frame with posterior probabilities
+#' @return The \code{diffprior} function returns a data frame with posterior probabilities
 #' for no (\code{p.0}), small (\code{p.sm}), medium (\code{p.me}), and large (\code{p.la})
 #' true effect size.
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
-#' @references van Aert, R.C.M. & van Assen, M.A.L.M. (2016). Bayesian evaluation
-#' of effect size after replicating an original study. Manuscript submitted for
-#' publication.
+#' @references van Aert, R.C.M. & van Assen, M.A.L.M. (2017). Bayesian evaluation
+#' of effect size after replicating an original study. PLoS ONE, 12(4), e0175302. 
+#' doi:10.1371/journal.pone.0175302
 #'
 #' @examples ### Example as presented on page 491 in Maxwell, Lau, and Howard (2015)
 #' res.snap <- snapshot(ri=c(0.243, 0.114), ni=c(80, 172), alpha=.05)
