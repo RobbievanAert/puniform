@@ -14,7 +14,7 @@ small, medium, and large true effect size.}
 \code{snapshot} or \code{uncor.snapshot} function.}
 }
 \value{
-The \code{snapshot} function returns a data frame with posterior probabilities
+The \code{diffprior} function returns a data frame with posterior probabilities
 for no (\code{p.0}), small (\code{p.sm}), medium (\code{p.me}), and large (\code{p.la})
 true effect size.
 }
@@ -41,9 +41,9 @@ diffprior(prior = prior, res.snap = res.snap)
 
 }
 \references{
-van Aert, R.C.M. & van Assen, M.A.L.M. (2016). Bayesian evaluation
-of effect size after replicating an original study. Manuscript submitted for
-publication.
+van Aert, R.C.M. & van Assen, M.A.L.M. (2017). Bayesian evaluation
+of effect size after replicating an original study. PLoS ONE, 12(4), e0175302. 
+doi:10.1371/journal.pone.0175302
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

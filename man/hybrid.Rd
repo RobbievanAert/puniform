@@ -4,10 +4,47 @@
 \alias{hybrid}
 \title{hybrid}
 \usage{
-hybrid(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi, toobs,
-  mr1i, mr2i, mri, rri, sdr1i, sdr2i, sdri, nr1i, nr2i, nri, trobs, m1i,
-  m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yoi, yri, voi, vri,
-  alpha = 0.05, side)
+hybrid(
+  mo1i,
+  mo2i,
+  moi,
+  roi,
+  sdo1i,
+  sdo2i,
+  sdoi,
+  no1i,
+  no2i,
+  noi,
+  toobs,
+  mr1i,
+  mr2i,
+  mri,
+  rri,
+  sdr1i,
+  sdr2i,
+  sdri,
+  nr1i,
+  nr2i,
+  nri,
+  trobs,
+  m1i,
+  m2i,
+  mi,
+  ri,
+  sd1i,
+  sd2i,
+  sdi,
+  n1i,
+  n2i,
+  ni,
+  tobs,
+  yoi,
+  yri,
+  voi,
+  vri,
+  alpha = 0.05,
+  side
+)
 }
 \arguments{
 \item{mo1i}{A vector of means in group 1 for two-independent means for the 
@@ -113,7 +150,7 @@ sizes of the original studies (see Details)}
 \item{vri}{A vector of sampling variances belonging to the standardized effect
 sizes of the replications (see Details)}
 
-\item{alpha}{A integer specifying the alpha level as used in the original
+\item{alpha}{A numerical value specifying the alpha level as used in the original
 study (default is 0.05, see Details).}
 
 \item{side}{A character indicating whether the observed effect size of the

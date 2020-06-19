@@ -23,7 +23,7 @@
 #' (see Details)
 #' @param di A vector of frequencies in lower right cell of 2x2 frequency table
 #' (see Details)
-#' @param alpha A integer specifying the alpha level as used in primary studies
+#' @param alpha A numerical value specifying the alpha level as used in primary studies
 #' (default is 0.05 but see Details)
 #' @param method_tau2 A character indicating the estimation method for the 
 #' between-study variance in true effect size in the meta-analysis 
@@ -37,7 +37,7 @@
 #' included if at least 80\% of the primary studies is statistically significant 
 #' regardless of the \code{pub_bias} parameter  
 #' @param main A character indicating the title of the plot (default is no title)
-#' @param cex.pch An integer to control the size of the points in the plot 
+#' @param cex.pch A numerical value to control the size of the points in the plot 
 #' 
 #' @details The \code{meta_plot} function assumes that two-tailed hypothesis tests 
 #' were conducted in the primary studies. In case one-tailed hypothesis tests were 

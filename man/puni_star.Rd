@@ -4,8 +4,26 @@
 \alias{puni_star}
 \title{p-uniform*}
 \usage{
-puni_star(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-  alpha = 0.05, side, method = "ML", boot = FALSE, control)
+puni_star(
+  mi,
+  ri,
+  ni,
+  sdi,
+  m1i,
+  m2i,
+  n1i,
+  n2i,
+  sd1i,
+  sd2i,
+  tobs,
+  yi,
+  vi,
+  alpha = 0.05,
+  side,
+  method = "ML",
+  boot = FALSE,
+  control
+)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample means}
@@ -35,7 +53,7 @@ puni_star(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
 \item{vi}{A vector of sampling variances belonging to the standardized effect
 sizes (see Details)}
 
-\item{alpha}{A integer specifying the alpha level as used in primary studies
+\item{alpha}{A numerical value specifying the alpha level as used in primary studies
 (default is 0.05 but see Details).}
 
 \item{side}{A character indicating whether the effect sizes in the primary studies

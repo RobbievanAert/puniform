@@ -2,6 +2,10 @@
 
 - Updated and improved documentation
 
+- var_dif_fis(), var_boot_fis(), var_dif_rmd(), and var_boot_rmd() were added to
+estimate dependent measures dispersion for Fisher-z transformed correlation 
+coefficients and raw mean differences
+
 
 # Changes in puniform 0.2.1 (2019-08-23)
 

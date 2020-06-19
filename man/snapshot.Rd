@@ -34,7 +34,7 @@ for the original study and replication for two-independent means}
 \item{tobs}{A vector of length two containing the t-values of the original
 study and replication}
 
-\item{alpha}{An integer specifying the alpha level as used in the original
+\item{alpha}{A numerical value specifying the alpha level as used in the original
 study (default is 0.05, see Details)}
 }
 \value{

@@ -18,7 +18,7 @@
 #' @param yi A vector of standardized effect sizes (see Details)
 #' @param vi A vector of sampling variances belonging to the standardized effect
 #' sizes (see Details)
-#' @param alpha A integer specifying the alpha level as used in primary studies
+#' @param alpha A numerical value specifying the alpha level as used in primary studies
 #' (default is 0.05, see Details).
 #' @param side A character indicating whether the effect sizes in the primary studies
 #' are in the right-tail of the distribution (i.e., positive)  or in the left-tail

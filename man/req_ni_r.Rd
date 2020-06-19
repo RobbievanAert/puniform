@@ -4,50 +4,64 @@
 \alias{req_ni_r}
 \title{req_ni_r}
 \usage{
-req_ni_r(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tobs.o,
-  alpha, des.pprob, des.pow, lo = 4, hi = 1e+05)
+req_ni_r(
+  ri.o,
+  ni.o,
+  m1i.o,
+  m2i.o,
+  n1i.o,
+  n2i.o,
+  sd1i.o,
+  sd2i.o,
+  tobs.o,
+  alpha,
+  des.pprob,
+  des.pow,
+  lo = 4,
+  hi = 1e+05
+)
 }
 \arguments{
-\item{ri.o}{An integer containing the raw correlation coefficient
+\item{ri.o}{A numeric value containing the raw correlation coefficient
 of the original study}
 
 \item{ni.o}{An integer containing the sample size for the raw correlation 
 coefficient}
 
-\item{m1i.o}{An integer containing the mean in group 1 of the original
+\item{m1i.o}{A numeric value containing the mean in group 1 of the original
 study for two-independent means}
 
-\item{m2i.o}{An integer containing the mean in group 2 of the original
+\item{m2i.o}{A numeric value containing the mean in group 2 of the original
 study for two-independent means}
 
-\item{n1i.o}{An integer containing the sample size in group 1 of
+\item{n1i.o}{A numeric value containing the sample size in group 1 of
 the original study for two-independent means}
 
-\item{n2i.o}{An integer containing the sample size in group 2 of
+\item{n2i.o}{A numeric value containing the sample size in group 2 of
 the original study for two-independent means}
 
-\item{sd1i.o}{An integer containing the standard deviation in group 1
+\item{sd1i.o}{A numeric value containing the standard deviation in group 1
 of the original study for two-independent means}
 
-\item{sd2i.o}{An integer containing the standard deviation in group 2
+\item{sd2i.o}{A numeric value containing the standard deviation in group 2
 of the original study for two-independent means}
 
-\item{tobs.o}{An integer containing the t-value of the original
+\item{tobs.o}{A numeric value containing the t-value of the original
 study}
 
-\item{alpha}{An integer specifying the alpha level as used in the original study}
+\item{alpha}{A numeric value specifying the alpha level as used in the original study}
 
-\item{des.pprob}{An integer specifying the posterior probability that an user
+\item{des.pprob}{A numeric value specifying the posterior probability that an user
 desires to obtain for one of the four true effect sizes}
 
-\item{des.pow}{An integer specifying the probability of observing a posterior
+\item{des.pow}{A numeric value specifying the probability of observing a posterior
 probability larger than des.pprob that an user desires to obtain for one of the
 four true effect sizes}
 
-\item{lo}{An integer specifying the lower bound of the search interval that is
+\item{lo}{A numeric value specifying the lower bound of the search interval that is
 used for the optimization procedure (default is 4)}
 
-\item{hi}{An integer specifying the upper bound of the search interval that is
+\item{hi}{A numeric value specifying the upper bound of the search interval that is
 used for the optimization procedure (default is 100,000)}
 }
 \value{

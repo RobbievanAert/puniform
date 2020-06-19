@@ -4,8 +4,25 @@
 \alias{puniform}
 \title{p-uniform}
 \usage{
-puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
-  alpha = 0.05, side, method = "P", plot = FALSE)
+puniform(
+  mi,
+  ri,
+  ni,
+  sdi,
+  m1i,
+  m2i,
+  n1i,
+  n2i,
+  sd1i,
+  sd2i,
+  tobs,
+  yi,
+  vi,
+  alpha = 0.05,
+  side,
+  method = "P",
+  plot = FALSE
+)
 }
 \arguments{
 \item{mi}{A vector of group means for one-sample means}
@@ -35,7 +52,7 @@ puniform(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi,
 \item{vi}{A vector of sampling variances belonging to the standardized effect
 sizes (see Details)}
 
-\item{alpha}{A integer specifying the alpha level as used in primary studies
+\item{alpha}{A numerical value specifying the alpha level as used in primary studies
 (default is 0.05, see Details).}
 
 \item{side}{A character indicating whether the effect sizes in the primary studies

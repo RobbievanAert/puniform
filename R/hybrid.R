@@ -51,7 +51,7 @@
 #' (see Details)
 #' @param vri A vector of sampling variances belonging to the standardized effect
 #' sizes of the replications (see Details)
-#' @param alpha A integer specifying the alpha level as used in the original
+#' @param alpha A numerical value specifying the alpha level as used in the original
 #' study (default is 0.05, see Details).
 #' @param side A character indicating whether the observed effect size of the
 #' original study is in the right-tail of the distribution (i.e., positive) or
