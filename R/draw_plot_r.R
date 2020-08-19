@@ -40,10 +40,13 @@ draw_plot_r <- function(dat, ylim, alpha = alpha, pub_bias = pub_bias, prop_sig,
   }
 
   ### Vertical line reflecting required sample size for particular statistical power
-  abline(v = pos_la, col = "gray", lty = 2) # 80% for large effect
-  abline(v = pos_me, col = "gray", lty = 2) # 80% for medium effect
-  abline(v = pos_sm, col = "gray", lty = 2) # 80% for small effect
-  
+  segments(x0 = pos_la, x1 = pos_la, y0 = par("usr")[3], 
+           y1 = par("usr")[4] + strheight("%"), col = "gray", lty = 2, xpd = TRUE)
+  segments(x0 = pos_me, x1 = pos_me, y0 = par("usr")[3], 
+           y1 = par("usr")[4] + strheight("%"), col = "gray", lty = 2, xpd = TRUE)
+  segments(x0 = pos_sm, x1 = pos_sm, y0 = par("usr")[3], 
+           y1 = par("usr")[4] + strheight("%"), col = "gray", lty = 2, xpd = TRUE)
+
   ### Horizontal line reflecting estimate of meta-analysis
   abline(h = dat$est_cum[nrow(dat)], lty = 3)
   
@@ -51,8 +54,11 @@ draw_plot_r <- function(dat, ylim, alpha = alpha, pub_bias = pub_bias, prop_sig,
   abline(h = 0)
   
   ### Letters indicating to what effect size each vertical line belongs
-  mtext("L", side = 3, at = pos_la, cex = par()$cex.lab)
-  mtext("M", side = 3, at = pos_me, cex = par()$cex.lab)
-  mtext("S", side = 3, at = pos_sm, cex = par()$cex.lab)
+  text(x = pos_la, y = par("usr")[4] + strheight("%") + (par("usr")[4] + strheight("%"))*0.01, 
+       label = "L", cex = par()$cex.lab*1.2, xpd = TRUE, pos = 3)
+  text(x = pos_me, y = par("usr")[4] + strheight("%") + (par("usr")[4] + strheight("%"))*0.01, 
+       label = "M", cex = par()$cex.lab*1.2, xpd = TRUE, pos = 3)
+  text(x = pos_sm, y = par("usr")[4] + strheight("%") + (par("usr")[4] + strheight("%"))*0.01, 
+       label = "S", cex = par()$cex.lab*1.2, xpd = TRUE, pos = 3)
   
 }

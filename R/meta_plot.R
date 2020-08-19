@@ -483,14 +483,62 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
   txt2 <- round(sum(dat$posi > pos_la)/nrow(dat)*100) # More than 80% for detecting large effect
   txt3 <- round(sum(dat$posi >= pos_me)/nrow(dat)*100) # More than 80% for detecting medium effect
   txt4 <- round(sum(dat$posi >= pos_sm)/nrow(dat)*100) # More than 80% for detecting small effect
-  mtext(paste(txt1, sep = ""), side = 3, at = pos_la/2, line = -1, cex = par()$cex.lab)
-  mtext(paste(txt2, sep = ""), side = 3, at = (pos_me+pos_la)/2, line = -1, cex = par()$cex.lab)
-  mtext(paste(txt3, sep = ""), side = 3, at = (pos_sm+pos_me)/2, line = -1, cex = par()$cex.lab)
-  mtext(paste(txt4, sep = ""), side = 3, at = (pos_95+pos_sm)/2, line = -1, cex = par()$cex.lab)
+  
+  text(x = pos_la/2, y = par("usr")[4],
+       labels = paste(txt1, "%", sep = ""), cex = par()$cex.lab*1.2, xpd = TRUE)
+  text(x = (pos_me+pos_la)/2, y = par("usr")[4],
+       labels = paste(txt2, "%", sep = ""), cex = par()$cex.lab*1.2, xpd = TRUE)
+  text(x = (pos_sm+pos_me)/2, y = par("usr")[4],
+       labels = paste(txt3, "%", sep = ""), cex = par()$cex.lab*1.2, xpd = TRUE)
+  text(x = (pos_95+pos_sm)/2, y = par("usr")[4],
+       labels = paste(txt4, "%", sep = ""), cex = par()$cex.lab*1.2, xpd = TRUE)
+  
+  ### Arrows drawn right above the percentages
+  arrows(x0 = pos_la/2+strwidth(paste(txt1, "%", sep = ""),
+                                cex = par()$cex.lab*1.2)/2, 
+         x1 = pos_la/2-strwidth(paste(txt1, "%", sep = ""),
+                                cex = par()$cex.lab*1.2)/2, 
+         y0 = par("usr")[4] + strheight(paste(txt1, "%", sep = ""),
+                                        cex = par()$cex.lab*1.2), 
+         y1 = par("usr")[4] + strheight(paste(txt1, "%", sep = ""),
+                                        cex = par()$cex.lab*1.2), 
+         xpd = TRUE, length = 0.5*strheight(paste("%", sep = ""), units = "inches"))
+  
+  arrows(x0 = (pos_me+pos_la)/2-strwidth(paste(txt2, "%", sep = ""),
+                                         cex = par()$cex.lab*1.2)/2, 
+         x1 = (pos_me+pos_la)/2+strwidth(paste(txt2, "%", sep = ""),
+                                         cex = par()$cex.lab*1.2)/2, 
+         y0 = par("usr")[4] + strheight(paste(txt2, "%", sep = ""),
+                                        cex = par()$cex.lab*1.2), 
+         y1 = par("usr")[4] + strheight(paste(txt2, "%", sep = ""),
+                                        cex = par()$cex.lab*1.2), 
+         xpd = TRUE, length = 0.5*strheight(paste("%", sep = ""), units = "inches"))
+  
+  arrows(x0 = (pos_sm+pos_me)/2-strwidth(paste(txt3, "%", sep = ""),
+                                         cex = par()$cex.lab*1.2)/2, 
+         x1 = (pos_sm+pos_me)/2+strwidth(paste(txt3, "%", sep = ""),
+                                         cex = par()$cex.lab*1.2)/2, 
+         y0 = par("usr")[4] + strheight(paste(txt3, "%", sep = ""),
+                                        cex = par()$cex.lab*1.2), 
+         y1 = par("usr")[4] + strheight(paste(txt3, "%", sep = ""),
+                                        cex = par()$cex.lab*1.2), 
+         xpd = TRUE, length = 0.5*strheight(paste("%", sep = ""), units = "inches"))
+  
+  arrows(x0 = (pos_95+pos_sm)/2-strwidth(paste(txt4, "%", sep = ""),
+                                         cex = par()$cex.lab*1.2)/2, 
+         x1 = (pos_95+pos_sm)/2+strwidth(paste(txt4, "%", sep = ""), 
+                                         cex = par()$cex.lab*1.2)/2, 
+         y0 = par("usr")[4] + strheight(paste(txt4, "%", sep = ""), 
+                                        cex = par()$cex.lab*1.2), 
+         y1 = par("usr")[4] + strheight(paste(txt4, "%", sep = ""), 
+                                        cex = par()$cex.lab*1.2), 
+         xpd = TRUE, length = 0.5*strheight(paste("%", sep = ""), units = "inches"))
   
   ### Text presenting percentage of statistically significant effect sizes
-  mtext(paste("Sig. = ", round(prop_sig*100,1), sep = ""), side = 3, 
-        at = 0.5, line = -3, cex = par()$cex.lab)
+  text(x = 0.5, 
+       y = par("usr")[4]-2*strheight(paste(txt1, "%", sep = ""), cex = par()$cex.lab*1.2),
+       labels = paste("Sig. = ", round(prop_sig*100,1), "%", sep = ""), 
+       cex = par()$cex.lab*1.2)
   
   invisible(dat_uniq)
   
