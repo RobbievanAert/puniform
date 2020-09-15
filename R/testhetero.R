@@ -8,27 +8,9 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
     
     pval.boot <- NA # P-value is not bootstrapped with method == ML
     
-    ### Optimize profile likelihood function of delta
-    # (suppressWarnings() in order to be able to specify wide search intervals)
-    est0 <- suppressWarnings(try(optimize(ml_est, c(-1,1), 0, yi, vi, ycv, 
-                                          maximum = TRUE)$maximum, silent = TRUE))
-    
-    if (class(est0) == "try-error" | any(est0 > 0.95 | est0 < -0.95))
-    {
-      est0 <- suppressWarnings(try(optimize(ml_est, c(-5,5), 0, yi, vi, ycv, 
-                                            maximum = TRUE)$maximum, silent = TRUE))
-    }
-    
-    if (class(est0) == "try-error" | any(est0 > 4.95 | est0 < -4.95) | is.na(est))
-    { # If effect size could not be estimated, return NA
-      L.het <- NA
-      pval.het <- NA
-    } else
-    { # Conduct likelihood-ratio test
-      L.het <- -2*(ml_est(est0, 0, yi, vi, ycv)-ml_est(est, tau.est, yi, vi, ycv))
-      pval.het <- pchisq(L.het, df = 1, lower.tail = FALSE)
-    }
-    
+    ### Conduct likelihood-ratio test
+    L.het <- -2*(ml_est(est, 0, yi, vi, ycv)-ml_est(est, tau.est, yi, vi, ycv))
+    pval.het <- pchisq(L.het, df = 1, lower.tail = FALSE)
   } else if (method == "P" | method == "LNP")
   {
     
@@ -67,8 +49,8 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
         
         ### Conduct bootstrapping
         L.het.boot <- replicate(reps, expr = boot_het(k = k, est0 = est0, vi = vi, 
-                                                          ycv = ycv, method = method,
-                                                          con = con))
+                                                      ycv = ycv, method = method,
+                                                      con = con))
         
         ### Compute p-value with bootstrapping
         pval.boot <- length(L.het.boot[L.het.boot > L.het & !is.na(L.het.boot)])/reps

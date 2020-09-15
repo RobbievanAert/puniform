@@ -2,6 +2,8 @@
 
 - Added extra information to the plot created with the meta_plot() function
 
+- Bug fix for conducting likelihood ratio tests with the puni_star() function
+
 
 # Changes in puniform 0.2.2 (2020-06-19)
 
