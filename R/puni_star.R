@@ -185,7 +185,8 @@
 #' @export
 
 puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
-                      alpha = 0.05, side, method = "ML", boot = FALSE, control)
+                      alpha = 0.05, side, method = "ML", cutoffs = 0.025, 
+                      boot = FALSE, control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
@@ -242,8 +243,16 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   }
   
   ##### EFFECT SIZE ESTIMATION #####
+  
+  ######################
+  ### Add 0 and 1 to cutoffs. Cutoffs now only work for side = "right". Later on,
+  # also make sure that they work for side = "left"
+  cutoffs <- c(0, 1-cutoffs, 1)
+  
+  ######################
+  
   res.es <- esest_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi), 
-                       method = method, con = con)
+                       method = method, cutoffs = cutoffs, con = con)
   
   ##### TEST OF AN EFFECT #####
   res.null <- testeffect_nsig(yi = es$yi, vi = es$vi, est = res.es$est,

@@ -1,5 +1,24 @@
+### Log likelihood function that is used for estimating the parameters
+ml_mul <- function(d, tau, yi, vi, cutoffs, obs_int)
+{
+
+  q <- unlist(lapply(1:length(yi), function(m)
+  {
+    ### Cutoffs transformed to effect sizes
+    y_int <- qnorm(cutoffs, sd = sqrt(vi[m]))
+    
+    dnorm(yi[m], mean = d, sd = sqrt(vi[m]+tau^2), log = TRUE) -
+      log(pnorm(y_int[obs_int[m]], mean = d, sd = sqrt(vi[m]+tau^2), lower.tail = FALSE)-
+            pnorm(y_int[obs_int[m]+1], mean = d, sd = sqrt(vi[m]+tau^2), lower.tail = FALSE))
+  }))
+  
+  return(-sum(q))
+}
+
 ### Function for estimation with p-uniform*
-esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con) 
+# esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con) 
+# {
+esest_nsig <- function(yi, vi, int, tau.int, ycv, method, cutoffs, con) 
 {
   
   if (method == "ML")
@@ -19,6 +38,15 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
     est <- -999 # Unreasonable estimate to force procedure to use at least two iterations
     i <- 0 # Counter for number of iterations
     
+    ###############
+    
+    ### The category a study belongs to is determined based on the p-value.
+    # Later on take into account that the side can also be left
+    pvals <- pnorm(yi/sqrt(vi))
+    obs_int <- cut(pvals, breaks = cutoffs, labels = FALSE)
+
+    ###############
+    
     ### While loop for optimizing profile likelihood functions
     while(stay) {
       
@@ -28,15 +56,33 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       old <- est
       tau.old <- tau.est
       
-      ### Optimize profile likelihood function of delta 
-      # (suppressWarnings() in order to be able to specify wide search intervals)
-      est <- suppressWarnings(optimize(ml_est, int, tau.est, yi, vi, ycv, 
-                                       maximum = TRUE)$maximum)
+      # ### Optimize profile likelihood function of delta 
+      # # (suppressWarnings() in order to be able to specify wide search intervals)
+      # est <- suppressWarnings(optimize(ml_est, int, tau.est, yi, vi, ycv, 
+      #                                  maximum = TRUE)$maximum)
+      
+      ####################
+      
+      ### Optimize the log likelihood function of delta. 
+      # Check later on whether using built-in optimization routines is not better/
+      # faster
+      est <- optimize(ml_mul, interval = int, tau = tau.est, yi = yi, vi = vi, 
+                      cutoffs = cutoffs, obs_int = obs_int)$minimum
+      
+      ####################
+      
+      # ### Optimize profile likelihood function of tau
+      # # (suppressWarnings() in order to be able to specify wide search intervals)
+      # tau.est <- suppressWarnings(optimize(ml_tau, tau.int, est, yi, vi, ycv, 
+      #                                      maximum = TRUE)$maximum)
+      
+      ####################
       
       ### Optimize profile likelihood function of tau
-      # (suppressWarnings() in order to be able to specify wide search intervals)
-      tau.est <- suppressWarnings(optimize(ml_tau, tau.int, est, yi, vi, ycv, 
-                                           maximum = TRUE)$maximum)
+      tau.est <- optimize(ml_mul, interval = tau.int, d = est, yi = yi, vi = vi, 
+                          cutoffs = cutoffs, obs_int = obs_int)$minimum
+      
+      ####################
       
       ### Print intermediate steps if requested
       if (verbose == TRUE)
