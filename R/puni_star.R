@@ -185,7 +185,8 @@
 #' @export
 
 puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
-                      alpha = 0.05, side, method = "ML", boot = FALSE, control)
+                      alpha = 0.05, side, method = "ML", mods = NULL, boot = FALSE, 
+                      control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
@@ -232,7 +233,8 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               tol = 0.001,       # Desired accuracy for the optimizing (ML) and root-finding procedures (P, LNP)
               max.iter = 300,   # Maximum number of iterations for the optimizing (ML) and root-finding procedures (P, LNP)
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
-              reps = 1000) # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              reps = 1000, # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              par = c(0,0,0)) # Starting values for p-uniform* with moderators
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
@@ -241,6 +243,8 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
     con[con.pos] <- control[1:length(con.pos)]
   }
   
+  if (is.null(mods) == TRUE)
+  {
   ##### EFFECT SIZE ESTIMATION #####
   res.es <- esest_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi), 
                        method = method, con = con)
@@ -272,6 +276,12 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
             pval.pb = res.pub$pval.pb)
   
   class(x) <- "puni_staroutput"
+  } else
+  {
+    ##### EFFECT SIZE ESTIMATION #####
+    x <- esest_mods(yi = es$yi, vi = es$vi, xi = xi, ycv = es$zcv*sqrt(es$vi), 
+                         con = con)
+  }
   
   return(x)
   

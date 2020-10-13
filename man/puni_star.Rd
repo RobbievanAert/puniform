@@ -21,6 +21,7 @@ puni_star(
   alpha = 0.05,
   side,
   method = "ML",
+  mods = NULL,
   boot = FALSE,
   control
 )
