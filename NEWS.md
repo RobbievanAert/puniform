@@ -1,4 +1,4 @@
-# Changes in puniform 0.2.3 (XXXX-XX-XX)
+# Changes in puniform 0.2.3 (2020-10-19)
 
 - Added extra information to the plot created with the meta_plot() function
 
