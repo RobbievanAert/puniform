@@ -278,6 +278,9 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   class(x) <- "puni_staroutput"
   } else
   {
+    ### Extract xi from mods argument and make it a vector
+    xi <- model.frame(mods)$xi
+    
     ##### EFFECT SIZE ESTIMATION #####
     x <- esest_mods(yi = es$yi, vi = es$vi, xi = xi, ycv = es$zcv*sqrt(es$vi), 
                          con = con)
