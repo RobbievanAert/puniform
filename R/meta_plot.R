@@ -33,9 +33,10 @@
 #' (\code{"summary"}) are plotted (see Details)
 #' @param pub_bias A logical indicating whether the expected results of the cumulative 
 #' meta-analysis based on a zero true effect in combination with extreme publication 
-#' bias should be plotted (default is TRUE). Note that these results are only 
-#' included if at least 80\% of the primary studies is statistically significant 
-#' regardless of the \code{pub_bias} parameter  
+#' bias should be plotted. The default value is NA implying that these results are only 
+#' included if at least 80\% of the primary studies is statistically significant.
+#' These results are always included if this argument is set to TRUE and never 
+#' included if this argument is set to FALSE 
 #' @param main A character indicating the title of the plot (default is no title)
 #' @param cex.pch A numerical value to control the size of the points in the plot 
 #' 
