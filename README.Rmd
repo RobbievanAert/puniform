@@ -4,6 +4,10 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+ <!-- badges: start -->
+  [![R build status](https://github.com/RobbievanAert/puniform/workflows/R-CMD-check/badge.svg)](https://github.com/RobbievanAert/puniform/actions)
+  <!-- badges: end -->
+
 # puniform
 
 Provides meta-analysis methods to correct and assess publication bias and outcome reporting bias. 
