@@ -1,8 +1,7 @@
 ## Test environments
 * Windows 10, R 4.0.3 (local)
-* ubuntu 16.04 (on travis-ci), R 4.0.2
-* osx 10.13.6 (on travis-ci), R 4.0.3
-* win-builder (devel and release)
+* ubuntu 16.04 (GitHub Actions), R 4.0.3
+* osx 10.15 (GitHub Actions), R 4.0.3
 
 ## R CMD check results
 There were no ERRORs and WARNINGs.

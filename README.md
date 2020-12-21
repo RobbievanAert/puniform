@@ -1,9 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<!-- badges: start --> [![R build
-status](https://github.com/RobbievanAert/puniform/workflows/R-CMD-check/badge.svg)](https://github.com/RobbievanAert/puniform/actions)
-<!-- badges: end -->
+![R-CMD-check](https://github.com/RobbievanAert/puniform/workflows/R-CMD-check/badge.svg?branch=master)
 
 # puniform
 
