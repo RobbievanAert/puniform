@@ -41,22 +41,22 @@ print.puni_staroutput <- function(x, ...) {
                             pval = x$pval.het, pval.boot = x$pval.boot, 
                             row.names = ""), width = 9))
   }
-  cat("\n")
-  cat("===")
-  cat("\n")
-  cat("\n")
-  cat("Publication bias test p-uniform*")
-  cat("\n")
-  cat("\n")
-  x$pval.pb <- ifelse(x$pval.pb < 0.001, "  <.001", round(x$pval.pb, 4))
-  print(format(data.frame(L.pb = round(x$L.pb, 4), pval = x$pval.pb,
-                          row.names = ""), width = 9))
-  if (x$method == "P" | x$method == "LNP")
-  {
-    cat("\n")
-    cat("Note:")
-    cat("\n")
-    cat("- Publication bias test is not yet implemented for method", x$method)
-    cat("\n")
-  }
+  # cat("\n")
+  # cat("===")
+  # cat("\n")
+  # cat("\n")
+  # cat("Publication bias test p-uniform*")
+  # cat("\n")
+  # cat("\n")
+  # x$pval.pb <- ifelse(x$pval.pb < 0.001, "  <.001", round(x$pval.pb, 4))
+  # print(format(data.frame(L.pb = round(x$L.pb, 4), pval = x$pval.pb,
+  #                         row.names = ""), width = 9))
+  # if (x$method == "P" | x$method == "LNP")
+  # {
+  #   cat("\n")
+  #   cat("Note:")
+  #   cat("\n")
+  #   cat("- Publication bias test is not yet implemented for method", x$method)
+  #   cat("\n")
+  # }
 }

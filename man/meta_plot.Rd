@@ -130,6 +130,12 @@ For creating a meta-plot based on odds ratios as effect size measure, the 2x2
 frequency table should follow a specific format. The reason for this is that 
 the probability for the outcome of interest in the control conditions has 
 to be estimated. Hence, the 2x2 frequency table should look like this:
+
+\tabular{lcc}{
+   \tab \strong{Outcome 1} \tab \strong{Outcome 2} \cr
+  \strong{Group 1} \tab ai \tab bi \cr
+  \strong{Group 2} \tab ci \tab di \cr
+}
 }
 \examples{
 ### Load data from meta-analysis by McCall and Carriger (1993)
@@ -152,8 +158,8 @@ Knapp, G., . . . Salanti, G. (2016). Methods to estimate the between-study varia
 and its uncertainty in meta-analysis. Research Synthesis Methods, 7(1), 55-79. 
 doi:10.1002/jrsm.1164
 
-van Assen, ..., & van Aert (2019). The meta-plot. Manuscript in 
-preparation.
+van Assen, ..., & van Aert (2021). The meta-plot: A graphical tool 
+for interpreting the results of a meta-analysis. Submitted for publication.
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
