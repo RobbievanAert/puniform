@@ -87,13 +87,11 @@ between-study variance}
 no between-study variance}
 \item{pval.boot}{one-tailed p-value of p-uniform*'s test of null hypothesis 
 of no between-study variance obtained with a parametric bootstrap}
-\item{L.pb}{test statistic of p-uniform*'s publication bias test}
-\item{pval.pb}{one-tailed p-value of p-uniform*'s publication bias test}
 \item{...}{a number of additional elements}
 }
 \description{
 Function to apply the p-uniform* method for one-sample mean, two-independent means,
-and one raw correlation coefficient as described in van Aert and van Assen (2019).
+and one raw correlation coefficient as described in van Aert and van Assen (2021).
 }
 \details{
 Three different effect size measures can be used as input for the \code{puni_star}
@@ -226,7 +224,7 @@ puni_star(tobs = tobs, ni = ni, alpha = 0.05, side = "right", method = "ML")
 Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 London: Oliver & Boyd.
 
-van Aert, R.C.M., & van Assen, M.A.L.M. (2019). Correcting for 
+van Aert, R.C.M., & van Assen, M.A.L.M. (2021). Correcting for 
 publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
 for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
 }

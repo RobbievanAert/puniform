@@ -33,9 +33,10 @@
 #' (\code{"summary"}) are plotted (see Details)
 #' @param pub_bias A logical indicating whether the expected results of the cumulative 
 #' meta-analysis based on a zero true effect in combination with extreme publication 
-#' bias should be plotted (default is TRUE). Note that these results are only 
-#' included if at least 80\% of the primary studies is statistically significant 
-#' regardless of the \code{pub_bias} parameter  
+#' bias should be plotted. The default value is NA implying that these results are only 
+#' included if at least 80\% of the primary studies is statistically significant.
+#' These results are always included if this argument is set to TRUE and never 
+#' included if this argument is set to FALSE 
 #' @param main A character indicating the title of the plot (default is no title)
 #' @param cex.pch A numerical value to control the size of the points in the plot 
 #' 
@@ -68,6 +69,12 @@
 #' the probability for the outcome of interest in the control conditions has 
 #' to be estimated. Hence, the 2x2 frequency table should look like this:
 #' 
+#' \tabular{lcc}{
+#'    \tab \strong{Outcome 1} \tab \strong{Outcome 2} \cr
+#'   \strong{Group 1} \tab ai \tab bi \cr
+#'   \strong{Group 2} \tab ci \tab di \cr
+#' }
+#' 
 #' @return An invisibly returned data frame consisting of the submitted data and
 #' \item{yi}{Standardized effect sizes used in the analyses}
 #' \item{vi}{Sampling variances of the standardized effect sizes used in the analyses}
@@ -89,8 +96,8 @@
 #' Knapp, G., . . . Salanti, G. (2016). Methods to estimate the between-study variance 
 #' and its uncertainty in meta-analysis. Research Synthesis Methods, 7(1), 55-79. 
 #' doi:10.1002/jrsm.1164
-#' @references van Assen, ..., & van Aert (2019). The meta-plot. Manuscript in 
-#' preparation.
+#' @references van Assen, ..., & van Aert (2021). The meta-plot: A graphical tool 
+#' for interpreting the results of a meta-analysis. Submitted for publication.
 #'
 #' @examples ### Load data from meta-analysis by McCall and Carriger (1993)
 #' data(data.mccall93)

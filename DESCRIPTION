@@ -1,8 +1,8 @@
 Package: puniform
 Type: Package
 Title: Meta-Analysis Methods Correcting for Publication Bias
-Version: 0.2.3
-Date: 2020-10-19
+Version: 0.2.4
+Date: 2020-12-21
 Author: Robbie C.M. van Aert
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: Provides meta-analysis methods that correct for
@@ -32,10 +32,12 @@ Description: Provides meta-analysis methods that correct for
     hypothesis significance testing. The meta-plot is a visual tool for meta-analysis 
     that provides information on the primary studies in the meta-analysis, the 
     results of the meta-analysis, and characteristics of the research on the effect 
-    under study (van Assen and others, 2020). Helper functions to apply the 
+    under study (van Assen et al., 2021). Helper functions to apply the 
     Correcting for Outcome Reporting Bias (CORB) method to correct for outcome 
-    reporting bias in a meta-analysis (van Aert & Wicherts, 2020).
+    reporting bias in a meta-analysis (van Aert & Wicherts, 2021).
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.15), ADGofTest (>= 0.3), stats, metafor
 LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
+URL: https://github.com/RobbievanAert/puniform
+BugReports: https://github.com/RobbievanAert/puniform/issues

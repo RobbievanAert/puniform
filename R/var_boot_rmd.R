@@ -39,7 +39,7 @@
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
-#' @references van Aert, R.C.M. & Wicherts, J.M. (2020). Correcting for outcome 
+#' @references van Aert, R.C.M. & Wicherts, J.M. (2021). Correcting for outcome 
 #' reporting bias in a meta-analysis: A meta-regression approach. Manuscript 
 #' submitted for publication.
 #'

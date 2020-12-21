@@ -1,7 +1,7 @@
 #' p-uniform*
 #'
 #' Function to apply the p-uniform* method for one-sample mean, two-independent means,
-#' and one raw correlation coefficient as described in van Aert and van Assen (2019).
+#' and one raw correlation coefficient as described in van Aert and van Assen (2021).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations
@@ -103,8 +103,6 @@
 #' no between-study variance}
 #' \item{pval.boot}{one-tailed p-value of p-uniform*'s test of null hypothesis 
 #' of no between-study variance obtained with a parametric bootstrap}
-#' \item{L.pb}{test statistic of p-uniform*'s publication bias test}
-#' \item{pval.pb}{one-tailed p-value of p-uniform*'s publication bias test}
 #' \item{...}{a number of additional elements}
 #'
 #' @note The \code{control} argument in the \code{puni_star} function is an optional 
@@ -164,7 +162,7 @@
 #'
 #' @references Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 #' London: Oliver & Boyd.
-#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2019). Correcting for 
+#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2021). Correcting for 
 #' publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
 #' for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
 #'
@@ -255,9 +253,12 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
                            tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
                            method = method, boot = boot, con = con)
   
-  ##### PUBLICATION BIAS TEST #####
-  res.pub <- pubbias_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi),
-                          est = res.es$est, tau.est = res.es$tau.est, method = method)
+  # ##### PUBLICATION BIAS TEST #####
+  # Commented out for now. More research is needed to develop a publication bias 
+  # test for p-uniform* and to study its properties.
+  # res.pub <- pubbias_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi),
+  #                         est = res.es$est, tau.est = res.es$tau.est, method = method)
+  res.pub <- data.frame(L.pb = NA, pval.pb = NA)
   
   ##### MIRROR OR TRANSFORM RESULTS #####
   res.trans <- transform_nsig(res.es = res.es, side = side)

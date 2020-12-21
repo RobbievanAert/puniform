@@ -59,7 +59,7 @@ var_boot_rmd(sd1i = c(0.8, 1.2), sd2i = c(0.85, 1.15), n1i = 100, n2i = 95, r = 
 
 }
 \references{
-van Aert, R.C.M. & Wicherts, J.M. (2020). Correcting for outcome 
+van Aert, R.C.M. & Wicherts, J.M. (2021). Correcting for outcome 
 reporting bias in a meta-analysis: A meta-regression approach. Manuscript 
 submitted for publication.
 }

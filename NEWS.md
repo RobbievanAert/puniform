@@ -1,3 +1,12 @@
+# Changes in puniform 0.2.4 (2020-12-20)
+
+- pub_bias argument in meta_plot() function is now more flexible
+
+- Publication bias test of puni_star() removed for now
+
+- Updated and improved documentation
+
+
 # Changes in puniform 0.2.3 (2020-10-19)
 
 - Added extra information to the plot created with the meta_plot() function
