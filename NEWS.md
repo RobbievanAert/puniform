@@ -1,3 +1,11 @@
+# Changes in puniform 0.2.5 (2022-03-18)
+
+- Modifying meta_plot() function to avoid a warning by the cumul() function of the 
+metafor package
+
+- Updated and improved documentation
+
+
 # Changes in puniform 0.2.4 (2020-12-20)
 
 - pub_bias argument in meta_plot() function is now more flexible
