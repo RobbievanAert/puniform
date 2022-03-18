@@ -22,7 +22,7 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
                                          method = method, val = "es", cv_P = 0)$root, 
                                  silent = TRUE))
     
-    if (class(est0) == "try-error")
+    if (inherits(est0, what = "try-error")) 
     {
       est0 <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(-10, 10), tau = 0, 
                                            yi = yi, vi = vi, param = "est", ycv = ycv, 
@@ -30,7 +30,7 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
                                    silent = TRUE))
     }
     
-    if (class(est0) == "try-error")
+    if (inherits(est0, what = "try-error"))
     { # If effect size cannot be estimated, return NA
       L.het <- NA
       pval.het <- NA
@@ -64,5 +64,4 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
   }
   
   return(data.frame(L.het = L.het, pval.het = pval.het, pval.boot = pval.boot))
-  
 }

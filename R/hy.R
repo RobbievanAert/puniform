@@ -9,13 +9,13 @@ hy <- function(es, measure, side)
   est.hy <- try(bisect(func = pdist_hy_helper, lo = bo[1], hi = bo[2], es = es, 
                        val = "est"), silent = TRUE)
   
-  if (class(est.hy) == "try-error") 
+  if (inherits(est.hy, what = "try-error")) 
   { # Apply bisection method with extended search interval
     bo.ext <- bounds_hy(es = es, ext = TRUE)
     est.hy <- try(bisect(func = pdist_hy_helper, lo = bo.ext[1], hi = bo.ext[2], 
                          es = es, val = "est"), silent = TRUE)
     
-    if (class(est.hy) == "try-error") 
+    if (inherits(est.hy, what = "try-error")) 
     { # If estimate cannot be computed, return NA
       est.hy <- NA
     }
@@ -25,14 +25,14 @@ hy <- function(es, measure, side)
   ci.lb.hy <- try(bisect(func = pdist_hy_helper, lo = bo[1], hi = est.hy, es = es, 
                          val = "ci.lb", cv.P = get_cv_P(nrow(es))), silent = TRUE)
   
-  if (class(ci.lb.hy) == "try-error") 
+  if (inherits(ci.lb.hy, what = "try-error")) 
   { # Apply bisection method with extended search interval
     bo.ext <- bounds_hy(es = es, ext = TRUE)
     ci.lb.hy <- try(bisect(func = pdist_hy_helper, lo = bo.ext[1], hi = est.hy, 
                            es = es, val = "ci.lb", cv.P = get_cv_P(nrow(es))), 
                     silent = TRUE)
     
-    if (class(ci.lb.hy) == "try-error") 
+    if (inherits(ci.lb.hy, what = "try-error")) 
     {
       ci.lb.hy <- NA
     }
@@ -43,7 +43,7 @@ hy <- function(es, measure, side)
                          val = "ci.ub", cv.P = nrow(es) - get_cv_P(nrow(es))), 
                   silent = TRUE)
   
-  if (class(ci.ub.hy) == "try-error") 
+  if (inherits(ci.lb.hy, what = "try-error")) 
   {
     ci.ub.hy <- NA
   }

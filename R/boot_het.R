@@ -9,7 +9,7 @@ boot_het <- function(k, est0, vi, ycv, method, con)
                           yi = yi.boot, vi = vi, param = "est", ycv = ycv, 
                           method = method, val = "es", cv_P = 0)$root, silent = TRUE))
   
-  if (class(est.boot) == "try-error") 
+  if (inherits(est.boot, what = "try-error")) 
   { # If effect size cannot be estimated, return NA
     stat <- NA
   } else 

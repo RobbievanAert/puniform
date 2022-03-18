@@ -69,13 +69,13 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                              yi = yi, vi = vi, est = est, tau.est = tau.est, 
                                              ycv = ycv)$root, silent = TRUE))
       
-      lb <- ifelse(class(tmp.lb) == "try-error", NA, tmp.lb) # Return NA if lower bound could not be estimated
+      lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) # Return NA if lower bound could not be estimated
       
       tmp.ub <- suppressWarnings(try(uniroot(get_LR_est, interval = c(est, est+est.ci[2]), 
                                              yi = yi, vi = vi, est = est, tau.est = tau.est, 
                                              ycv = ycv)$root, silent = TRUE))
       
-      ub <- ifelse(class(tmp.ub) == "try-error", NA, tmp.ub) # Return NA if upper bound could not be estimated
+      ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub) # Return NA if upper bound could not be estimated
       
       ### Estimation of CI tau
       if (get_LR_tau(prof.tau = 0, yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv) < 0)
@@ -88,14 +88,14 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                                vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
                                        silent = TRUE))
         
-        tau.lb <- ifelse(class(tmp.lb) == "try-error", NA, tmp.lb) # Return NA if lower bound could not be estimated
+        tau.lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) # Return NA if lower bound could not be estimated
       }
       
       tmp.ub <- suppressWarnings(try(uniroot(get_LR_tau, interval = c(tau.est, tau.est+tau.ci[2]), 
                                              yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
                                      silent = TRUE))
       
-      tau.ub <- ifelse(class(tmp.ub) == "try-error", NA, tmp.ub) # Return NA if upper bound could not be estimated
+      tau.ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub) # Return NA if upper bound could not be estimated
     }
   } else if (method == "P" | method == "LNP")
   {
@@ -155,7 +155,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                          vi = vi, param = "est", ycv = ycv, method = method, val = "es", 
                          cv_P = 0)$root, silent = TRUE)
       
-      if (class(est) == "try-error")
+      if (inherits(est, what = "try-error")) 
       { # If effect size could not be estimated return NAs and break out while loop
         est <- NA
         tau.est <- NA
@@ -174,7 +174,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                              vi = vi, param = "est", ycv = ycv, method = method, val = "es", 
                              cv_P = 0)$root, silent = TRUE)
           
-          if (class(est) == "try-error")
+          if (inherits(est, what = "try-error")) 
           { # If effect size could not be estimated return NAs
             est <- NA
             tau.est <- NA
@@ -189,7 +189,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                              vi = vi, param = "tau", ycv = ycv, method = method, val = "es", 
                              cv_P = 0)$root, silent = TRUE)
       
-      if (class(tau.est) == "try-error")
+      if (inherits(tau.est, what = "try-error")) 
       { # If effect size could not be estimated return NAs and break out while loop
         est <- NA
         tau.est <- NA
@@ -224,7 +224,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
           est <- try(uniroot(pdist_nsig, interval = c(int[1], int[2]), tau = tau.est, yi = yi,
                              vi = vi, param = "est", method = method, val = "es")$root, silent = TRUE)
           
-          if (class(est) == "try-error")
+          if (inherits(est, what = "try-error")) 
           { # If effect size could not be estimated return NAs and break out while loop
             est <- NA
             tau.est <- NA
@@ -266,7 +266,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                         ycv = ycv, method = method, val = "ci.lb", 
                         get_cv_P(length(yi)))$root, silent = TRUE))
       
-      if (class(lb) == "try-error") 
+      if (inherits(lb, what = "try-error")) 
       { # Check if lower bound could be estimated
         lb <- NA
       } 
@@ -276,7 +276,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                         ycv = ycv, method = method, val = "ci.ub", 
                         get_cv_P(length(yi)))$root, silent = TRUE))
       
-      if (class(ub) == "try-error") 
+      if (inherits(ub, what = "try-error")) 
       { # Check if upper bound could be estimated
         ub <- NA
       } 
@@ -298,7 +298,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                         silent = TRUE))
           
-          if (class(tau.ub) == "try-error") 
+          if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated
             tau.ub <- NA
           } 
@@ -311,7 +311,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                 method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
                         silent = TRUE))  
           
-          if (class(tau.lb) == "try-error") 
+          if (inherits(tau.lb, what = "try-error")) 
           { # Check if lower bound could be estimated
             tau.lb <- NA
           } 
@@ -321,7 +321,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                         silent = TRUE))
           
-          if (class(tau.ub) == "try-error") 
+          if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated
             tau.ub <- NA
           }
@@ -342,7 +342,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                         silent = TRUE))
           
-          if (class(tau.ub) == "try-error") 
+          if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated
             tau.ub <- NA
           } 
@@ -363,7 +363,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                           silent = TRUE))  
           }
           
-          if (class(tau.lb) == "try-error") 
+          if (inherits(tau.lb, what = "try-error")) 
           { # Check if lower bound could be estimated
             tau.lb <- NA
           } 
@@ -373,7 +373,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                         silent = TRUE))
           
-          if (class(tau.ub) == "try-error") 
+          if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated
             tau.ub <- NA
           }

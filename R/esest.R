@@ -68,7 +68,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
         est.bo <- try(bisect(func = pdist, lo = bo[1], hi = bo[2],
                              yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig/2,
                              val = "est", method = "P"), silent = TRUE)
-        if (class(est.bo) == "try-error") { # Estimate of method = P with extended search interval
+        if (inherits(est.bo, what = "try-error"))  { # Estimate of method = P with extended search interval
           est.bo <- bisect(func = pdist, lo = bo.ext[1], hi = bo.ext[2],
                            yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig/2,
                            val = "est", method = "P")
@@ -78,7 +78,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
                                                         yi = yi, vi = vi, zval = zval, zcv = zcv,
                                                         ksig = ksig, val = "est",
                                                         method = method)$minimum), silent = TRUE))
-        if (class(est) == "try-error") { est <- NA }
+        if (inherits(est, what = "try-error"))  { est <- NA }
       }
       if (method == "AD") { # Apply quasi-Newton Raphson algorithm for Anderson-Darling method
         est.AD <- suppressWarnings(nlm(pdist, p = 0, yi = yi, vi = vi, zval = zval,
@@ -94,12 +94,12 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
       est <- try(bisect(func = pdist, lo = bo[1], hi = bo[2], yi = yi,
                         vi = vi, zval = zval, zcv = zcv, ksig = ksig.est, val = "est",
                         method = method), silent = TRUE)
-      if (class(est) == "try-error") { # Apply bisection method with extended search interval
+      if (inherits(est, what = "try-error")) { # Apply bisection method with extended search interval
         approx.est <- 1 # Assign value to object in order to show notification
         est <- try(bisect(func = pdist, lo = bo.ext[1], hi = bo.ext[2],
                           yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig.est,
                           val = "est", method = method), silent = TRUE)
-        if (class(est) == "try-error") { est <- NA } # If estimate cannot be computed, return NA
+        if (inherits(est, what = "try-error")) { est <- NA } # If estimate cannot be computed, return NA
       }
 
       ### Apply bisection method for lower bound
@@ -108,13 +108,13 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
         ci.lb <- try(bisect(func = pdist, lo = bo[1], hi = est, yi = yi,
                             vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "ci.lb",
                             method = method, cv.P = get_cv_P(ksig)), silent = TRUE)
-        if (class(ci.lb) == "try-error") { # Apply bisection method with extended search interval
+        if (inherits(ci.lb, what = "try-error")) { # Apply bisection method with extended search interval
           approx.ci.lb <- 1 # Assign value to object in order to show notification
           ci.lb <- try(bisect(func = pdist, lo = bo.ext[1], hi = est,
                               yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
                               val = "ci.lb", method = method, cv.P = get_cv_P(ksig)),
                        silent = TRUE)
-          if (class(ci.lb) == "try-error") { ci.lb <- NA }
+          if (inherits(ci.lb, what = "try-error")) { ci.lb <- NA }
         }
       } else if (method == "LN1MINP") {
         approx.ci.lb <- 0 # Assign value to object in order to show notification
@@ -122,24 +122,24 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
         ci.lb <- try(bisect(func = pdist, lo = bo[1], hi = est, yi = yi,
                             vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "ci.ub",
                             method = method), silent = TRUE)
-        if (class(ci.lb) == "try-error") { # Apply bisection method with extended search interval
+        if (inherits(ci.lb, what = "try-error")) { # Apply bisection method with extended search interval
           approx.ci.lb <- 1 # Assign value to object in order to show notification
           ci.lb <- try(bisect(func = pdist, lo = bo.ext[1], hi = est,
                               yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
                               val = "ci.ub", method = method), silent = TRUE)
-          if (class(ci.lb) == "try-error") { ci.lb <- NA }
+          if (inherits(ci.lb, what = "try-error")) { ci.lb <- NA }
         }
       } else {
         approx.ci.lb <- 0 # Assign value to object in order to show notification
         ci.lb <- try(bisect(func = pdist, lo = bo[1], hi = est, yi = yi,
                             vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "ci.lb",
                             method = method), silent = TRUE)
-        if (class(ci.lb) == "try-error") { # Apply bisection method with extended search interval
+        if (inherits(ci.lb, what = "try-error")) { # Apply bisection method with extended search interval
           approx.ci.lb <- 1 # Assign value to object in order to show notification
           ci.lb <- try(bisect(func = pdist, lo = bo.ext[1], hi = est,
                               yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
                               val = "ci.lb", method = method), silent = TRUE)
-          if (class(ci.lb) == "try-error") { ci.lb <- NA }
+          if (inherits(ci.lb, what = "try-error")) { ci.lb <- NA }
         }
       }
 
@@ -148,7 +148,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
         ci.ub <- try(bisect(func = pdist, lo = est, hi = bo[2], yi = yi,
                             vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "ci.ub",
                             method = method, cv.P = ksig - get_cv_P(ksig)), silent = TRUE)
-        if (class(ci.ub) == "try-error") { ci.ub <- NA }
+        if (inherits(ci.ub, what = "try-error")) { ci.ub <- NA }
       } else if (method == "LN1MINP") {
         if (is.na(est) == TRUE) { # If est could not be estimated: use lower bound search interval
           ci.ub <- try(bisect(func = pdist, lo = bo[1], hi = bo[2],
@@ -159,7 +159,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
                               yi = yi, vi = vi, zval = zval, zcv = zcv, ksig = ksig,
                               val = "ci.lb", method = method), silent = TRUE)
         }
-        if (class(ci.ub) == "try-error") { ci.ub <- NA }
+        if (inherits(ci.ub, what = "try-error")) { ci.ub <- NA }
       } else if (method == "LNP") {
         if (is.na(est) == TRUE) { # If est could not be estimated: use lower bound search interval
           ci.ub <- try(bisect(func = pdist, lo = bo[1], hi = bo[2], yi = yi,
@@ -170,7 +170,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
                               vi = vi, zval = zval, zcv = zcv, ksig = ksig, val = "ci.ub",
                               method = method), silent = TRUE)
         }
-        if (class(ci.ub) == "try-error") { ci.ub <- NA }
+        if (inherits(ci.ub, what = "try-error")) { ci.ub <- NA }
       }
     }
   } else if (method == "ML")
@@ -218,14 +218,14 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
       out <- sapply(int, function(int) get_LR_ci(d = int, yi = yi, vi = vi, zcv = zcv, est = est))
       bo <- try(data.frame(lb = int[min(which(out < 0))-1], ub = int[max(which(out < 0))+1]), silent = TRUE)
 
-      if (class(bo) == "try-error")
+      if (inherits(bo, what = "try-error")) 
       { # Extend interval for estimating confidence interval
         int <- seq(est-5000/(5*ksig), est+60/(0.5*ksig), 0.5/ksig)
         out <- sapply(int, function(int) get_LR_ci(d = int, yi = yi, vi = vi, zcv = zcv, est = est))
         bo <- try(data.frame(lb = int[min(which(out < 0))-1], ub = int[max(which(out < 0))+1]), silent = TRUE)
       }
 
-      if (class(bo) == "try-error")
+      if (inherits(bo, what = "try-error")) 
       { # If only one bound can be estimated and search interval cannot be created, return NA
         ci.lb <- ci.ub <- NA
       } else {
@@ -233,7 +233,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
         ### Lower bound confidence interval
         ci.lb <- try(uniroot(get_LR_ci, interval = c(bo$lb, est), yi = yi,
                              vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
-        if (class(ci.lb) == "try-error")
+        if (inherits(ci.lb, what = "try-error")) 
         { # Check if lower bound could be computed
           ci.lb <- NA
         }
@@ -241,7 +241,7 @@ esest <- function(yi, vi, zval, zcv, ksig, method) {
         ### Upper bound confidence interval
         ci.ub <- try(uniroot(get_LR_ci, interval = c(est, bo$ub), yi = yi,
                              vi = vi, zcv = zcv, est = est)$root, silent = TRUE)
-        if (class(ci.ub) == "try-error")
+        if (inherits(ci.ub, what = "try-error")) 
         { # Check if upper bound could be estimated
           ci.ub <- NA
         }

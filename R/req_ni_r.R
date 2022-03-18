@@ -120,7 +120,7 @@ req_ni_r <- function(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tob
                                   des.pprob=des.pprob, des.pow=des.pow)))
 
         ### If required sample size could not be computed, the sample size is larger than 100,000
-        if (class(tmp) == "try-error") { ni.r.o[i] <- "> 100,000"
+        if (inherits(tmp, what = "try-error")) { ni.r.o[i] <- "> 100,000"
         } else { ni.r.o[i] <- tmp }
       }
     }
@@ -131,7 +131,7 @@ req_ni_r <- function(ri.o, ni.o, m1i.o, m2i.o, n1i.o, n2i.o, sd1i.o, sd2i.o, tob
                               des.pow=des.pow)))
 
     ### If required sample size could not be computed, the sample size is larger than 100,000
-    if (class(tmp) == "try-error") { ni.r[i] <- "> 100,000"
+    if (inherits(tmp, what = "try-error")) { ni.r[i] <- "> 100,000"
     } else { ni.r[i] <- tmp }
   }
 
