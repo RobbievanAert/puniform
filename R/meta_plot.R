@@ -153,7 +153,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     pos_me <- (sqrt(64*64/(64+64))-sqrt(2))/(sqrt(325)-sqrt(2))
     pos_la <- (sqrt(26*26/(26+26))-sqrt(2))/(sqrt(325)-sqrt(2))
     
-    ### Get relative position on the x-axis of observerd effect sizes
+    ### Get relative position on the x-axis of observed effect sizes
     dat$posi <- (sqrt(dat$n1i*dat$n2i/(dat$n1i+dat$n2i))-sqrt(2))/(sqrt(325)-sqrt(2))
     
     ### Proportion of statistically significant effect sizes
@@ -166,7 +166,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     res <- metafor::rma(yi = yi, vi = vi, method = method_tau2, data = dat)
     
     ### Cumulative meta-analysis starting with the most precise effect size
-    cum_dat <- metafor::cumul(res, order(dat$posi, decreasing = TRUE))
+    cum_dat <- metafor::cumul(res)
     
     ### Store estimates of cumulative meta-analysis start with a meta-analysis 
     # based on the most precise effect size and end with a meta-analysis based on 
@@ -271,7 +271,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     res <- metafor::rma(yi = yi, vi = vi, method = method_tau2, data = dat)
     
     ### Cumulative meta-analysis starting with the most precise effect size
-    cum_dat <- metafor::cumul(res, order(dat$posi, decreasing = TRUE))
+    cum_dat <- metafor::cumul(res)
     
     ### Store estimates of cumulative meta-analysis start with a meta-analysis based 
     # on the most precise effect size and end with a meta-analysis based on all
@@ -411,7 +411,7 @@ meta_plot <- function(m1i, m2i, sd1i, sd2i, n1i, n2i, gi, vgi, ri, ni, ai, bi,
     res <- metafor::rma(yi = yi, vi = vi, method = method_tau2, data = dat)
     
     ### Cumulative meta-analysis starting with the most precise effect size
-    cum_dat <- metafor::cumul(res, order(dat$posi, decreasing = TRUE))
+    cum_dat <- metafor::cumul(res)
     
     ### Store estimates of cumulative meta-analysis start with a meta-analysis based 
     # on the most precise effect size and end with a meta-analysis based on all
