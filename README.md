@@ -11,7 +11,7 @@ and outcome reporting bias.
 The currently included methods are:
 
 -   The *p*-uniform method as described in [van Assen, van Aert, and
-    Wicherts (2015)](https://doi.apa.org/record/2014-48759-001?doi=1)
+    Wicherts (2015)](https://psycnet.apa.org/record/2014-48759-001)
 -   The *p*-uniform\* method as described in [van Aert and van
     Assen (2021)](https://osf.io/preprints/metaarxiv/zqjr9/)
 -   The hybrid method as described in [van Aert and van

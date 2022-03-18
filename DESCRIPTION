@@ -8,7 +8,7 @@ Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: Provides meta-analysis methods that correct for
     publication bias and outcome reporting bias. Four methods and a visual tool 
     are currently included in the package. The p-uniform method as described in 
-    van Assen, van Aert, and Wicherts (2015) <doi:https://doi.apa.org/record/2014-48759-001?doi=1> 
+    van Assen, van Aert, and Wicherts (2015) <https:psycnet.apa.org/record/2014-48759-001> 
     can be used for estimating the average effect size, testing the null hypothesis 
     of no effect, and testing for publication bias using only the statistically 
     significant effect sizes of primary studies. The second method in the package 
