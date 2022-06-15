@@ -1,3 +1,9 @@
+# Changes in puniform 0.2.6 (XXXX-XX-XX)
+
+- Fix a bug in hybrid() where the standard error was also transformed from Fisher's
+z-value to Pearson correlation
+
+
 # Changes in puniform 0.2.5 (2022-03-18)
 
 - Modifying meta_plot() function to avoid a warning by the cumul() function of the 

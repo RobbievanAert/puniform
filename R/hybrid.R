@@ -434,7 +434,6 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
   if (measure == "COR") 
   { # Back transform Fisher z to correlation
     est.fe <- (exp(2*res4$est.fe) - 1)/(exp(2*res4$est.fe) + 1)
-    se.fe <- (exp(2*res4$se.fe) - 1)/(exp(2*res4$se.fe) + 1)
     ci.lb.fe <- (exp(2*res4$ci.lb.fe) - 1)/(exp(2*res4$ci.lb.fe) + 1)
     ci.ub.fe <- (exp(2*res4$ci.ub.fe) - 1)/(exp(2*res4$ci.ub.fe) + 1)
     zval.fe <- res4$zval.fe
