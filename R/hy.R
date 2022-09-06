@@ -1,49 +1,38 @@
 ### Function for applying hybrid method
-hy <- function(es, measure, side) 
+hy <- function(es, measure, side, con) 
 {
   
-  ### Compute bounds for effect size estimation
-  bo <- bounds_hy(es = es, ext = FALSE)
+  int <- con$int
+  est.ci <- con$est.ci
+  verbose <- con$verbose
+  tol <- con$tol 
   
   ### Apply bisection method for effect size
-  est.hy <- try(bisect(func = pdist_hy_helper, lo = bo[1], hi = bo[2], es = es, 
-                       val = "est"), silent = TRUE)
+  est.hy <- try(bisect(func = pdist_hy_helper, lo = int[1], hi = int[2], es = es, 
+                       val = "est", tol = tol, verbose = verbose), silent = TRUE)
   
-  if (inherits(est.hy, what = "try-error")) 
-  { # Apply bisection method with extended search interval
-    bo.ext <- bounds_hy(es = es, ext = TRUE)
-    est.hy <- try(bisect(func = pdist_hy_helper, lo = bo.ext[1], hi = bo.ext[2], 
-                         es = es, val = "est"), silent = TRUE)
-    
-    if (inherits(est.hy, what = "try-error")) 
-    { # If estimate cannot be computed, return NA
-      est.hy <- NA
-    }
+  if (inherits(est.hy, what = "try-error"))
+  { # If estimate cannot be computed, return NA
+    est.hy <- NA
   }
   
   ### Apply bisection method for lower bound
-  ci.lb.hy <- try(bisect(func = pdist_hy_helper, lo = bo[1], hi = est.hy, es = es, 
-                         val = "ci.lb", cv.P = get_cv_P(nrow(es))), silent = TRUE)
+  ci.lb.hy <- try(bisect(func = pdist_hy_helper, lo = est.hy-est.ci[1], 
+                         hi = est.hy, es = es, 
+                         val = "ci.lb", cv.P = get_cv_P(nrow(es)), 
+                         tol = tol, verbose = verbose), silent = TRUE)
   
   if (inherits(ci.lb.hy, what = "try-error")) 
-  { # Apply bisection method with extended search interval
-    bo.ext <- bounds_hy(es = es, ext = TRUE)
-    ci.lb.hy <- try(bisect(func = pdist_hy_helper, lo = bo.ext[1], hi = est.hy, 
-                           es = es, val = "ci.lb", cv.P = get_cv_P(nrow(es))), 
-                    silent = TRUE)
-    
-    if (inherits(ci.lb.hy, what = "try-error")) 
-    {
-      ci.lb.hy <- NA
-    }
+  {
+    ci.lb.hy <- NA
   }
   
   ### Apply bisection method for upper bound
-  ci.ub.hy <- try(bisect(func = pdist_hy_helper, lo = est.hy, hi = bo[2], es = es,
-                         val = "ci.ub", cv.P = nrow(es) - get_cv_P(nrow(es))), 
-                  silent = TRUE)
+  ci.ub.hy <- try(bisect(func = pdist_hy_helper, lo = est.hy, hi = est.hy+est.ci[2], 
+                         es = es, val = "ci.ub", cv.P = nrow(es) - get_cv_P(nrow(es)), 
+                         tol = tol, verbose = verbose), silent = TRUE)
   
-  if (inherits(ci.lb.hy, what = "try-error")) 
+  if (inherits(ci.ub.hy, what = "try-error")) 
   {
     ci.ub.hy <- NA
   }

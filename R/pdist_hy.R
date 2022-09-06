@@ -20,25 +20,18 @@ pdist_hy <- function(d, es, val, cv.P)
     if (ori[i] == 1)
     { # In case of an original study
       
-      if (zcv[i] - zd[i] <= 38) 
-      { # If no extreme probability has to be computed for the original study  
-        pmarg <- exp(pnorm(zcv[i]*sqrt(vi[i]), d, sqrt(vi[i]), lower.tail = FALSE, 
-                           log.p = TRUE))
-        ph1 <- exp(pnorm(yi[i], d, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE))
-        q[i] <- ph1/pmarg
-        
-      } else 
-      { # Use approximation to compute extreme probability for original study
-        q[i] <- approx(zd[i], zval[i], zcv[i]) 
-      } 
+      pmarg <- pnorm(zcv[i]*sqrt(vi[i]), d, sqrt(vi[i]), lower.tail = FALSE, 
+                     log.p = TRUE)
+      ph1 <- pnorm(yi[i], d, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE)
+      q[i] <- exp(ph1-pmarg)
       
     } else if (ori[i] == 0)
     { # In case of a replication
-      q[i] <- exp(pnorm(yi[i], d, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE))  
+      q[i] <- pnorm(yi[i], d, sqrt(vi[i]), lower.tail = FALSE)  
     }
     
   } 
-
+  
   stat <- sum(q)
   
   if (val == "est") 

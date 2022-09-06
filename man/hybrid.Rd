@@ -43,7 +43,8 @@ hybrid(
   voi,
   vri,
   alpha = 0.05,
-  side
+  side,
+  control
 )
 }
 \arguments{
@@ -157,6 +158,9 @@ study (default is 0.05, see Details).}
 original study is in the right-tail of the distribution (i.e., positive) or
 in the left-tail of the distribution (i.e., negative) (either \code{"right"}
 or \code{"left"})}
+
+\item{control}{An optional list of elements that give the user more control 
+over the root-finding procedures (see Note)}
 }
 \value{
 \item{k}{total number of effect sizes}
@@ -267,6 +271,32 @@ In order to maintain backwards compatibility, it is still possible to analyze
 data like this by using the arguments \code{m1i, m2i, mi, ri, sd1i, sd2i, sdi, 
 n1i, n2i, ni, tobs}. However, using the \code{hybrid} function in this way is 
 now deprecated.
+}
+\note{
+The \code{control} argument in the \code{hybrid} function is an optional 
+argument that gives the user more control over the root-finding procedures. 
+This can be especially useful if estimation of the method does not converge 
+and NAs are returned by the function. The \code{control} argument should 
+be specified as a list containing one or more elements. For example, 
+\code{control = list(verbose = TRUE)} Default values are used if an element is 
+not specified. The following elements can be specified by the user:
+
+\itemize{
+\item{\code{int:}}{ A vector of length two that indicates the lower and upper 
+bound of the interval that is used for estimating the effect size. The effect 
+size estimate should be included in this interval. Its default values are -10
+for the first element and the maximum effect size of a study included in the 
+analysis + 1 as the second element.}
+\item{\code{est.ci:}}{ A vector of length two indicating the values that are 
+subtracted from and added to the estimate of the effect size for computing the 
+95\% confidence intervals. Its default values are (50, 1). To give an example, 
+estimates for the lower and upper bound around the effect size estimate are 
+searched on the interval (est-50, est) and (est, est+1), respectively.}
+\item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
+Its default value is .Machine$double.eps^0.25.} 
+\item{\code{verbose:}}{ A logical indicating whether information should be printed 
+about the estimation procedure. Its default value is FALSE.}
+}
 }
 \examples{
 ### Apply hybrid method to example on page 5 of van Aert and van Assen (2018).

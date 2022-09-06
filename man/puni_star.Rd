@@ -178,11 +178,11 @@ The estimate of the between-study variance should be included in this interval.
 This interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
 and its default values are (0, 2).}
 \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
-added to the estimate of the effect size for computing the 95\% confidence 
-intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-and its default values are (3, 3). To give an example, estimates for the lower 
-and upper bound around the effect size estimate are searched on the interval 
-(est-3, est) and (est, est+3), respectively.}
+subtracted from and added to the estimate of the effect size for computing the 
+95\% confidence intervals. This vector is used for the methods \code{ML}, 
+\code{P}, and \code{LNP} and its default values are (3, 3). To give an example, 
+estimates for the lower and upper bound around the effect size estimate are 
+searched on the interval (est-3, est) and (est, est+3), respectively.}
 \item{\code{tau.ci:}}{ A vector of length two indicating the values that are 
 added to the estimate of the between-study variance for computing the 95\% confidence 
 intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
