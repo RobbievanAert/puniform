@@ -15,5 +15,7 @@ transform_nsig <- function(res.es, side)
     ub <- res.es$ub
   }
   
-  return(data.frame(est = est, lb = lb, ub = ub))
+  out <- data.frame(est = est, lb = lb, ub = ub)
+  
+  return(out)
 }

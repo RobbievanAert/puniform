@@ -183,7 +183,7 @@
 #' @export
 
 puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
-                      alpha = 0.05, side, method = "ML", boot = FALSE, control)
+                      alpha = 0.05, side, method = "ML", mods = NULL, boot = FALSE, control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
@@ -217,6 +217,9 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
     es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, measure = measure)
   }
   
+  ### Critical value
+  es$ycv <- es$zcv*sqrt(es$vi)
+  
   ### Default values for optimizing (ML) and root-finding procedures (P and LNP)
   con <- list(stval.tau = 0,     # Starting value of tau for estimation (ML)
               int = c(-2, 2),    # Interval that is used for estimating ES (ML)
@@ -230,7 +233,11 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               tol = 0.001,       # Desired accuracy for the optimizing (ML) and root-finding procedures (P, LNP)
               max.iter = 300,   # Maximum number of iterations for the optimizing (ML) and root-finding procedures (P, LNP)
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
-              reps = 1000) # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              reps = 1000,  # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              
+              par = rep(0, length(labels(terms(mods)))+2) # Starting values for p-uniform* with moderators
+              
+  )
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
@@ -240,39 +247,50 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   }
   
   ##### EFFECT SIZE ESTIMATION #####
-  res.es <- esest_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi), 
-                       method = method, con = con)
-  
-  ##### TEST OF AN EFFECT #####
-  res.null <- testeffect_nsig(yi = es$yi, vi = es$vi, est = res.es$est,
-                              tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
-                              method = method)
-  
-  ##### TEST OF NO BETWEEN-STUDY VARIANCE #####
-  res.hetero <- testhetero(yi = es$yi, vi = es$vi, est = res.es$est,
-                           tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
-                           method = method, boot = boot, con = con)
-  
-  # ##### PUBLICATION BIAS TEST #####
-  # Commented out for now. More research is needed to develop a publication bias 
-  # test for p-uniform* and to study its properties.
-  # res.pub <- pubbias_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi),
-  #                         est = res.es$est, tau.est = res.es$tau.est, method = method)
-  res.pub <- data.frame(L.pb = NA, pval.pb = NA)
-  
-  ##### MIRROR OR TRANSFORM RESULTS #####
-  res.trans <- transform_nsig(res.es = res.es, side = side)
-  
-  ##### CREATE OUTPUT #####
-  x <- list(method = method, k = length(es$yi), ksig = sum(es$pval < alpha/2), 
-            est = res.trans$est, ci.lb = res.trans$lb, ci.ub = res.trans$ub, 
-            L.0 = res.null$L.0, pval.0 = res.null$pval.0, tau2 = res.es$tau.est^2, 
-            tau2.lb = res.es$tau.lb^2, tau2.ub = res.es$tau.ub^2, 
-            L.het = res.hetero$L.het, pval.het = res.hetero$pval.het, 
-            pval.boot = res.hetero$pval.boot, L.pb = res.pub$L.pb, 
-            pval.pb = res.pub$pval.pb)
-  
-  class(x) <- "puni_staroutput"
+  if (is.null(mods) == FALSE)
+  {
+    ### Create a data frame that includes columns for the moderators
+    es <- cbind(es, model.frame(mods))
+    res.es <- esest_mods(es = es, mods = mods, con = con)
+    
+    x <- res.es
+  } else 
+  {
+    res.es <- esest_nsig(yi = es$yi, vi = es$vi, ycv = es$ycv, method = method, 
+                         con = con)
+    
+    ##### TEST OF AN EFFECT #####
+    res.null <- testeffect_nsig(yi = es$yi, vi = es$vi, est = res.es$est,
+                                tau.est = res.es$tau.est, ycv = es$ycv,
+                                method = method)
+    
+    ##### TEST OF NO BETWEEN-STUDY VARIANCE #####
+    res.hetero <- testhetero(yi = es$yi, vi = es$vi, est = res.es$est,
+                             tau.est = res.es$tau.est, ycv = es$ycv,
+                             method = method, boot = boot, con = con)
+    
+    # ##### PUBLICATION BIAS TEST #####
+    # Commented out for now. More research is needed to develop a publication bias 
+    # test for p-uniform* and to study its properties.
+    # res.pub <- pubbias_nsig(yi = es$yi, vi = es$vi, ycv = es$ycv,
+    #                         est = res.es$est, tau.est = res.es$tau.est, method = method)
+    res.pub <- data.frame(L.pb = NA, pval.pb = NA)
+    
+    ##### MIRROR OR TRANSFORM RESULTS #####
+    res.trans <- transform_nsig(res.es = res.es, side = side)
+    
+    ##### CREATE OUTPUT #####
+    x <- list(method = method, k = length(es$yi), ksig = sum(es$pval < alpha/2), 
+              est = res.trans$est, ci.lb = res.trans$lb, ci.ub = res.trans$ub, 
+              L.0 = res.null$L.0, pval.0 = res.null$pval.0, tau2 = res.es$tau.est^2, 
+              tau2.lb = res.es$tau.lb^2, tau2.ub = res.es$tau.ub^2, 
+              L.het = res.hetero$L.het, pval.het = res.hetero$pval.het, 
+              pval.boot = res.hetero$pval.boot, L.pb = res.pub$L.pb, 
+              pval.pb = res.pub$pval.pb)
+    
+    class(x) <- "puni_staroutput"
+    
+  }
   
   return(x)
   
