@@ -5,59 +5,90 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
   if (method == "ML")
   {
     
-    ### Starting values for optimization
-    tau.est <- con$stval.tau
-    int <- con$int
-    tau.int <- con$tau.int
     est.ci <- con$est.ci
     tau.ci <- con$tau.ci
-    tol <- con$tol
-    max.iter <- con$max.iter
-    verbose <- con$verbose
     
-    stay <- TRUE # In order to stay in while loop
-    est <- -999 # Unreasonable estimate to force procedure to use at least two iterations
-    i <- 0 # Counter for number of iterations
-    
-    ### While loop for optimizing profile likelihood functions
-    while(stay) {
+    if(con$proc.ml == "prof")
+    {
       
-      i <- i+1 # Counter for number of iterations
+      ### Starting values for optimization
+      tau.est <- con$stval.tau
+      int <- con$int
+      tau.int <- con$tau.int
+      tol <- con$tol
+      maxit <- con$maxit
+      verbose <- con$verbose
       
-      ### For next iteration new estimate becomes old estimate
-      old <- est
-      tau.old <- tau.est
+      stay <- TRUE # In order to stay in while loop
+      est <- -999 # Unreasonable estimate to force procedure to use at least two iterations
+      i <- 0 # Counter for number of iterations
       
-      ### Optimize profile likelihood function of delta 
-      # (suppressWarnings() in order to be able to specify wide search intervals)
-      est <- suppressWarnings(optimize(ml_est, int, tau.est, yi, vi, ycv, 
-                                       maximum = TRUE)$maximum)
-      
-      ### Optimize profile likelihood function of tau
-      # (suppressWarnings() in order to be able to specify wide search intervals)
-      tau.est <- suppressWarnings(optimize(ml_tau, tau.int, est, yi, vi, ycv, 
-                                           maximum = TRUE)$maximum)
-      
-      ### Print intermediate steps if requested
-      if (verbose == TRUE)
-      {
-        cat("est = ", est, "tau.est = ", tau.est, fill = TRUE)
+      ### While loop for optimizing profile likelihood functions
+      while(stay) {
+        
+        i <- i+1 # Counter for number of iterations
+        
+        ### For next iteration new estimate becomes old estimate
+        old <- est
+        tau.old <- tau.est
+        
+        ### Optimize profile likelihood function of delta 
+        # (suppressWarnings() in order to be able to specify wide search intervals)
+        est <- suppressWarnings(optimize(ml_est, int, tau.est, yi, vi, ycv, 
+                                         maximum = TRUE)$maximum)
+        
+        ### Optimize profile likelihood function of tau
+        # (suppressWarnings() in order to be able to specify wide search intervals)
+        tau.est <- suppressWarnings(optimize(ml_tau, tau.int, est, yi, vi, ycv, 
+                                             maximum = TRUE)$maximum)
+        
+        ### Print intermediate steps if requested
+        if (verbose == TRUE)
+        {
+          cat("est = ", est, "tau.est = ", tau.est, fill = TRUE)
+        }
+        
+        ### Stay in while loop till difference between previous and new estimates
+        # is less than tol or maxit equals maximum number of iterations
+        stay <- ifelse(abs(tau.est-tau.old) < tol & abs(est-old) < tol | 
+                         i == maxit, FALSE, TRUE)
+        
       }
       
-      ### Stay in while loop till difference between previous and new estimates
-      # is less than tol or max.iter equals maximum number of iterations
-      stay <- ifelse(abs(tau.est-tau.old) < tol & abs(est-old) < tol | 
-                       i == max.iter, FALSE, TRUE)
+      if (i == maxit | any(round(est, 3) %in% int | round(tau.est, 3) %in% 
+                              tau.int) & round(tau.est, 3) != 0) 
+      { # If maximum number of iterations is reached or if estimates are equal to 
+        # bounds of interval that was used for optimization return NA except if 
+        # estimate of tau is equal to zero
+        est <- NA
+        tau.est <- NA
+        
+      }
+    } else
+    {
+      ### Starting values
+      par <- c(con$stval.d, con$stval.tau)
       
+      ### Control arguments of optim()
+      control.optim <- list(fnscale = con$fnscale, maxit = con$maxit)
+      
+      ### Optimize log likelihood function
+      out <- optim(par = par, fn = ml_star, yi = yi, vi = vi, ycv = ycv, 
+                   lower = c(-Inf, 0), method = "L-BFGS-B", control = control.optim)
+      
+      ### Store estimates
+      est <- out$par[1]
+      tau.est <- out$par[2]
+      
+      ### Return warning message if there are indications for non-convergence
+      if (out$convergence != 0)
+      {
+        warning("Convergence code is non-zero indicating convergence issues. Try changing the control parameters 'fnscale' and 'maxit' to reach convergence.")
+      }
     }
     
-    if (i == max.iter | any(round(est, 3) %in% int | round(tau.est, 3) %in% 
-                                tau.int) & round(tau.est, 3) != 0) 
-    { # If maximum number of iterations is reached or if estimates are equal to 
-      # bounds of interval that was used for optimization return NA except if 
-      # estimate of tau is equal to zero
-      est <- NA
-      tau.est <- NA
+    if (is.na(est) & is.na(tau.est))
+    {
       lb <- NA
       ub <- NA
       tau.lb <- NA
@@ -69,13 +100,15 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                              yi = yi, vi = vi, est = est, tau.est = tau.est, 
                                              ycv = ycv)$root, silent = TRUE))
       
-      lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) # Return NA if lower bound could not be estimated
+      ### Return NA if lower bound could not be estimated
+      lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) 
       
       tmp.ub <- suppressWarnings(try(uniroot(get_LR_est, interval = c(est, est+est.ci[2]), 
                                              yi = yi, vi = vi, est = est, tau.est = tau.est, 
                                              ycv = ycv)$root, silent = TRUE))
       
-      ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub) # Return NA if upper bound could not be estimated
+      ### Return NA if upper bound could not be estimated
+      ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub)
       
       ### Estimation of CI tau
       if (get_LR_tau(prof.tau = 0, yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv) < 0)
@@ -88,25 +121,27 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
                                                vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
                                        silent = TRUE))
         
-        tau.lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) # Return NA if lower bound could not be estimated
+        ### Return NA if lower bound could not be estimated
+        tau.lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) 
       }
       
       tmp.ub <- suppressWarnings(try(uniroot(get_LR_tau, interval = c(tau.est, tau.est+tau.ci[2]), 
                                              yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
                                      silent = TRUE))
       
-      tau.ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub) # Return NA if upper bound could not be estimated
+      ### Return NA if upper bound could not be estimated
+      tau.ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub) 
     }
   } else if (method == "P" | method == "LNP")
   {
-   
+    
     ### Starting values for root-finding
     bounds.int <- con$bounds.int
     tau.int <- con$tau.int
     est.ci <- con$est.ci
     tau.ci <- con$tau.ci
     tol <- con$tol
-    max.iter <- con$max.iter
+    maxit <- con$maxit
     verbose <- con$verbose
     
     tau.est <- 0 # Use tau=0 for first step
@@ -121,7 +156,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       
       i <- i+1 # Counter for number of iterations
       
-      if (i > max.iter-99)
+      if (i > maxit-99)
       { # Check if root finding is not oscillating between two values
         ### Compute difference between new and old estimates
         tau.dif.new <- round(abs(tau.est-tau.old), 2)
@@ -133,7 +168,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
         }
       }
       
-      if (i > max.iter-100)
+      if (i > maxit-100)
       { # Compute difference between new and old estimates
         tau.dif <- round(abs(tau.old-tau.est), 2)
       }
@@ -202,14 +237,14 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
         cat("est = ", est, "tau.est = ", tau.est, fill = TRUE) 
       }
       
-      if (i > max.iter-10)
+      if (i > maxit-10)
       { # Store last ten estimates of effect size and tau before maximum number 
         # of iterations is reached
-        est.max[i-max.iter+10] <- est
-        taus.max[i-max.iter+10] <- tau.est
+        est.max[i-maxit+10] <- est
+        taus.max[i-maxit+10] <- tau.est
       }
       
-      if (i == max.iter)
+      if (i == maxit)
       { # If maximum number of iterations is reached
         if(mean(abs(diff(est.max))) < 0.1)
         { # If algorithm is oscilating, compute mean of last ten estimates of tau and 
@@ -239,8 +274,8 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       }
       
       ### Stay in while loop till difference between previous and new estimates
-      # is less than tol or max.iter equals maximum number of iterations
-      stay <- ifelse(abs(tau.est-tau.old) < tol & abs(est-old) < tol | i == max.iter, 
+      # is less than tol or maxit equals maximum number of iterations
+      stay <- ifelse(abs(tau.est-tau.old) < tol & abs(est-old) < tol | i == maxit, 
                      FALSE, TRUE)
     }
     
@@ -262,9 +297,9 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
     {
       ### Estimate CI of est ###
       lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(est-con$est.ci[1], est),  
-                        tau = tau.est, yi = yi, vi = vi, param = "est", 
-                        ycv = ycv, method = method, val = "ci.lb", 
-                        get_cv_P(length(yi)))$root, silent = TRUE))
+                                         tau = tau.est, yi = yi, vi = vi, param = "est", 
+                                         ycv = ycv, method = method, val = "ci.lb", 
+                                         get_cv_P(length(yi)))$root, silent = TRUE))
       
       if (inherits(lb, what = "try-error")) 
       { # Check if lower bound could be estimated
@@ -272,9 +307,9 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       } 
       
       ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(est, est+con$est.ci[2]),  
-                        tau = tau.est, yi = yi, vi = vi, param = "est", 
-                        ycv = ycv, method = method, val = "ci.ub", 
-                        get_cv_P(length(yi)))$root, silent = TRUE))
+                                         tau = tau.est, yi = yi, vi = vi, param = "est", 
+                                         ycv = ycv, method = method, val = "ci.ub", 
+                                         get_cv_P(length(yi)))$root, silent = TRUE))
       
       if (inherits(ub, what = "try-error")) 
       { # Check if upper bound could be estimated
@@ -294,9 +329,9 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
           tau.lb <- 0 
           
           tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
-                                est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
-                                method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
-                        silent = TRUE))
+                                                 est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
+                                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
+                                         silent = TRUE))
           
           if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated
@@ -307,9 +342,9 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
         { # Estimate lower and upper bound
           
           tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(max(0, tau.est-con$tau.ci[2]), tau.est), 
-                                est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
-                                method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
-                        silent = TRUE))  
+                                                 est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
+                                                 method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
+                                         silent = TRUE))  
           
           if (inherits(tau.lb, what = "try-error")) 
           { # Check if lower bound could be estimated
@@ -317,9 +352,9 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
           } 
           
           tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
-                                est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
-                                method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
-                        silent = TRUE))
+                                                 est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
+                                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
+                                         silent = TRUE))
           
           if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated
@@ -338,9 +373,9 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
           tau.lb <- 0 # Truncate lower bound to zero if it is negative
           
           tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
-                                est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
-                                method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
-                        silent = TRUE))
+                                                 est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
+                                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
+                                         silent = TRUE))
           
           if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated
@@ -352,15 +387,15 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
           if (con$tau.ci[2] == 0)
           { # If user did not specify a value for search interval, search from 0 to tau.est
             tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est), est = est, 
-                                  yi = yi, vi = vi, param = "tau", ycv = ycv, 
-                                  method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
-                          silent = TRUE))  
+                                                   yi = yi, vi = vi, param = "tau", ycv = ycv, 
+                                                   method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
+                                           silent = TRUE))  
           } else 
           { # Estimate lower and upper bound
             tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(max(0, tau.est-con$tau.ci[2]), tau.est), 
-                                  est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
-                                  method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
-                          silent = TRUE))  
+                                                   est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
+                                                   method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
+                                           silent = TRUE))  
           }
           
           if (inherits(tau.lb, what = "try-error")) 
@@ -369,9 +404,9 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
           } 
           
           tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
-                                est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
-                                method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
-                        silent = TRUE))
+                                                 est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
+                                                 method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
+                                         silent = TRUE))
           
           if (inherits(tau.ub, what = "try-error")) 
           { # Check if upper bound could be estimated

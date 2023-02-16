@@ -13,6 +13,11 @@ the previous version due to different bounds that are used for estimation.
 - The internal function bounds_hy() is no longer used for determining the bounds
 for estimation and is removed from the package
 
+- The default optimization procedure of puni_star() and method = "ML" is now to 
+optimize both parameters at the same time. The previous version where the profile
+log-likelihood functions of both parameters were iteratively optimized is still 
+available by setting the control argument proc.ml = "prof".
+
 - Updated and improved documentation
 
 
