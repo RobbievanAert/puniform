@@ -235,7 +235,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
               reps = 1000,  # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
               
-              par = rep(0, length(labels(terms(mods)))+2) # Starting values for p-uniform* with moderators
+              par = rep(0, ncol(model.matrix(mods))+1) # Starting values for p-uniform* with moderators
               
   )
   

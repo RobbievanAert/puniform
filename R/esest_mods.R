@@ -3,8 +3,8 @@ esest_mods <- function(es, mods, con)
 {
   par <- con$par # Load starting values
   
-  n_bs <- length(labels(terms(mods)))+1 # Number of regression parameters (including intercept)
-  
+  n_bs <- ncol(model.matrix(mods)) # Number of regression parameters
+    
   lower <- c(rep(-Inf, n_bs), 0) # Lower bound for optimizing
   
   out <- optim(par = par, fn = ml_mods, method = "L-BFGS-B", lower = lower, 
