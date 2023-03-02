@@ -3,7 +3,7 @@ esest_mods <- function(es, mods, con)
 {
   par <- con$par # Load starting values
   
-  n_bs <- ncol(model.matrix(mods)) # Number of regression parameters
+  n_bs <- ncol(model.matrix(mods), data = es) # Number of regression parameters
     
   lower <- c(rep(-Inf, n_bs), 0) # Lower bound for optimizing
   
