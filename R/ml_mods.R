@@ -9,7 +9,7 @@ ml_mods <- function(par, es, mods, n_bs)
   ycv <- es$ycv
   
   ### Evaluate the regression equation at the estimated bs
-  X <- model.matrix(terms(mods), data = es)
+  X <- model.matrix(mods, data = es)
   M <- X %*% bs
   
   ### Compute the log-likelihood of the truncated densities
