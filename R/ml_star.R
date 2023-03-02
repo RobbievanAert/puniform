@@ -16,7 +16,7 @@ ml_star <- function(par, yi, vi, ycv, verbose = FALSE)
              pnorm(ycv, mean = d, sd = sqrt(vi+tau^2), log.p = TRUE))
   }, yi = yi, vi = vi, ycv = ycv, MoreArgs = list(d = d, tau = tau))
   
-  ll <- sum(q) # Compute log likelihood
+  ll <- sum(q) # Compute log-likelihood
   
   if (verbose == TRUE)
   {

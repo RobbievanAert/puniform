@@ -9,8 +9,10 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
     pval.boot <- NA # P-value is not bootstrapped with method == ML
     
     ### Conduct likelihood-ratio test
-    L.het <- -2*(ml_est(est, 0, yi, vi, ycv)-ml_est(est, tau.est, yi, vi, ycv))
+    L.het <- -2*(ml_star(par = c(est, 0), yi = yi, vi = vi, ycv = ycv)-
+                   ml_star(par = c(est, tau.est), yi = yi, vi = vi, ycv = ycv))
     pval.het <- pchisq(L.het, df = 1, lower.tail = FALSE)
+    
   } else if (method == "P" | method == "LNP")
   {
     
