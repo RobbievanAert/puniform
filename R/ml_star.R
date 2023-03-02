@@ -1,5 +1,5 @@
 ### Function for computing log likelihood of p-uniform*
-ml_star <- function(par, yi, vi, ycv) 
+ml_star <- function(par, yi, vi, ycv, verbose = FALSE) 
 {
   
   d <- par[1]
@@ -16,6 +16,12 @@ ml_star <- function(par, yi, vi, ycv)
              pnorm(ycv, mean = d, sd = sqrt(vi+tau^2), log.p = TRUE))
   }, yi = yi, vi = vi, ycv = ycv, MoreArgs = list(d = d, tau = tau))
   
-  -1*sum(q) # Compute log likelihood
+  ll <- sum(q) # Compute log likelihood
   
+  if (verbose == TRUE)
+  {
+    cat("d = ", d, "; tau^2 = ", tau^2, "; log-lik = ", ll, fill = TRUE, sep = "")
+  }
+  
+  return(ll)
 }

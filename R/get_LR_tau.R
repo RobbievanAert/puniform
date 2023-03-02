@@ -1,6 +1,6 @@
 ### Function for estimating profile likelihood CI for tau
 get_LR_tau <- function(prof.tau, yi, vi, est, tau.est, ycv)
 {
-  (2*(ml_tau(tau.est, est, yi, vi, ycv)-
-        ml_tau(prof.tau, est, yi, vi, ycv)))-qchisq(.95, df = 1)
+  (2*(ml_star(par = c(est, tau.est), yi = yi, vi = vi, ycv = ycv)-
+        ml_star(par = c(est, prof.tau), yi = yi, vi = vi, ycv = ycv)))-qchisq(.95, df = 1)
 }

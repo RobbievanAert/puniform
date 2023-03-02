@@ -69,12 +69,14 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       ### Starting values
       par <- c(con$stval.d, con$stval.tau)
       
-      ### Control arguments of optim()
-      control.optim <- list(fnscale = con$fnscale, maxit = con$maxit)
+      ### Control arguments of optim(). -1 times con$fnscale to maximize the 
+      # log-likelihood function
+      control.optim <- list(fnscale = -1*con$fnscale, maxit = con$maxit)
       
       ### Optimize log likelihood function
       out <- optim(par = par, fn = ml_star, yi = yi, vi = vi, ycv = ycv, 
-                   lower = c(-Inf, 0), method = "L-BFGS-B", control = control.optim)
+                   lower = c(-Inf, 0), method = "L-BFGS-B", 
+                   verbose = con$verbose, control = control.optim)
       
       ### Store estimates
       est <- out$par[1]
