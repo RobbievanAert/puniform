@@ -1,5 +1,5 @@
 ### Function for computing log-likelihood in case of p-uniform* with moderators
-ml_mods <- function(par, es, mods, n_bs)
+ml_mods <- function(par, es, n_bs, mods)
 {
   bs <- par[1:n_bs] # Get values for bs
   tau <- par[n_bs+1] # Get value for tau

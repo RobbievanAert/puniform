@@ -1,10 +1,8 @@
 ### Function for estimating the parameters with p-uniform* in case of moderators
-esest_mods <- function(es, mods, con)
+esest_mods <- function(es, mods, n_bs, con)
 {
   par <- con$par # Load starting values
   
-  n_bs <- ncol(model.matrix(mods, data = es)) # Number of regression parameters
-    
   lower <- c(rep(-Inf, n_bs), 0) # Lower bound for optimizing
   
   out <- optim(par = par, fn = ml_mods, method = "L-BFGS-B", lower = lower, 

@@ -220,6 +220,9 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   ### Critical value
   es$ycv <- es$zcv*sqrt(es$vi)
   
+  ### Number of fixed effects parameters to be estimated
+  n_bs <- ifelse(is.null(mods), 1, ncol(model.matrix(mods, data = es)))
+  
   ### Default values for optimizing (ML) and root-finding procedures (P and LNP)
   con <- list(stval.tau = 0,     # Starting value of tau for estimation (ML)
               int = c(-2, 2),    # Interval that is used for estimating ES (ML)
@@ -235,7 +238,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
               reps = 1000,  # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
               
-              par = rep(0, ncol(model.matrix(mods, data = es))+1) # Starting values for p-uniform* with moderators
+              par = rep(0, n_bs+1) # Starting values for p-uniform* with moderators. +1 for estimating tau
               
   )
   
@@ -251,7 +254,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   {
     ### Create a data frame that includes columns for the moderators
     es <- cbind(es, model.frame(mods))
-    res.es <- esest_mods(es = es, mods = mods, con = con)
+    res.es <- esest_mods(es = es, mods = mods, n_bs = n_bs, con = con)
     
     x <- res.es
   } else 
