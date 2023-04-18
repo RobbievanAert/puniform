@@ -183,7 +183,8 @@
 #' @export
 
 puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
-                      alpha = 0.05, side, method = "ML", mods = NULL, boot = FALSE, control)
+                      alpha = 0.05, side, method = "ML", type = "Wald", mods = NULL, 
+                      boot = FALSE, control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
@@ -237,10 +238,8 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               max.iter = 300,   # Maximum number of iterations for the optimizing (ML) and root-finding procedures (P, LNP)
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
               reps = 1000,  # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
-              
-              par = rep(0, n_bs+1) # Starting values for p-uniform* with moderators. +1 for estimating tau
-              
-  )
+              par = rep(0, n_bs+1), # Starting values for p-uniform* with moderators. +1 for estimating tau
+              optimizer = "Nelder-Mead") # Optimizer for puni_star() with moderators
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
@@ -249,16 +248,41 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
     con[con.pos] <- control[1:length(con.pos)]
   }
   
-  ##### EFFECT SIZE ESTIMATION #####
+  ### If there are moderators included
   if (is.null(mods) == FALSE)
   {
+    ### Extract variable names for the output
+    var_names <- colnames(model.matrix(mods, data = es))
+    
+    ##### EFFECT SIZE ESTIMATION #####
     ### Create a data frame that includes columns for the moderators
     es <- cbind(es, model.frame(mods))
-    res.es <- esest_mods(es = es, mods = mods, n_bs = n_bs, con = con)
+    res.es <- esest_mods(es = es, mods = mods, n_bs = n_bs, type = type, con = con)
     
-    x <- res.es
+    ##### TEST OF AN EFFECT #####
+    res.null <- testeffect_mods(es = es, mods = mods, n_bs = n_bs, ll = res.es$ll, 
+                                est = res.es$est, se = res.es$se, type = type, 
+                                con = con)
+    
+    ##### TEST OF NO BETWEEN-STUDY VARIANCE #####
+    res.hetero <- testhetero_mods(es = es, mods = mods, n_bs = n_bs, ll = res.es$ll, 
+                                  tau2.est = res.es$tau2.est, se = res.es$se, 
+                                  type = type, con = con)
+    
+    ##### CREATE OUTPUT #####
+    x <- list(var_names = var_names, method = method, k = length(es$yi), 
+              ksig = sum(es$pval < alpha/2), est = res.es$est, se = res.es$se, 
+              ci.lb = res.es$ci.lb, ci.ub = res.es$ci.ub, 
+              L.0 = res.null$L.0, pval.0 = res.null$pval.0, tau2 = res.es$tau2.est, 
+              tau2.lb = res.es$ci.lb.tau2.est, tau2.ub = res.es$ci.ub.tau2.est, 
+              L.het = res.hetero$L.het, pval.het = res.hetero$pval.het, 
+              optim.info = res.es$optim.info)
+    
+    class(x) <- "puni_staroutput"
+    
   } else 
-  {
+  { # If there are no moderators included
+    ##### EFFECT SIZE ESTIMATION #####
     res.es <- esest_nsig(yi = es$yi, vi = es$vi, ycv = es$ycv, method = method, 
                          con = con)
     

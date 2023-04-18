@@ -13,6 +13,11 @@ the previous version due to different bounds that are used for estimation.
 - The internal function bounds_hy() is no longer used for determining the bounds
 for estimation and is removed from the package
 
+- Improved the output of print.puni_staroutput() using the newly created report
+function
+
+- Added moderator analyses to puni_star()
+
 - Updated and improved documentation
 
 
