@@ -70,7 +70,7 @@ esest_mods <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), type, con)
       warning("Error when inverting Hessian", call. = FALSE)
     } else 
     {
-      se <- sqrt(diag(H))  
+      se <- sqrt(diag(inv_H))  
     }
     
     if (type == "profile")
