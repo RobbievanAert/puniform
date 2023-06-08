@@ -1,8 +1,8 @@
 Package: puniform
 Type: Package
 Title: Meta-Analysis Methods Correcting for Publication Bias
-Version: 0.2.5
-Date: 2022-03-18
+Version: 0.2.6
+Date: 2023-08-06
 Author: Robbie C.M. van Aert
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: Provides meta-analysis methods that correct for
@@ -12,7 +12,7 @@ Description: Provides meta-analysis methods that correct for
     can be used for estimating the average effect size, testing the null hypothesis 
     of no effect, and testing for publication bias using only the statistically 
     significant effect sizes of primary studies. The second method in the package 
-    is the p-uniform* method as described in van Aert and van Assen (2019) 
+    is the p-uniform* method as described in van Aert and van Assen (2023) 
     <doi:10.31222/osf.io/zqjr9>. This method is an extension of the p-uniform 
     method that allows for estimation of the average effect size and the 
     between-study variance in a meta-analysis, and uses both the statistically 
@@ -32,12 +32,12 @@ Description: Provides meta-analysis methods that correct for
     hypothesis significance testing. The meta-plot is a visual tool for meta-analysis 
     that provides information on the primary studies in the meta-analysis, the 
     results of the meta-analysis, and characteristics of the research on the effect 
-    under study (van Assen et al., 2021). Helper functions to apply the 
+    under study (van Assen et al., 2023). Helper functions to apply the 
     Correcting for Outcome Reporting Bias (CORB) method to correct for outcome 
-    reporting bias in a meta-analysis (van Aert & Wicherts, 2021).
+    reporting bias in a meta-analysis (van Aert & Wicherts, 2023).
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.15), ADGofTest (>= 0.3), stats, metafor
 LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: https://github.com/RobbievanAert/puniform
 BugReports: https://github.com/RobbievanAert/puniform/issues

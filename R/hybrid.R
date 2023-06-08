@@ -76,6 +76,8 @@
 #' @param sd2i A vector of standard deviations in group 2 for two-independent
 #' means (deprecated, see Details)
 #' @param tobs A vector of t-values (deprecated, see Details)
+#' @param control An optional list of elements that give the user more control 
+#' over the root-finding procedures (see Note) 
 #'
 #' @details Three different effect sizes can be used as input for the
 #' \code{hybrid} function: one-sample means, two-independent means, and raw
@@ -180,7 +182,32 @@
 #'  no effect}
 #' \item{pval.repl}{two-tailed p-value of replication for testing
 #' null-hypothesis of no effect}
-#'
+#' 
+#' @note The \code{control} argument in the \code{hybrid} function is an optional 
+#' argument that gives the user more control over the root-finding procedures. 
+#' This can be especially useful if estimation of the method does not converge 
+#' and NAs are returned by the function. The \code{control} argument should 
+#' be specified as a list containing one or more elements. For example, 
+#' \code{control = list(verbose = TRUE)} Default values are used if an element is 
+#' not specified. The following elements can be specified by the user:
+#' 
+#' \itemize{
+#' \item{\code{int:}}{ A vector of length two that indicates the lower and upper 
+#' bound of the interval that is used for estimating the effect size. The effect 
+#' size estimate should be included in this interval. Its default values are -10
+#' for the first element and the maximum effect size of a study included in the 
+#' analysis + 1 as the second element.}
+#' \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
+#' subtracted from and added to the estimate of the effect size for computing the 
+#' 95\% confidence intervals. Its default values are (50, 1). To give an example, 
+#' estimates for the lower and upper bound around the effect size estimate are 
+#' searched on the interval (est-50, est) and (est, est+1), respectively.}
+#' \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
+#' Its default value is .Machine$double.eps^0.25.} 
+#' \item{\code{verbose:}}{ A logical indicating whether information should be printed 
+#' about the estimation procedure. Its default value is FALSE.}
+#' } 
+#' 
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
 #' @references van Aert, R. C. M., & van Assen, M. A. L. M. (2018). Examining
@@ -223,7 +250,7 @@
 hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi, 
                    toobs, mr1i, mr2i, mri, rri, sdr1i, sdr2i, sdri, nr1i, nr2i, 
                    nri, trobs, m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, 
-                   tobs, yoi, yri, voi, vri, alpha = 0.05, side) 
+                   tobs, yoi, yri, voi, vri, alpha = 0.05, side, control) 
 {
   
   if (!missing("mi") | !missing("tobs") | !missing("m1i") | !missing("ri"))
@@ -342,7 +369,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es.yri$ori <- 0 # Create variable to indicate that it is a replication
       
       es <- rbind(es.yoi, es.yri) # Bind data frames
-
+      
     } else if (!missing("no1i") & !missing("no2i") & !missing("toobs") & 
                !missing("nr1i") & !missing("nr2i") & !missing("trobs")) 
     {
@@ -359,7 +386,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es.yri$ori <- 0 # Create variable to indicate that it is a replication
       
       es <- rbind(es.yoi, es.yri) # Bind data frames
-
+      
     } else if (!missing("roi") & !missing("noi") & !missing("rri") & !missing("nri")) 
     {
       measure <- "COR"
@@ -375,7 +402,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es.yri$ori <- 0 # Create variable to indicate that it is a replication
       
       es <- rbind(es.yoi, es.yri) # Bind data frames
-
+      
     } else if (!missing("yoi") & !missing("voi") & !missing("yri") & 
                !missing("vri"))
     {
@@ -406,9 +433,32 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
   krep <- sum(es$ori == 0) # Number of replications
   
   ##############################################################################
-
+  
+  ### Default values for root-finding procedures
+  
+  # - int    =  interval that is used for estimating ES and computing CI
+  # - est.ci =  values that are subtracted from (first element) and added to 
+  #             (second element) the estimate to determine the search interval 
+  #             for computing the CI
+  # - tol    =  the convergence tolerance
+  # - verbose = if verbose = TRUE output is printed about estimation procedures
+  
+  con <- list(int = c(-10, max(es$yi + 1)),
+              est.ci = c(50, 1),
+              tol = .Machine$double.eps^0.25,
+              verbose = FALSE) 
+  
+  ### Check if user has specified values in control and if yes replace values in con
+  if (missing(control) == FALSE)
+  {
+    con.pos <- pmatch(names(control), names(con))
+    con[con.pos] <- control[1:length(con.pos)]
+  }
+  
+  ##############################################################################
+  
   ### Apply hybrid method
-  res1 <- hy(es = es, measure = measure, side = side)
+  res1 <- hy(es = es, measure = measure, side = side, con = con)
   
   ### Hybrid^R method
   if (res.repl$pval.o < alpha/2) 
@@ -417,7 +467,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
                        ci.ub.hyr = res1$ci.ub.hy, x.hyr = res1$x.hy, 
                        pval.hyr = res1$pval.hy, pval.o = res.repl$pval.o)
   } else 
-  { # Use results of only replications if two-tailed p-value of orginal studies 
+  { # Use results of only replications if two-tailed p-value of original studies 
     # > alpha/2
     res2 <- data.frame(est.hyr = res.repl$est.repl, ci.lb.hyr = res.repl$ci.lb.repl,
                        ci.ub.hyr = res.repl$ci.ub.repl, x.hyr = res.repl$stat.repl,

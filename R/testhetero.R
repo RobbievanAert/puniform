@@ -8,9 +8,21 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
     
     pval.boot <- NA # P-value is not bootstrapped with method == ML
     
+    ### Log-likelihood when estimating both parameters
+    ll <- ml_star(par = c(est, tau.est), yi = yi, vi = vi, ycv = ycv) 
+    
+    ### Log-likelihood when tau is constrained to zero
+    ll0 <- optimize(f = ml_star_est, interval = con$int, tau = 0, yi = yi, vi = vi,
+                    ycv = ycv, maximum = TRUE)$objective
+    
     ### Conduct likelihood-ratio test
-    L.het <- -2*(ml_est(est, 0, yi, vi, ycv)-ml_est(est, tau.est, yi, vi, ycv))
-    pval.het <- pchisq(L.het, df = 1, lower.tail = FALSE)
+    L.het <- -2*(ll0-ll)
+    
+    ### 0.5 x chisq, because the tested null-hypothesis H0: tau2 = 0 is on the 
+    # boundary of the parameter space. See Andrews (2001) and Molenberghs and 
+    # Verbeke (2012)
+    pval.het <- 0.5*pchisq(L.het, df = 1, lower.tail = FALSE)
+    
   } else if (method == "P" | method == "LNP")
   {
     

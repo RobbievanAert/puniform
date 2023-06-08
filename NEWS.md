@@ -1,7 +1,29 @@
-# Changes in puniform 0.2.6 (XXXX-XX-XX)
+# Changes in puniform 0.2.6 (2023-06-08)
 
 - Fix a bug in hybrid() where the standard error was also transformed from Fisher's
 z-value to Pearson correlation
+
+- Improve pdist_hy() such that logarithm of the probabilities are computed. The 
+approximation of extreme tail probabilities is now no longer needed.
+
+- hybrid() now has a control argument that provide the user more control about the
+estimation. Note that this may cause minor differences in estimates compared to 
+the previous version due to different bounds that are used for estimation.
+
+- The internal function bounds_hy() is no longer used for determining the bounds
+for estimation and is removed from the package
+
+- The default optimization procedure of puni_star() and method = "ML" is now to 
+optimize both parameters at the same time. The previous version where the profile
+log-likelihood functions of both parameters were iteratively optimized is still 
+available by setting the control argument proc.ml = "prof".
+
+- Fix a bug in the computation of the profile likelihood confidence intervals of 
+esest_nsig() and in the computation of the likelihood-ratio test in testeffect_nsig()
+and testhetero(). Note that the functions get_LR_est() and get_LR_tau() are not
+necessary anymore and are deleted from the package.
+
+- Updated and improved documentation
 
 
 # Changes in puniform 0.2.5 (2022-03-18)

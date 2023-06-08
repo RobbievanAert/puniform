@@ -96,8 +96,9 @@
 #' Knapp, G., . . . Salanti, G. (2016). Methods to estimate the between-study variance 
 #' and its uncertainty in meta-analysis. Research Synthesis Methods, 7(1), 55-79. 
 #' doi:10.1002/jrsm.1164
-#' @references van Assen, ..., & van Aert (2021). The meta-plot: A graphical tool 
-#' for interpreting the results of a meta-analysis. Submitted for publication.
+#' @references van Assen, ..., & van Aert (2023). The meta-plot: A graphical tool 
+#' for interpreting the results of a meta-analysis. Zeitschrift fur Psychologie, 
+#' 231(1), 65-78. doi:10.1027/2151-2604/a000513
 #'
 #' @examples ### Load data from meta-analysis by McCall and Carriger (1993)
 #' data(data.mccall93)

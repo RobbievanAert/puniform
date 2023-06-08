@@ -91,7 +91,7 @@ of no between-study variance obtained with a parametric bootstrap}
 }
 \description{
 Function to apply the p-uniform* method for one-sample mean, two-independent means,
-and one raw correlation coefficient as described in van Aert and van Assen (2021).
+and one raw correlation coefficient as described in van Aert and van Assen (2023).
 }
 \details{
 Three different effect size measures can be used as input for the \code{puni_star}
@@ -135,9 +135,9 @@ Three different methods are currently implemented in the \code{puni_star} functi
 The \code{ML} method refers to maximum likelihood estimation of the effect size 
 and the between-study variance. Profile likelihood confidence intervals around 
 the estimates are computed by means of inverting the likelihood-ratio test. 
-Likelihood-ratio tests are used for the publication bias test and testing the 
-null hypotheses of no effect and no between-study variance. The \code{ML} method 
-is the recommended method for applying p-uniform*. 
+Likelihood-ratio tests are used for testing the null hypotheses of no effect 
+and no between-study variance. The \code{ML} method is the recommended method 
+for applying p-uniform*. 
 
 The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
 The method \code{P} is based on the distribution of the sum of independent 
@@ -160,9 +160,19 @@ be specified as a list containing one or more elements. For example,
 not specified. The following elements can be specified by the user:
 
 \itemize{
+\item{\code{proc.ml:}}{ A character indicating with optimization procedure should 
+be used for the method \code{ML}. The initial implementation of p-uniform* iteratively
+optimized the profile log-likelihood functions. As of version 0.2.6 of this 
+package, the default optimization routine estimates both parameters at the 
+same time. The old optimization procedure can be used by specifying \code{proc.ml = "prof"}}.
+\item{\code{stval.d:}}{ An integer that is the starting value of the effect 
+size for estimation. This starting value is used for the method \code{ML} and 
+is only needed when both parameters are estimated at the same time. See argument 
+\code{proc.ml} for more information. The default value is the mean of the effect
+sizes in the meta-analysis.}
 \item{\code{stval.tau:}}{ An integer that is the starting value of tau for estimation.
-This starting value is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
-its default value is 0.}
+This starting value is used for the methods \code{ML}, \code{P}, and \code{LNP}. 
+The default value is the standard deviation of the effect sizes in the meta-analysis.}
 \item{\code{int:}}{ A vector of length two that indicates the lower and upper 
 bound of the interval that is used for estimating the effect size. The effect 
 size estimate should be included in this interval. This interval is used for the 
@@ -178,11 +188,11 @@ The estimate of the between-study variance should be included in this interval.
 This interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
 and its default values are (0, 2).}
 \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
-added to the estimate of the effect size for computing the 95\% confidence 
-intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-and its default values are (3, 3). To give an example, estimates for the lower 
-and upper bound around the effect size estimate are searched on the interval 
-(est-3, est) and (est, est+3), respectively.}
+subtracted from and added to the estimate of the effect size for computing the 
+95\% confidence intervals. This vector is used for the methods \code{ML}, 
+\code{P}, and \code{LNP} and its default values are (3, 3). To give an example, 
+estimates for the lower and upper bound around the effect size estimate are 
+searched on the interval (est-3, est) and (est, est+3), respectively.}
 \item{\code{tau.ci:}}{ A vector of length two indicating the values that are 
 added to the estimate of the between-study variance for computing the 95\% confidence 
 intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
@@ -190,10 +200,16 @@ and its default values are (3, 1).}
 \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
 This number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its 
 default value is 0.001.} 
-\item{\code{max.iter:}}{ An integer indicating the maximum number of iterations 
+\item{\code{maxit:}}{ An integer indicating the maximum number of iterations 
 that is used for estimating the effect size and between-study variance. This 
 number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its default 
 value is 300.}
+\item{\code{fnscale:}}{ An integer that can be used for scaling the log-likelihood
+value in the optimization. \code{fnscale} is one of the control arguments of 
+the \code{optim()} function that is internally used for optimization when the 
+\code{ML} method is used and both parameters are estimated at the same time. 
+See the argument \code{proc.ml} above #' and the documentation of the \code{optim()} 
+function for more information.} 
 \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 about the algorithm for estimating the effect size and between-study variance. 
 This logical is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
@@ -224,7 +240,7 @@ puni_star(tobs = tobs, ni = ni, alpha = 0.05, side = "right", method = "ML")
 Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 London: Oliver & Boyd.
 
-van Aert, R.C.M., & van Assen, M.A.L.M. (2021). Correcting for 
+van Aert, R.C.M., & van Assen, M.A.L.M. (2023). Correcting for 
 publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
 for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
 }

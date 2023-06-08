@@ -33,7 +33,7 @@ Multiple raw mean differences can be computed in case of two groups
 and multiple outcomes. The function computes the variance of the 
 difference of two raw mean differences given a correlation between the outcomes. 
 For a derivation of this variance see the supplemental materials of 
-van Aert & Wicherts (2020).
+van Aert & Wicherts (2023).
 
 The vectors \code{sd1i} and \code{sd2i} can contain a single standard deviation 
 or multiple standard deviations if information on more than one outcome 
@@ -41,7 +41,7 @@ measure is available.
 
 The variance that is computed with this function can be used to correct for 
 outcome reporting bias by including the variance as a moderator in a 
-(multivariate) meta-analysis. Please see van Aert & Wicherts (2020) for 
+(multivariate) meta-analysis. Please see van Aert & Wicherts (2023) for 
 more information.
 }
 \examples{
@@ -50,9 +50,9 @@ var_dif_rmd(sd1i = c(0.8, 1.2), sd2i = c(0.85, 1.15), n1i = 100, n2i = 95, r = 0
 
 }
 \references{
-van Aert, R.C.M. & Wicherts, J.M. (2021). Correcting for outcome 
-reporting bias in a meta-analysis: A meta-regression approach. Manuscript 
-submitted for publication.
+van Aert, R.C.M. & Wicherts, J.M. (2023). Correcting for outcome 
+reporting bias in a meta-analysis: A meta-regression approach. Behavior Research
+Methods.
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
