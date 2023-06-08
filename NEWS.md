@@ -1,4 +1,4 @@
-# Changes in puniform 0.2.6 (XXXX-XX-XX)
+# Changes in puniform 0.2.6 (2023-06-08)
 
 - Fix a bug in hybrid() where the standard error was also transformed from Fisher's
 z-value to Pearson correlation

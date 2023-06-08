@@ -1,6 +1,6 @@
 ### Function for computing the profile log likelihood of p-uniform* for the
 # average effect size
-ml_star_d <- function(d, tau, yi, vi, ycv) 
+ml_star_est <- function(d, tau, yi, vi, ycv) 
 {
   q <- mapply(function(d, tau, yi, vi, ycv)
   { # Compute conditional probabilities for significant and nonsignificant 

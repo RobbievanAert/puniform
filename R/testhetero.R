@@ -12,7 +12,7 @@ testhetero <- function(yi, vi, est, tau.est, ycv, method, boot, con)
     ll <- ml_star(par = c(est, tau.est), yi = yi, vi = vi, ycv = ycv) 
     
     ### Log-likelihood when tau is constrained to zero
-    ll0 <- optimize(f = ml_star_d, interval = con$int, tau = 0, yi = yi, vi = vi,
+    ll0 <- optimize(f = ml_star_est, interval = con$int, tau = 0, yi = yi, vi = vi,
                     ycv = ycv, maximum = TRUE)$objective
     
     ### Conduct likelihood-ratio test

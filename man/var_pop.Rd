@@ -30,11 +30,11 @@ assumes equal true effect size of all outcomes, equal sampling variances of
 the outcomes' effect size, and equal correlation (i.e., \code{r}) among the 
 outcomes. 
 
-For a derivation of this estimator see van Aert & Wicherts (2020).
+For a derivation of this estimator see van Aert & Wicherts (2023).
 
 The variance that is computed with this function can be used to correct for 
 outcome reporting bias by including the variance as a moderator in a 
-(multivariate) meta-analysis. Please see van Aert & Wicherts (2020) for 
+(multivariate) meta-analysis. Please see van Aert & Wicherts (2023) for 
 more information.
 }
 \examples{
@@ -43,9 +43,9 @@ var_pop(v = 0.1, r = 0.3)
 
 }
 \references{
-van Aert, R.C.M. & Wicherts, J.M. (2021). Correcting for outcome 
-reporting bias in a meta-analysis: A meta-regression approach. Manuscript 
-submitted for publication.
+van Aert, R.C.M. & Wicherts, J.M. (2023). Correcting for outcome 
+reporting bias in a meta-analysis: A meta-regression approach. Behavior Research
+Methods.
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

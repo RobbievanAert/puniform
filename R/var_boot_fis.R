@@ -18,7 +18,7 @@
 #' transformed correlation coefficients can be computed between variables l and h 
 #' and variables l and m. The function computes the variance of the two overlapping 
 #' Fisher-z transformed correlation coefficients using a parametric bootstrap 
-#' procedure. For more information see van Aert & Wicherts (2020).
+#' procedure. For more information see van Aert & Wicherts (2023).
 #' 
 #' The vector \code{ri} can contain a single Pearson correlation coefficient or 
 #' multiple coefficients if information on more than one outcome is 
@@ -29,7 +29,7 @@
 #'  
 #' The variance that is computed with this function can be used to correct for 
 #' outcome reporting bias by including the variance as a moderator in a 
-#' (multivariate) meta-analysis. Please see van Aert & Wicherts (2020) for 
+#' (multivariate) meta-analysis. Please see van Aert & Wicherts (2023) for 
 #' more information.
 #'
 #' @return The \code{var_boot_fis} function returns a numerical value that is the 
@@ -37,9 +37,9 @@
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
 #'
-#' @references van Aert, R.C.M. & Wicherts, J.M. (2021). Correcting for outcome 
-#' reporting bias in a meta-analysis: A meta-regression approach. Manuscript 
-#' submitted for publication.
+#' @references van Aert, R.C.M. & Wicherts, J.M. (2023). Correcting for outcome 
+#' reporting bias in a meta-analysis: A meta-regression approach. Behavior Research
+#' Methods.
 #'
 #' @examples ### Compute variance for an artificial example
 #' var_boot_fis(ri = 0, n = 100, r = 0.3)

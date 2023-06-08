@@ -99,7 +99,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
     {
       ### Function to compute profile likelihood confidence intervals for the 
       # average effect size
-      get_profile_ci <- function(d, tau, yi, vi, chi_cv, ll, con)
+      get_profile_ci_est <- function(d, tau, yi, vi, chi_cv, ll, con)
       {
         
         ll0 <- optimize(f = ml_star_tau, interval = con$tau.int, d = d, yi = yi, vi = vi,
@@ -127,7 +127,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
         ll <- out$value
       }
       
-      tmp.lb <- try(uniroot(f = get_profile_ci, interval = c(est-est.ci[1],est), 
+      tmp.lb <- try(uniroot(f = get_profile_ci_est, interval = c(est-est.ci[1],est), 
                             tau = tau.est, yi = yi, vi = vi, 
                             chi_cv = qchisq(.95, df = 1), ll = ll, con = con)$root, 
                     silent = TRUE)
@@ -135,7 +135,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       ### Return NA if lower bound could not be estimated
       lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb)
       
-      tmp.ub <- try(uniroot(f = get_profile_ci, interval = c(est,est+est.ci[2]), 
+      tmp.ub <- try(uniroot(f = get_profile_ci_est, interval = c(est,est+est.ci[2]), 
                             tau = tau.est, yi = yi, vi = vi, 
                             chi_cv = qchisq(.95, df = 1), ll = ll, con = con)$root, 
                     silent = TRUE)
@@ -149,22 +149,22 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       
       ### Function to compute profile likelihood confidence intervals for the 
       # average effect size
-      get_profile_ci <- function(tau, d, yi, vi, chi_cv, ll, con)
+      get_profile_ci_tau <- function(tau, d, yi, vi, chi_cv, ll, con)
       {
         
-        ll0 <- optimize(f = ml_star_d, interval = con$int, tau = tau, yi = yi, 
+        ll0 <- optimize(f = ml_star_est, interval = con$int, tau = tau, yi = yi, 
                         vi = vi, ycv = ycv, maximum = TRUE)$objective
         
         return(-2*(ll0-ll)-chi_cv)
       }
       
-      if (get_profile_ci(tau = 0, d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1),
-                         ll = ll, con = con) < 0)
+      if (get_profile_ci_tau(tau = 0, d = est, yi = yi, vi = vi, 
+                             chi_cv = qchisq(.95, df = 1), ll = ll, con = con) < 0)
       { # Set lower bound to zero if it is smaller than 0
         tau.lb <- 0
       } else
       {
-        tmp.lb <- try(uniroot(f = get_profile_ci, 
+        tmp.lb <- try(uniroot(f = get_profile_ci_tau, 
                               interval = c(max(c(0, tau.est-con$tau.ci[1])), tau.est), 
                               d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1), 
                               ll = ll, con = con)$root, silent = TRUE)
@@ -173,7 +173,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
         tau.lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb)
       }
       
-      tmp.ub <- try(uniroot(f = get_profile_ci, 
+      tmp.ub <- try(uniroot(f = get_profile_ci_tau, 
                             interval = c(tau.est, tau.est+con$tau.ci[2]), 
                             d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1), 
                             ll = ll, con = con)$root, silent = TRUE)
