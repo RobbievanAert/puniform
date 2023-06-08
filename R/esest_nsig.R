@@ -56,7 +56,7 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       }
       
       if (i == maxit | any(round(est, 3) %in% int | round(tau.est, 3) %in% 
-                              tau.int) & round(tau.est, 3) != 0) 
+                           tau.int) & round(tau.est, 3) != 0) 
       { # If maximum number of iterations is reached or if estimates are equal to 
         # bounds of interval that was used for optimization return NA except if 
         # estimate of tau is equal to zero
@@ -97,42 +97,90 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
       tau.ub <- NA
     } else 
     {
-      ### Estimation CI (suppressWarnings() in order to be able to specify wide search intervals)
-      tmp.lb <- suppressWarnings(try(uniroot(get_LR_est, interval = c(est-est.ci[1], est), 
-                                             yi = yi, vi = vi, est = est, tau.est = tau.est, 
-                                             ycv = ycv)$root, silent = TRUE))
-      
-      ### Return NA if lower bound could not be estimated
-      lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) 
-      
-      tmp.ub <- suppressWarnings(try(uniroot(get_LR_est, interval = c(est, est+est.ci[2]), 
-                                             yi = yi, vi = vi, est = est, tau.est = tau.est, 
-                                             ycv = ycv)$root, silent = TRUE))
-      
-      ### Return NA if upper bound could not be estimated
-      ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub)
-      
-      ### Estimation of CI tau
-      if (get_LR_tau(prof.tau = 0, yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv) < 0)
-      { # If lower bound is smaller than zero, set estimate lower bound to zero
-        tau.lb <- 0
-      } else 
+      ### Function to compute profile likelihood confidence intervals for the 
+      # average effect size
+      get_profile_ci <- function(d, tau, yi, vi, chi_cv, ll, con)
       {
-        tmp.lb <- suppressWarnings(try(uniroot(get_LR_tau, interval = c(max(0, tau.est-tau.ci[1]), 
-                                                                        tau.est), yi = yi, 
-                                               vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
-                                       silent = TRUE))
         
-        ### Return NA if lower bound could not be estimated
-        tau.lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb) 
+        ll0 <- optimize(f = ml_star_tau, interval = con$tau.int, d = d, yi = yi, vi = vi,
+                        ycv = ycv, maximum = TRUE)$objective
+        
+        return(-2*(ll0-ll)-chi_cv)
       }
       
-      tmp.ub <- suppressWarnings(try(uniroot(get_LR_tau, interval = c(tau.est, tau.est+tau.ci[2]), 
-                                             yi = yi, vi = vi, est = est, tau.est = tau.est, ycv = ycv)$root, 
-                                     silent = TRUE))
+      if(con$proc.ml == "prof")
+      { # Get log-likelihood if optimization via the profile likelihoods was done
+        
+        ### Starting values
+        par <- c(con$stval.d, con$stval.tau)
+        
+        ### Control arguments of optim(). -1 times con$fnscale to maximize the 
+        # log-likelihood function
+        control.optim <- list(fnscale = -1*con$fnscale, maxit = con$maxit)
+        
+        ### Optimize log likelihood function
+        ll <- optim(par = par, fn = ml_star, yi = yi, vi = vi, ycv = ycv, 
+                    lower = c(-Inf, 0), method = "L-BFGS-B", 
+                    verbose = con$verbose, control = control.optim)$value
+      } else
+      {
+        ll <- out$value
+      }
       
-      ### Return NA if upper bound could not be estimated
-      tau.ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub) 
+      tmp.lb <- try(uniroot(f = get_profile_ci, interval = c(est-est.ci[1],est), 
+                            tau = tau.est, yi = yi, vi = vi, 
+                            chi_cv = qchisq(.95, df = 1), ll = ll, con = con)$root, 
+                    silent = TRUE)
+      
+      ### Return NA if lower bound could not be estimated
+      lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb)
+      
+      tmp.ub <- try(uniroot(f = get_profile_ci, interval = c(est,est+est.ci[2]), 
+                            tau = tau.est, yi = yi, vi = vi, 
+                            chi_cv = qchisq(.95, df = 1), ll = ll, con = con)$root, 
+                    silent = TRUE)
+      
+      ### Return NA if lower bound could not be estimated
+      ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub)
+      
+      ##########################################################################
+      
+      ### Estimation of CI tau
+      
+      ### Function to compute profile likelihood confidence intervals for the 
+      # average effect size
+      get_profile_ci <- function(tau, d, yi, vi, chi_cv, ll, con)
+      {
+        
+        ll0 <- optimize(f = ml_star_d, interval = con$int, tau = tau, yi = yi, 
+                        vi = vi, ycv = ycv, maximum = TRUE)$objective
+        
+        return(-2*(ll0-ll)-chi_cv)
+      }
+      
+      if (get_profile_ci(tau = 0, d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1),
+                         ll = ll, con = con) < 0)
+      { # Set lower bound to zero if it is smaller than 0
+        tau.lb <- 0
+      } else
+      {
+        tmp.lb <- try(uniroot(f = get_profile_ci, 
+                              interval = c(max(c(0, tau.est-con$tau.ci[1])), tau.est), 
+                              d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1), 
+                              ll = ll, con = con)$root, silent = TRUE)
+        
+        ### Return NA if lower bound could not be estimated
+        tau.lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb)
+      }
+      
+      tmp.ub <- try(uniroot(f = get_profile_ci, 
+                            interval = c(tau.est, tau.est+con$tau.ci[2]), 
+                            d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1), 
+                            ll = ll, con = con)$root, silent = TRUE)
+      
+      ### Return NA if lower bound could not be estimated
+      tau.ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub)
+      
     }
   } else if (method == "P" | method == "LNP")
   {
