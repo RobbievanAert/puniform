@@ -18,6 +18,11 @@ optimize both parameters at the same time. The previous version where the profil
 log-likelihood functions of both parameters were iteratively optimized is still 
 available by setting the control argument proc.ml = "prof".
 
+- Fix a bug in the computation of the profile likelihood confidence intervals of 
+esest_nsig() and in the computation of the likelihood-ratio test in testeffect_nsig()
+and testhetero(). Note that the functions get_LR_est() and get_LR_tau() are not
+necessary anymore and are deleted from the package.
+
 - Updated and improved documentation
 
 

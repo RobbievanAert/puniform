@@ -265,7 +265,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   ##### TEST OF AN EFFECT #####
   res.null <- testeffect_nsig(yi = es$yi, vi = es$vi, est = res.es$est,
                               tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
-                              method = method)
+                              method = method, con = con)
   
   ##### TEST OF NO BETWEEN-STUDY VARIANCE #####
   res.hetero <- testhetero(yi = es$yi, vi = es$vi, est = res.es$est,
