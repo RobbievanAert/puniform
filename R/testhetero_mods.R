@@ -17,7 +17,11 @@ testhetero_mods <- function(es, mods, n_bs, ll, tau2.est, se, type, con)
     
     ### Conduct likelihood-ratio test
     L.het <- -2*(ll0-ll)
-    pval.het <- pchisq(L.het, df = 1, lower.tail = FALSE)
+    
+    ### 0.5 x chisq, because the tested null-hypothesis H0: tau2 = 0 is on the 
+    # boundary of the parameter space. See Andrews (2001) and Molenberghs and 
+    # Verbeke (2012)
+    pval.het <- 0.5*pchisq(L.het, df = 1, lower.tail = FALSE)
     
   } else if (type == "Wald")
   { # Wald test
