@@ -2,7 +2,7 @@ Package: puniform
 Type: Package
 Title: Meta-Analysis Methods Correcting for Publication Bias
 Version: 0.2.6
-Date: 2023-08-06
+Date: 2023-07-14
 Author: Robbie C.M. van Aert
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: Provides meta-analysis methods that correct for

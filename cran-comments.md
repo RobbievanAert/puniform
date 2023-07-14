@@ -1,5 +1,5 @@
 ## Test environments
-* Windows 10, R 4.2.3 (local)
+* Windows 10, R 4.3.1 (local)
 * ubuntu 22.04.2 (GitHub Actions), R 4.3.0
 * osx 12.6.5 (GitHub Actions), R 4.3.0
 
