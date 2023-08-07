@@ -4,7 +4,7 @@ repl <- function(es, m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
 {
   
   ### Conduct FE meta-analysis based on replications
-  sub <- subset(es, es$ori == 0)
+  sub <- subset(es, es$original == 0)
   tmp <- fe_ma(yi = sub$yi, vi = sub$vi)
   est.repl <- tmp$est.fe
   se.repl <- tmp$se.fe
@@ -42,7 +42,7 @@ repl <- function(es, m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
   }
   
   ### Conduct FE meta-analysis based on original studies
-  sub <- subset(es, es$ori == 1)
+  sub <- subset(es, es$original == 1)
   tmp <- fe_ma(yi = sub$yi, vi = sub$vi)
   pval.o <- tmp$pval.fe
   

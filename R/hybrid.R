@@ -1,127 +1,65 @@
 #' hybrid
 #'
-#' Function to statistically combine original studies and replications by means
-#' of the hybrid methods and fixed-effect meta-analysis as described in van Aert
-#' and van Assen (2018).
+#' Function to statistically combine original studies and preregistered/replications 
+#' by means of the hybrid methods as described in van Aert and van Assen (2018) 
+#' and van Aert (2023).
 #'
-#' @param moi A vector of group means for one-sample means for the original studies
-#' @param mri A vector of group means for one-sample means for the replications
-#' @param roi A vector of raw correlations for the original studies
-#' @param rri A vector of raw correlations for the replications
-#' @param noi A vector of sample sizes for one-sample means and correlations for 
-#' original studies
-#' @param nri A vector of sample sizes for one-sample means and correlations for 
-#' replications
-#' @param sdoi A vector of standard deviations for one-sample means for original 
-#' studies
-#' @param sdri A vector of standard deviations for one-sample means for replications 
-#' @param mo1i A vector of means in group 1 for two-independent means for the 
-#' original studies
-#' @param mr1i A vector of means in group 1 for two-independent means for the 
-#' replications
-#' @param mo2i A vector of means in group 2 for two-independent means for the 
-#' original studies
-#' @param mr2i A vector of means in group 2 for two-independent means for the 
-#' replications
-#' @param no1i A vector of sample sizes in group 1 for two-independent means for 
-#' the original studies
-#' @param nr1i A vector of sample sizes in group 1 for two-independent means for 
-#' the replications
-#' @param no2i A vector of sample sizes in group 2 for two-independent means for 
-#' the original studies
-#' @param nr2i A vector of sample sizes in group 2 for two-independent means for 
-#' the replications
-#' @param sdo1i A vector of standard deviations in group 1 for two-independent
-#' means for the original studies
-#' @param sdr1i A vector of standard deviations in group 1 for two-independent
-#' means for the replications
-#' @param sdo2i A vector of standard deviations in group 2 for two-independent
-#' means for the original studies
-#' @param sdr2i A vector of standard deviations in group 2 for two-independent
-#' means for the replications
-#' @param toobs A vector of t-values for one-sample means and two-independent means 
-#' for the original studies
-#' @param trobs A vector of t-values for one-sample means and two-independent means 
-#' for the replications
-#' @param yoi A vector of standardized effect sizes of the original studies 
-#' (see Details)
-#' @param voi A vector of sampling variances belonging to the standardized effect
-#' sizes of the original studies (see Details)
-#' @param yri A vector of standardized effect sizes of the replications 
-#' (see Details)
-#' @param vri A vector of sampling variances belonging to the standardized effect
-#' sizes of the replications (see Details)
-#' @param alpha A numerical value specifying the alpha level as used in the original
-#' study (default is 0.05, see Details).
+#' @param mi A vector of group means for one-sample means
+#' @param ri A vector of raw correlations
+#' @param ni A vector of sample sizes for one-sample means and correlations
+#' @param sdi A vector of standard deviations for one-sample means
+#' @param m1i A vector of means in group 1 for two-independent means
+#' @param m2i A vector of means in group 2 for two-independent means
+#' @param n1i A vector of sample sizes in group 1 for two-independent means
+#' @param n2i A vector of sample sizes in group 2 for two-independent means
+#' @param sd1i A vector of standard deviations in group 1 for two-independent
+#' means
+#' @param sd2i A vector of standard deviations in group 2 for two-independent
+#' means
+#' @param tobs A vector of t-values
+#' @param yi A vector of standardized effect sizes (see Details)
+#' @param vi A vector of sampling variances belonging to the standardized effect
+#' sizes (see Details)
+#' @param original A vector indicating whether a study is an original study (1)
+#' and therefore was susceptible to bias or not (0)
 #' @param side A character indicating whether the observed effect size of the
-#' original study is in the right-tail of the distribution (i.e., positive) or
+#' original studies are in the right-tail of the distribution (i.e., positive) or
 #' in the left-tail of the distribution (i.e., negative) (either \code{"right"}
 #' or \code{"left"})
-#' @param mi A vector of group means for one-sample means (deprecated, see Details)
-#' @param ri A vector of raw correlations (deprecated, see Details)
-#' @param ni A vector of sample sizes for one-sample means and correlations 
-#' (deprecated, see Details)
-#' @param sdi A vector of standard deviations for one-sample means (deprecated, 
-#' see Details)
-#' @param m1i A vector of means in group 1 for two-independent means (deprecated, 
-#' see Details)
-#' @param m2i A vector of means in group 2 for two-independent means (deprecated, 
-#' see Details)
-#' @param n1i A vector of sample sizes in group 1 for two-independent means 
-#' (deprecated, see Details)
-#' @param n2i A vector of sample sizes in group 2 for two-independent means 
-#' (deprecated, see Details)
-#' @param sd1i A vector of standard deviations in group 1 for two-independent
-#' means (deprecated, see Details)
-#' @param sd2i A vector of standard deviations in group 2 for two-independent
-#' means (deprecated, see Details)
-#' @param tobs A vector of t-values (deprecated, see Details)
+#' @param alpha A numerical value specifying the alpha level as used in the original
+#' study (default is 0.05, see Details)
+#' @param mods A one-sided formula to specify the moderators to include. For 
+#' example \code{x1} can be included as moderator by specifying \code{mods = ~ x1}
 #' @param control An optional list of elements that give the user more control 
-#' over the root-finding procedures (see Note) 
+#' over the estimation procedures (see Note) 
 #'
 #' @details Three different effect sizes can be used as input for the
 #' \code{hybrid} function: one-sample means, two-independent means, and raw
-#' correlation coefficients. For each effect size measure, data of the original 
-#' studies and replications have to be provided separately. For analyzing 
-#' one-sample means, either the group means (\code{moi} and \code{mri}), standard 
-#' deviations (\code{sdoi} and \code{sdri}), and sample sizes (\code{noi} and 
-#' \code{nri}) for the original studies and replications or t-values (\code{toobs} 
-#' and \code{trobs}) and sample sizes (\code{noi} and \code{nri}) have to be 
-#' provided. For analyzing two-independent means, either the group means of group 
-#' 1 (\code{mo1i} and \code{mr1i}) and group 2 (\code{mo1i} and \code{mr1i}), 
-#' standard deviations of group 1 (\code{sdo1i} and \code{sdr1i}) and group 2 
-#' (\code{sdo2i} and \code{sdr2i}), and sample sizes of group 1 (\code{no1i} and 
-#' \code{nr1i}) and group 2 (\code{no2i} and \code{nr2i}) for the original studies 
-#' and replications have to be provided. It is also possible to analyze 
-#' two-independent means by providing t-values (\code{toobs} and \code{trobs}) in 
-#' combination with sample sizes of group 1 (\code{no1i} and \code{nr1i}) and group
-#' 2 (\code{no2i} and \code{nr2i}) for the original studies and replications. 
-#' Correlation coefficients can also be analyzed by supplying the function with 
-#' raw correlation coefficients (\code{roi} and \code{rri}) and sample sizes 
-#' (\code{noi} and \code{nri}) of the original studies and replications. The 
-#' \code{side} argument to specify whether the observed effect size of the
-#' original study is in the right-tail of the distribution (i.e., positive) or
-#' in the left-tail of the distribution should also be specified for every effect size 
-#' measure.
+#' correlation coefficients. Analyzing one-sample means and two-independent
+#' means can be done by either providing the function group means (\code{mi} or
+#' \code{m1i} and \code{m2i}), standard deviations (\code{sdi} or \code{sd1i}
+#' and \code{sd2i}), and sample sizes (\code{ni} or \code{n1i} and \code{n2i})
+#' or t-values (\code{tobs}) and sample sizes (\code{ni} or \code{n1i}
+#' and \code{n2i}). Pearson correlation coefficients can be analyzed by supplying 
+#' \code{ri} and \code{ni} to the \code{hybrid} function. These correlation 
+#' coefficients are internally transformed to Fisher's z correlations before 
+#' analyzing the data. The results in the output are of the Fisher's z transformed
+#' correlations. It is also possible to specify the standardized effect sizes and 
+#' its sampling variances directly via the \code{yi} and \code{vi} arguments. 
+#'  
+#' Two other arguments that need to be specified are \code{side} and \code{original}. 
+#' \code{side} indicates whether the effect size in the original study was expected
+#' to be in the right-tail (\code{side = "right"} or in the left-tail 
+#' (\code{side = "left"}) of the distribution. The argument \code{original} has 
+#' to be used to indicate which studies are original studies and expected to be 
+#' susceptible to bias. A 1 indicates that a study was susceptible to bias and 
+#' a 0 indicates that a study was not susceptible to bias.
 #' 
-#' It is also possible to specify the standardized effect sizes and its sampling
-#' variances directly via the \code{yoi}, \code{yri}, \code{voi}, and \code{vri} 
-#' arguments. However, extensive knowledge about computing standardized effect 
-#' sizes and its sampling variances is required and specifying standardized effect 
-#' sizes and sampling variances is not recommended to be used if the p-values in 
-#' the primary studies are not computed with a z-test. In case the p-values in the 
-#' original studies were computed with, for instance, a t-test, the p-values of a 
-#' z-test and t-test do not exactly coincide and studies may be not statistically 
-#' significant according to a z-test.
-#' 
-#' The hybrid methods assume that the original studies are statistically
-#' significant, so original studies that are not statistically signifcant are 
-#' discarded from the analysis. Furthermore, it is assumed that two-tailed 
-#' hypothesis tests were conducted in the original studies. In case one-tailed 
-#' hypothesis tests were conducted in the original studies, the alpha level has 
-#' to be multiplied by two. For example, if one-tailed hypothesis tests were 
-#' conducted with an alpha level of .05, an alpha of 0.1 has to be entered into 
-#' the \code{hybrid} function.
+#' It is assumed that two-tailed hypothesis tests were conducted in the original 
+#' studies. In case one-tailed hypothesis tests were conducted in the original 
+#' studies, the alpha level has to be multiplied by two. For example, if one-tailed 
+#' hypothesis tests were conducted with an alpha level of .05, an alpha of 0.1 
+#' has to be supplied to the \code{hybrid} function.
 #' 
 #' \strong{Previous version}
 #' 
@@ -138,42 +76,62 @@
 #'
 #' @return
 #' \item{k}{total number of effect sizes}
-#' \item{krep}{number of effect sizes of replications}
-#' \item{est.hy}{effect size estimate of hybrid method}
-#' \item{ci.lb.hy}{lower bound of hybrid method's confidence interval}
-#' \item{ci.ub.hy}{upper bound of hybrid method's confidence interval}
-#' \item{x.hy}{test statistic of hybrid method's test of null-hypothesis of no
-#' effect}
-#' \item{pval.hy}{two-tailed p-value of hybrid method's test of null-hypothesis
-#'  of no effect}
-#' \item{measure}{effect size measure}
+#' \item{k.original}{number of effect sizes of original studies}
+#' \item{est}{parameter estimates of the fixed effects of the hybrid method}
+#' \item{tau2}{estimate of the between-study variance in true effect size of hybrid 
+#' method}
+#' \item{se}{standard error of the fixed effects and of the estimated between-study
+#' variance}
+#' \item{ci.lb}{lower bound of hybrid method's confidence interval of the average
+#' effect size}
+#' \item{ci.ub}{upper bound of hybrid method's confidence interval of the average
+#' effect size}
+#' \item{L.0}{test statistic of hybrid method's test of null-hypothesis of no
+#' effect. This is either a z-value (\code{zval} in the output) or a 
+#' chi-square value (\code{LR} in the output) in case of a likelihood-ratio test}
+#' \item{pval.0}{p-value of hybrid method's test of null-hypothesis of no effect}
+#'  \item{tau2}{estimate of the between-study variance in true effect size of hybrid 
+#' method}
+#' \item{tau2.lb}{lower bound of hybrid method's confidence interval of the
+#' between-study variance}
+#' \item{tau2.ub}{upper bound of hybrid method's confidence interval of the
+#' between-study variance}
+#' \item{L.het}{test statistic of hybrid method's test of null-hypothesis of no
+#' heterogeneity This is either a z-value (\code{zval} in the output) or a 
+#' chi-square value (\code{LR} in the output) in case of a likelihood-ratio test}
+#' \item{pval.het}{p-value of hybrid method's test of null-hypothesis of no
+#' heterogeneity}
 #' \item{est.hyr}{effect size estimate of hybridR method}
-#' \item{ci.lb.hyr}{lower bound of hybridR method's confidence interval}
-#' \item{ci.ub.hyr}{upper bound of hybridR method's confidence interval}
-#' \item{x.hyr}{test statistic of hybridR method's test of null-hypothesis of
+#' \item{ci.lb.hyr}{lower bound of hybridR method's confidence interval of the 
+#' effect size}
+#' \item{ci.ub.hyr}{upper bound of hybridR method's confidence interval of the 
+#'  effect size}
+#' \item{L.0.hyr}{test statistic of hybridR method's test of null-hypothesis of
 #'  no effect}
-#' \item{pval.hyr}{two-tailed p-value of hybridR method's test of
-#' null-hypothesis of no effect}
+#' \item{pval.0.hyr}{p-value of hybridR method's test of null-hypothesis of no 
+#' effect} 
 #' \item{pval.o}{two-tailed p-value of original study}
 #' \item{est.hy0}{effect size estimate of hybrid0 method}
-#' \item{ci.lb.hy0}{lower bound of hybrid0 method's confidence interval}
-#' \item{ci.ub.hy0}{upper bound of hybrid0 method's confidence interval}
-#' \item{x.hy0}{test statistic of hybrid0 method's test of null-hypothesis of no
+#' \item{ci.lb.hy0}{lower bound of hybrid0 method's confidence interval of the 
+#' effect size}
+#' \item{ci.ub.hy0}{upper bound of hybrid0 method's confidence interval of the 
+#' effect size}
+#' \item{L.0.hy0}{test statistic of hybrid0 method's test of null-hypothesis of no
 #' effect}
-#' \item{pval.hy0}{two-tailed p-value of hybrid0 method's test of
+#' \item{pval.0.hy0}{two-tailed p-value of hybrid0 method's test of
 #' null-hypothesis of no effect}
-#' \item{est.fe}{effect size estimate based on traditional fixed-effect
+#' \item{est.fe}{effect size estimate based on fixed-effect
 #' meta-analysis}
 #' \item{se.fe}{standard error of effect size estimate based on traditional
 #' fixed-effect meta-analysis}
 #' \item{zval.fe}{test statistic of the null-hypothesis of no effect based on
-#' traditional fixed-effect meta-analysis}
+#' fixed-effect meta-analysis}
 #' \item{pval.fe}{two-tailed p-value of the null-hypothesis of no effect based
-#' on traditional fixed-effect meta-analysis}
+#' on fixed-effect meta-analysis}
 #' \item{ci.lb.fe}{lower bound of confidence interval based on traditional
 #' fixed-effect meta-analysis}
 #' \item{ci.ub.fe}{upper bound of confidence interval based on
-#' traditional fixed-effect meta-analysis}
+#' fixed-effect meta-analysis}
 #' \item{est.repl}{effect size estimate of replication}
 #' \item{se.repl}{standard error of replication's effect size estimate}
 #' \item{ci.lb.repl}{lower bound of replication's confidence interval}
@@ -182,9 +140,11 @@
 #'  no effect}
 #' \item{pval.repl}{two-tailed p-value of replication for testing
 #' null-hypothesis of no effect}
+#' \item{optim.info}{model fitting results if the implementation of van Aert 
+#' (2023) is used}
 #' 
 #' @note The \code{control} argument in the \code{hybrid} function is an optional 
-#' argument that gives the user more control over the root-finding procedures. 
+#' argument that gives the user more control over the estimation procedures. 
 #' This can be especially useful if estimation of the method does not converge 
 #' and NAs are returned by the function. The \code{control} argument should 
 #' be specified as a list containing one or more elements. For example, 
@@ -196,16 +156,40 @@
 #' bound of the interval that is used for estimating the effect size. The effect 
 #' size estimate should be included in this interval. Its default values are -10
 #' for the first element and the maximum effect size of a study included in the 
-#' analysis + 1 as the second element.}
+#' analysis + 1 as the second element. This control argument is only applicable 
+#' to the implementation of van Aert and van Assen (2018).}
 #' \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
 #' subtracted from and added to the estimate of the effect size for computing the 
 #' 95\% confidence intervals. Its default values are (50, 1). To give an example, 
 #' estimates for the lower and upper bound around the effect size estimate are 
 #' searched on the interval (est-50, est) and (est, est+1), respectively.}
+#' \item{\code{tau2.ci}}{ A vector of length two indicating the values that are 
+#' subtracted from and added to the estimate of the between-study variance for 
+#' computing the 95\% confidence intervals. Its default values are (0.5, 0.5). 
+#' To give an example, estimates for the lower and upper bound around the effect 
+#' size estimate are searched on the interval (tau2-0.5, tau2) and (tau2, tau2+0.5), 
+#' respectively.}
 #' \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
-#' Its default value is .Machine$double.eps^0.25.} 
+#' Its default value is .Machine$double.eps^0.25. This control argument is only 
+#' applicable to the implementation of van Aert and van Assen (2018).} 
 #' \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 #' about the estimation procedure. Its default value is FALSE.}
+#' \item{\code{par:}}{ Starting values for the optimization procedure in case of
+#' the implementation of van Aert (2023). The default values are zeros.}
+#' \item{\code{implementation:}}{ A character indicating whether the implementation
+#' of van Aert and van Assen (2018) based on a single original and single replication
+#' should be used (\code{implementation = "two"}) or whether the implementation 
+#' of van Aert (2023) should be used that allows for including more than two studies
+#' (\code{implementation = "multiple"}).}
+#' \item{\code{optimizer:}}{ A character indicating the optimizer that is used if
+#' the implementation of van Aert (2023) is used. The default value is "Nelder-Mead".
+#' The \code{optim} function is used for optimization, so the optimizations 
+#' methods implemented in the \code{optim} function can be used. See the 
+#' documentation of the \code{optim} function for more information.}
+#' \item{\code{type:}}{ A character vector indicating whether Wald-based hypothesis
+#' tests and confidence intervals are preferrred (\code{type = "Wald"}) or 
+#' likelihood-ratio tests and profile likelihood confidence intervals 
+#' (\code{type = "profile"}).}
 #' } 
 #' 
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
@@ -214,22 +198,60 @@
 #' reproducibility in psychology: A hybrid method for statistically combining a
 #' biased original study and replication. Behavior Research Methods, 50(4): 1515-1539.
 #' doi:10.3758/s13428-017-0967-6
+#' 
+#' @references van Aert, R.C.M. (2023). Manuscript in preparation.
 #'
 #' @examples
-#' ### Apply hybrid method to example on page 5 of van Aert and van Assen (2018).
-#'
-#' pval.o <- 0.03 # p-value original study
-#' pval.r <- 0.3 # p-value replication
-#'
-#' no1i <- no2i <- 40 # Sample size per group in original study
-#' nr1i <- nr2i <- 80 # Sample size per group in replication
-#' toobs <- qt(pval.o/2, df = no1i+no2i-2, lower.tail = FALSE) # Observed t-values original study
-#' trobs <- qt(pval.r/2, df = nr1i+nr2i-2, lower.tail = FALSE) # Observed t-values replication
-#'
-#' ### Apply hybrid method
-#' hybrid(toobs = toobs, trobs = trobs, no1i = no1i, no2i = no2i, nr1i = nr1i, 
-#' nr2i = nr2i, side = "right")
 #' 
+#' ### Application using the implementation of van Aert (2023) with more than two studies.
+#' # Note that these data come from the "metadat" R package that needs to be loaded.
+#' # The data come from the meta-analyses by Lehmann et al. (2018). See the help 
+#' # file of dat.lehmann2018 for more information about this meta-analysis.
+#' library(metadat)
+#' dat <- dat.lehmann2018
+#'
+#' ### Create a new object to indicate which studies were original studies and 
+#' # which ones were preregistered
+#' dat$original <- ifelse(dat$Preregistered == "Not Pre-Registered", 1, 0)
+#'
+#' ### Lehmann et al. split the analyses for males and females. We only use the data
+#' # of females for this example.
+#' red_romance_femalep <- dat[dat$Gender == "Females", ]
+#'
+#' ### Prepare data for the analysis
+#' yi <- red_romance_femalep$yi
+#' vi <- red_romance_femalep$vi
+#' original <- red_romance_femalep$original
+#'
+#' ### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
+#' hybrid(yi = yi, vi = vi, original = original, side = "right")
+#'
+#' ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
+#' # likelihood confidence intervals
+#' hybrid(yi = yi, vi = vi, original = original, side = "right", control = list(type = "profile"))
+#'
+#' ### Include Color_Match as moderator
+#' Color_Match <- red_romance_femalep$Color_Match
+#'
+#' ### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
+#' hybrid(yi = yi, vi = vi, original = original, side = "right", mods = ~ Color_Match)
+#'
+#' ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
+#' # likelihood confidence intervals
+#' hybrid(yi = yi, vi = vi, original = original, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
+#' 
+#' ### Application using the implementation of van Aert and van Assen (2018). 
+#' # The hybrid method is applied to example on page 5 of van Aert and van Assen 
+#' # (2018).
+#'
+#' pval <- c(0.03, 0.3) # p-value original study and replication
+#' n1i <- n2i <- c(40, 80) # Sample sizes per group 
+#' tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values 
+#' 
+#' ### Apply hybrid method using the implementation of van Aert and van Assen (2018)
+#' hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", original = c(1,0), 
+#' control = list(implementation = "two"))
+#'  
 #' ### Apply hybrid method to two original studies and two replications
 #' 
 #' noi <- nri <- 50 # Sample size original studies and replicaitons
@@ -247,10 +269,8 @@
 #'
 #' @export
 
-hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi, 
-                   toobs, mr1i, mr2i, mri, rri, sdr1i, sdr2i, sdri, nr1i, nr2i, 
-                   nri, trobs, m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, 
-                   tobs, yoi, yri, voi, vri, alpha = 0.05, side, control) 
+hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi, 
+                   original, mods = NULL, alpha = 0.05, side, control) 
 {
   
   if (!missing("mi") | !missing("tobs") | !missing("m1i") | !missing("ri"))
@@ -262,7 +282,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es <- escompute(mi = mi, ni = ni, sdi = sdi, alpha = alpha/2, side = side,
                       measure = measure)
       
-      es$ori <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
       
       res.repl <- repl(es = es, mi = mi, sdi = sdi, ni = ni, measure = measure,
                        side = side)
@@ -273,7 +293,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es <- escompute(ni = ni, tobs = tobs, alpha = alpha/2, side = side,
                       measure = measure)
       
-      es$ori <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
       
       res.repl <- repl(es = es, tobs = tobs, measure = measure, side = side)
       
@@ -284,7 +304,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es <- escompute(m1i = m1i, m2i = m2i, n1i = n1i, n2i = n2i, sd1i = sd1i,
                       sd2i = sd2i, alpha = alpha/2, side = side, measure = measure)
       
-      es$ori <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
       
       res.repl <- repl(es = es, m1i = m1i, m2i = m2i, n1i = n1i, n2i = n2i,
                        sd1i = sd1i, sd2i = sd2i, measure = measure, side = side)
@@ -295,7 +315,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es <- escompute(n1i = n1i, n2i = n2i, tobs = tobs, alpha = alpha/2,
                       side = side, measure = measure)
       
-      es$ori <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
       
       res.repl <- repl(es = es, tobs = tobs, measure = measure, side = side)
       
@@ -305,7 +325,7 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
       es <- escompute(ri = ri, ni = ni, alpha = alpha/2, side = side,
                       measure = measure)
       
-      es$ori <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
       
       res.repl <- repl(es = es, measure = measure, side = side)
     }
@@ -318,135 +338,105 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
     ### If data of more than one original study and replication are provided
   } else
   {
-    if (!missing("moi") & !missing("noi") & !missing("sdoi") & !missing("mri") & 
-        !missing("nri") & !missing("sdri")) 
+    if (!missing("mi") & !missing("ni") & !missing("sdi")) 
     {
       measure <- "M"
       
-      ### Compute effect size for original studies
-      es.yoi <- escompute(mi = moi, ni = noi, sdi = sdoi, alpha = alpha/2, 
-                          side = side, measure = measure)
-      es.yoi$ori <- 1 # Create variable to indicate that it is an original study
+      ### Compute effect size
+      es <- escompute(mi = mi, ni = ni, sdi = sdi, alpha = alpha/2, side = side, 
+                      measure = measure)
+      es$original <- original
       
-      ### Compute effect size for replications
-      es.yri <- escompute(mi = mri, ni = nri, sdi = sdri, alpha = alpha/2, 
-                          side = side, measure = measure)
-      es.yri$ori <- 0 # Create variable to indicate that it is a replication
-      
-      es <- rbind(es.yoi, es.yri) # Bind data frames
-      
-    } else if (!missing("noi") & !missing("toobs") & !missing("nri") & !missing("trobs")) 
+    } else if (!missing("ni") & !missing("tobs")) 
     {
       measure <- "MT"
       
-      ### Compute effect size for original studies
-      es.yoi <- escompute(ni = noi, tobs = toobs, alpha = alpha/2, 
-                          side = side, measure = measure)
-      es.yoi$ori <- 1 # Create variable to indicate that it is an original study
+      ### Compute effect size
+      es <- escompute(ni = ni, tobs = tobs, alpha = alpha/2, side = side, measure = measure)
+      es$original <- original
       
-      ### Compute effect size for replications
-      es.yri <- escompute(ni = nri, tobs = trobs, alpha = alpha/2, 
-                          side = side, measure = measure)
-      es.yri$ori <- 0 # Create variable to indicate that it is a replication
-      
-      es <- rbind(es.yoi, es.yri) # Bind data frames
-      
-    } else if (!missing("mo1i") & !missing("mo2i") & !missing("no1i") & 
-               !missing("no2i") & !missing("sdo1i") & !missing("sdo2i") & 
-               !missing("mr1i") & !missing("mr2i") & !missing("nr1i") & 
-               !missing("nr2i") & !missing("sdr1i") & !missing("sdr2i")) 
+    } else if (!missing("m1i") & !missing("m2i") & !missing("n1i") & 
+               !missing("n2i") & !missing("sd1i") & !missing("sd2i")) 
     {
       measure <- "MD"
       
-      ### Compute effect size for original studies
-      es.yoi <- escompute(m1i = mo1i, m2i = mo2i, n1i = no1i, n2i = no2i, sd1i = sdo1i,
-                          sd2i = sdo2i, alpha = alpha/2, side = side, measure = measure)
-      es.yoi$ori <- 1 # Create variable to indicate that it is an original study
+      ### Compute effect size
+      es <- escompute(m1i = m1i, m2i = m2i, n1i = n1i, n2i = n2i, sd1i = sd1i,
+                      sd2i = sd2i, alpha = alpha/2, side = side, measure = measure)
+      es$original <- original
       
-      ### Compute effect size for replications
-      es.yri <- escompute(m1i = mr1i, m2i = mr2i, n1i = nr1i, n2i = nr2i, sd1i = sdr1i,
-                          sd2i = sdr2i, alpha = alpha/2, side = side, measure = measure)
-      es.yri$ori <- 0 # Create variable to indicate that it is a replication
-      
-      es <- rbind(es.yoi, es.yri) # Bind data frames
-      
-    } else if (!missing("no1i") & !missing("no2i") & !missing("toobs") & 
-               !missing("nr1i") & !missing("nr2i") & !missing("trobs")) 
+    } else if (!missing("n1i") & !missing("n2i") & !missing("tobs")) 
     {
       measure <- "MDT"
       
-      ### Compute effect size for original studies
-      es.yoi <- escompute(n1i = no1i, n2i = no2i, tobs = toobs, alpha = alpha/2,
-                          side = side, measure = measure)
-      es.yoi$ori <- 1 # Create variable to indicate that it is an original study
+      ### Compute effect size
+      es <- escompute(n1i = n1i, n2i = n2i, tobs = tobs, alpha = alpha/2,
+                      side = side, measure = measure)
+      es$original <- original
       
-      ### Compute effect size for replications
-      es.yri <- escompute(n1i = nr1i, n2i = nr2i, tobs = trobs, alpha = alpha/2,
-                          side = side, measure = measure)
-      es.yri$ori <- 0 # Create variable to indicate that it is a replication
-      
-      es <- rbind(es.yoi, es.yri) # Bind data frames
-      
-    } else if (!missing("roi") & !missing("noi") & !missing("rri") & !missing("nri")) 
+    } else if (!missing("ri") & !missing("ni")) 
     {
       measure <- "COR"
       
-      ### Compute effect size for original studies
-      es.yoi <- escompute(ri = roi, ni = noi, alpha = alpha/2, side = side,
-                          measure = measure)
-      es.yoi$ori <- 1 # Create variable to indicate that it is an original study
+      ### Compute effect size
+      es <- escompute(ri = ri, ni = ni, alpha = alpha/2, side = side,
+                      measure = measure)
+      es$original <- original
       
-      ### Compute effect size for replications
-      es.yri <- escompute(ri = rri, ni = nri, alpha = alpha/2, side = side,
-                          measure = measure)
-      es.yri$ori <- 0 # Create variable to indicate that it is a replication
-      
-      es <- rbind(es.yoi, es.yri) # Bind data frames
-      
-    } else if (!missing("yoi") & !missing("voi") & !missing("yri") & 
-               !missing("vri"))
+    } else if (!missing("yi") & !missing("vi"))
     {
       measure <- "SPE"
       
-      ### Compute effect size for original studies
-      es.yoi <- escompute(yi = yoi, vi = voi, alpha = alpha/2, side = side, 
-                          measure = measure)
-      es.yoi$ori <- 1 # Create variable to indicate that it is an original study
-      
-      ### Compute effect size for replications
-      es.yri <- escompute(yi = yri, vi = vri, alpha = alpha/2, side = side, 
-                          measure = measure)
-      es.yri$ori <- 0 # Create variable to indicate that it is a replication
-      
-      es <- rbind(es.yoi, es.yri) # Bind data frames
+      ### Compute effect size
+      es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, 
+                      measure = measure)
+      es$original <- original
       
     }
-    
-    ### Select only statistically significant original studies
-    es <- subset(es, es$ori == 0 | (es$ori == 1 & es$pval < alpha/2))
-    
-    ### Conduct fixed-effect meta-analysis
-    res.repl <- repl(es = es, measure = measure, side = side)
   }
   
   k <- nrow(es) # Total number of effect sizes
-  krep <- sum(es$ori == 0) # Number of replications
+  k.original <- sum(es$original == 1) # Number of original studies in the meta-analysis
+  
+  ### Critical value
+  es$ycv <- es$zcv*sqrt(es$vi)
+  
+  ### Number of fixed effects parameters to be estimated
+  n_bs <- ifelse(is.null(mods), 1, ncol(model.matrix(mods, data = es)))
   
   ##############################################################################
   
-  ### Default values for root-finding procedures
+  ### Default values for estimation procedures
   
-  # - int    =  interval that is used for estimating ES and computing CI
-  # - est.ci =  values that are subtracted from (first element) and added to 
-  #             (second element) the estimate to determine the search interval 
-  #             for computing the CI
-  # - tol    =  the convergence tolerance
-  # - verbose = if verbose = TRUE output is printed about estimation procedures
+  # - int            = interval that is used for estimating ES and computing CI
+  # - est.ci         = values that are subtracted from (first element) and added to 
+  #                    (second element) of the estimate to determine the search interval 
+  #                    for computing the CI. For example, the lower bound of the CI is
+  #                    searched for on the interval c(est-50, est)
+  # - tau2.ci        = values that are subtracted from (first element) and added to 
+  #                    (second element) of the estimate to determine the search interval 
+  #                    for computing the CI. For example, the upper bound of the CI is
+  #                    searched for on the interval c(tau2, tau2+0.5)
+  # - tol            = the convergence tolerance used for implementation == "two"
+  # - verbose        = if verbose = TRUE output is printed about the estimation procedures
+  # - par            = starting values for ML estimation
+  # - implementation = "multiple" or "two" indicating whether the implementation
+  #                    for two studies as outlined in van Aert and van Assen
+  #                    (2018) should be used or not
+  # - optimizer      = optimizer that is used for ML estimation in case of 
+  #                    implementation == "multiple"
+  # - type           = type of hypothesis testing procedure and procedure for 
+  #                    creating confidence intervals. Options are "Wald" or "profile"
   
   con <- list(int = c(-10, max(es$yi + 1)),
               est.ci = c(50, 1),
+              tau2.ci = c(0.5, 0.5),
               tol = .Machine$double.eps^0.25,
-              verbose = FALSE) 
+              verbose = FALSE,
+              par = rep(0, n_bs+1), # Starting values for ML estimation. +1 for estimating tau^2
+              implementation = "multiple",
+              optimizer = "Nelder-Mead",
+              type = "Wald") 
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
@@ -457,72 +447,116 @@ hybrid <- function(mo1i, mo2i, moi, roi, sdo1i, sdo2i, sdoi, no1i, no2i, noi,
   
   ##############################################################################
   
-  ### Apply hybrid method
-  res1 <- hy(es = es, measure = measure, side = side, con = con)
-  
-  ### Hybrid^R method
-  if (res.repl$pval.o < alpha/2) 
-  { # Use results of hybrid if two-tailed p-value of original studies < alpha/2
-    res2 <- data.frame(est.hyr = res1$est.hy, ci.lb.hyr = res1$ci.lb.hy,
-                       ci.ub.hyr = res1$ci.ub.hy, x.hyr = res1$x.hy, 
-                       pval.hyr = res1$pval.hy, pval.o = res.repl$pval.o)
-  } else 
-  { # Use results of only replications if two-tailed p-value of original studies 
-    # > alpha/2
-    res2 <- data.frame(est.hyr = res.repl$est.repl, ci.lb.hyr = res.repl$ci.lb.repl,
-                       ci.ub.hyr = res.repl$ci.ub.repl, x.hyr = res.repl$stat.repl,
-                       pval.hyr = res.repl$pval.repl, pval.o = res.repl$pval.o)
+  ### In the absence of moderators, fit an intercept-only model
+  if (is.null(mods)) 
+  { 
+    mods <- ~ 1
+    var_names <- ""
+  } else
+  { # Add data of moderators to es data frame
+    es <- cbind(es, model.frame(mods))
+    
+    ### Extract variable names for the output
+    var_names <- colnames(model.matrix(mods, data = es))
   }
   
-  ### Hybrid^0 method
-  res3 <- hy0(es = es, res1 = res1, alpha = alpha/2)
+  ### Apply hybrid method
+  res1 <- hy(es = es, measure = measure, side = side, mods = mods, n_bs = n_bs,
+             con = con)
   
-  ### Apply fixed-effect meta-analysis
-  res4 <- fe_ma(yi = es$yi, vi = es$vi)
-  
-  ### Transform results of fixed-effect meta-analysis
-  if (measure == "COR") 
-  { # Back transform Fisher z to correlation
-    est.fe <- (exp(2*res4$est.fe) - 1)/(exp(2*res4$est.fe) + 1)
-    ci.lb.fe <- (exp(2*res4$ci.lb.fe) - 1)/(exp(2*res4$ci.lb.fe) + 1)
-    ci.ub.fe <- (exp(2*res4$ci.ub.fe) - 1)/(exp(2*res4$ci.ub.fe) + 1)
-    zval.fe <- res4$zval.fe
+  # If the implementation of van Aert and van Assen (2018) is used with only two
+  # studies (one original and one replication study), compute Hybrid^R,
+  # Hybrid^0, and fixed-effect meta-analysis
+  if (con$implementation == "two")
+  {
     
-    if (side == "left") 
-    { # Re-mirror estimates
-      est.fe <- est.fe*-1
-      tmp <- ci.ub.fe
-      ci.ub.fe <- ci.lb.fe*-1
-      ci.lb.fe <- tmp*-1
-      zval.fe <- zval.fe*-1
+    ### Conduct fixed-effect meta-analysis
+    res.repl <- repl(es = es, measure = measure, side = side)
+    
+    ### Hybrid^R method
+    if (res.repl$pval.o < alpha/2) 
+    { # Use results of hybrid if two-tailed p-value of original studies < alpha/2
+      res2 <- data.frame(est.hyr = res1$est, ci.lb.hyr = res1$ci.lb,
+                         ci.ub.hyr = res1$ci.ub, L.0.hyr = res1$L.0, 
+                         pval.0.hyr = res1$pval.0, pval.o = res.repl$pval.o)
+    } else 
+    { # Use results of only replications if two-tailed p-value of original studies 
+      # > alpha/2
+      res2 <- data.frame(est.hyr = res.repl$est.repl, ci.lb.hyr = res.repl$ci.lb.repl,
+                         ci.ub.hyr = res.repl$ci.ub.repl, L.0.hyr = res.repl$stat.repl,
+                         pval.0.hyr = res.repl$pval.repl, pval.o = res.repl$pval.o)
     }
     
-  } else if (side == "left" & measure != "COR") 
-  { # Re-mirror estimates
-    est.fe <- res4$est.fe*-1
-    tmp <- res4$ci.ub.fe
-    ci.ub.fe <- res4$ci.lb.fe*-1
-    ci.lb.fe <- tmp*-1
-    zval.fe <- res4$zval.fe*-1
-  } else 
-  {
-    est.fe <- res4$est.fe
-    ci.ub.fe <- res4$ci.ub.fe
-    ci.lb.fe <- res4$ci.lb.fe
-    zval.fe <- res4$zval.fe
+    ### Hybrid^0 method
+    res3 <- hy0(es = es, res1 = res1, alpha = alpha/2)
+    
+    ### Apply fixed-effect meta-analysis
+    res4 <- fe_ma(yi = es$yi, vi = es$vi)
+    
+    ### Transform results of fixed-effect meta-analysis
+    if (measure == "COR") 
+    { # Back transform Fisher z to correlation
+      res4$est.fe <- (exp(2*res4$est.fe) - 1)/(exp(2*res4$est.fe) + 1)
+      res4$ci.lb.fe <- (exp(2*res4$ci.lb.fe) - 1)/(exp(2*res4$ci.lb.fe) + 1)
+      res4$ci.ub.fe <- (exp(2*res4$ci.ub.fe) - 1)/(exp(2*res4$ci.ub.fe) + 1)
+      res4$zval.fe <- res4$zval.fe
+      
+      if (side == "left") 
+      { # Re-mirror estimates
+        res4$est.fe <- est.fe*-1
+        tmp <- ci.ub.fe
+        res4$ci.ub.fe <- ci.lb.fe*-1
+        res4$ci.lb.fe <- tmp*-1
+        res4$zval.fe <- zval.fe*-1
+      }
+      
+    } else if (side == "left" & measure != "COR") 
+    { # Re-mirror estimates
+      res4$est.fe <- res4$est.fe*-1
+      tmp <- res4$ci.ub.fe
+      res4$ci.ub.fe <- res4$ci.lb.fe*-1
+      res4$ci.lb.fe <- tmp*-1
+      res4$zval.fe <- res4$zval.fe*-1
+    } else 
+    {
+      res4$est.fe <- res4$est.fe
+      res4$ci.ub.fe <- res4$ci.ub.fe
+      res4$ci.lb.fe <- res4$ci.lb.fe
+      res4$zval.fe <- res4$zval.fe
+    }
+  } else
+  { # Assign NAs to objects if implementation == "multiple"
+    res2 <- data.frame(est.hyr = NA, ci.lb.hyr = NA, ci.ub.hyr = NA, L.0.hyr = NA,
+                       pval.0.hyr = NA, pval.o = NA)
+    
+    res3 <- data.frame(est.hy0 = NA, ci.lb.hy0 = NA, ci.ub.hy0 = NA, 
+                       L.0.hy0 = NA, pval.0.hy0 = NA, ave = NA)
+    
+    res4 <- data.frame(est.fe = NA, se.fe = NA, ci.lb.fe = NA, ci.ub.fe = NA, 
+                       zval.fe = NA, pval.fe = NA, pval.fe.one = NA, 
+                       Qstat = NA, Qpval = NA)
+    
+    res.repl <- data.frame(est.repl = NA, se.repl = NA, ci.lb.repl = NA, 
+               ci.ub.repl = NA, stat.repl = NA, pval.repl = NA, pval.o = NA)
   }
   
-  x <- list(est.hy = res1$est, ci.lb.hy = res1$ci.lb, ci.ub.hy = res1$ci.ub,
-            x.hy = res1$x, pval.hy = res1$pval, measure = measure, est.hyr = res2$est.hyr,
-            ci.lb.hyr = res2$ci.lb.hyr, ci.ub.hyr = res2$ci.ub.hyr, x.hyr = res2$x.hyr,
-            pval.hyr = res2$pval.hyr, pval.o = res2$pval.o, est.hy0 = res3$est.hy0,
-            ci.lb.hy0 = res3$ci.lb.hy0, ci.ub.hy0 = res3$ci.ub.hy0, x.hy0 = res3$x.hy0,
-            pval.hy0 = res3$pval.hy0, est.fe = est.fe, se.fe = res4$se.fe,
-            ci.lb.fe = ci.lb.fe, ci.ub.fe = ci.ub.fe, zval.fe = zval.fe,
-            pval.fe = res4$pval.fe, est.repl = res.repl$est.repl, se.repl = res.repl$se.repl,
+  x <- list(con = con, var_names = var_names, est = res1$est, tau2 = res1$tau2, 
+            se = res1$se, L.0 = res1$L.0, pval.0 = res1$pval.0, 
+            L.het = res1$L.het, pval.het = res1$pval.het, 
+            ci.lb = res1$ci.lb, ci.ub = res1$ci.ub, 
+            tau2.lb = res1$tau2.lb, tau2.ub = res1$tau2.ub, 
+            optim.info = res1$optim.info, est.hyr = res2$est.hyr, 
+            ci.lb.hyr = res2$ci.lb.hyr, ci.ub.hyr = res2$ci.ub.hyr, 
+            L.0.hyr = res2$L.0.hyr, pval.0.hyr = res2$pval.0.hyr, pval.o = res2$pval.o, 
+            est.hy0 = res3$est.hy0, ci.lb.hy0 = res3$ci.lb.hy0, 
+            ci.ub.hy0 = res3$ci.ub.hy0, L.0.hy0 = res3$L.0.hy0, 
+            pval.0.hy0 = res3$pval.0.hy0, est.fe = res4$est.fe, 
+            se.fe = res4$se.fe, ci.lb.fe = res4$ci.lb.fe, ci.ub.fe = res4$ci.ub.fe, 
+            zval.fe = res4$zval.fe, pval.fe = res4$pval.fe, 
+            est.repl = res.repl$est.repl, se.repl = res.repl$se.repl,
             ci.lb.repl = res.repl$ci.lb.repl, ci.ub.repl = res.repl$ci.ub.repl,
             stat.repl = res.repl$stat.repl, pval.repl = res.repl$pval.repl, 
-            k = k, krep = krep)
+            k = k, k.original = k.original, optim.info = res1$optim.info)
   class(x) <- "hybridoutput"
   return(x)
 }
