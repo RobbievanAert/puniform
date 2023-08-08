@@ -65,7 +65,7 @@ print.hybridoutput <- function(x, ...) {
   } else if (x$con$implementation == "multiple")
   {
     cat("\n")
-    cat("Results Hybrid method (k = ", x$k, "; Number original studies = ", x$k.original, ")", sep = "")
+    cat("Results Hybrid method (k = ", x$k, "; number original studies = ", x$k.original, ")", sep = "")
     cat("\n")
     cat("\n")
     cat("Model results Hybrid method:")
