@@ -312,7 +312,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       } else
       {
         tau2.lb <- try(uniroot(f = get_profile_ci,
-                                     interval = log(c(max(1e-50,log(tau2-tau2.ci[1])), 
+                                     interval = log(c(max(1e-50,tau2-tau2.ci[1]), 
                                                       tau2)),
                                      es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                      mods = mods, est = est, tau2 = tau2,
