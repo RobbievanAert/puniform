@@ -1,7 +1,7 @@
 #' Meta-plot
 #'
 #' Function to create meta-plots for two-independent means, raw correlations, and 
-#' odds ratios. See van Assen et al. (2019) for more information.
+#' odds ratios. See van Assen et al. (2023) for more information.
 #'
 #' @param m1i A vector of means in group 1 for two-independent means
 #' @param m2i A vector of means in group 2 for two-independent means
@@ -64,6 +64,15 @@
 #' confidence intervals left out, and keeping the leftmost meta-analysis and 
 #' those just immediately to the right of the vertical lines.
 #' 
+#' The meta-plot can be created for standardized mean differences by providing
+#' the function with the sample means (\code{m1i} and \code{m21}), the sample 
+#' sizes (\code{n1i} and \code{n2i}), and the standard deviations (\code{sd1i} and 
+#' \code{sd2i}) or by specifying the standardized mean differences (i.e., Hedges' 
+#' g; \code{gi}) together with the corresponding sampling variances (\code{vgi})
+#' and the sample sizes (\code{n1i} and \code{n2i}). Hedges' g standardized 
+#' mean differences and corresponding sampling variances are computed in the 
+#' function if the sample means, sample sizes, and standard deviations are provided.
+#' 
 #' For creating a meta-plot based on odds ratios as effect size measure, the 2x2 
 #' frequency table should follow a specific format. The reason for this is that 
 #' the probability for the outcome of interest in the control conditions has 
@@ -92,13 +101,15 @@
 #' @references Langan, D., Higgins, J. P. T., & Simmonds, M. (2016). Comparative 
 #' performance of heterogeneity variance estimators in meta-analysis: A review of 
 #' simulation studies. Research Synthesis Methods, 8(2), 181-198. doi:10.1002/jrsm.1198
+#' @references Paule, R. C., & Mandel, J. (1982). Consensus values and weighting factors. 
+#' Journal of Research of the National Bureau of Standards, 87(5), 377–385.
+#' @references van Assen, ..., & van Aert (2023). The meta-plot: A graphical tool 
+#' for interpreting the results of a meta-analysis. Zeitschrift fur Psychologie, 
+#' 231(1), 65-78. doi:10.1027/2151-2604/a000513
 #' @references Veroniki, A. A., Jackson, D., Viechtbauer, W., Bender, R., Bowden, J., 
 #' Knapp, G., . . . Salanti, G. (2016). Methods to estimate the between-study variance 
 #' and its uncertainty in meta-analysis. Research Synthesis Methods, 7(1), 55-79. 
 #' doi:10.1002/jrsm.1164
-#' @references van Assen, ..., & van Aert (2023). The meta-plot: A graphical tool 
-#' for interpreting the results of a meta-analysis. Zeitschrift fur Psychologie, 
-#' 231(1), 65-78. doi:10.1027/2151-2604/a000513
 #'
 #' @examples ### Load data from meta-analysis by McCall and Carriger (1993)
 #' data(data.mccall93)

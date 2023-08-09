@@ -1,3 +1,8 @@
+# Changes in puniform 0.2.7 (XXXX-XX-XX)
+
+- Updated and improved documentation
+
+
 # Changes in puniform 0.2.6 (2023-06-08)
 
 - Fix a bug in hybrid() where the standard error was also transformed from Fisher's
