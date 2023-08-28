@@ -38,9 +38,14 @@
 #' \code{n1i} and \code{n2i}) or t-values (\code{tobs}) and sample sizes (\code{ni}
 #' or \code{n1i} and \code{n2i}). Both options should be accompanied with input
 #' for the arguments \code{side}, \code{method}, and \code{alpha}. See the Example section for
-#' examples. Raw correlation coefficients can be analyzed by supplying \code{ri}
-#' and \code{ni} to the \code{puni_star} function next to input for the arguments
-#' \code{side}, \code{method}, and \code{alpha}.
+#' examples. Raw correlation coefficients can be analyzed by supplying the raw
+#' correlation coefficients \code{ri} and sample sizes and \code{ni} to the 
+#' \code{puni_star} function next to input for the arguments \code{side}, 
+#' \code{method}, and \code{alpha}. Note that the method internally transforms the 
+#' raw correlation coefficients to Fisher's z correlation coefficients. The output
+#' of the function also shows the results for the Fisher's z correlation coefficient. 
+#' Hence, the results need to be transformed to raw correlation coefficients if 
+#' this is preferred by the user.
 #'
 #' It is also possible to specify the standardized effect sizes and its sampling
 #' variances directly via the \code{yi} and \code{vi} arguments. However, extensive
