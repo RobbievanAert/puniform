@@ -229,13 +229,16 @@ of van Aert (2023) should be used that allows for including more than two studie
 (\code{implementation = "multiple"}).}
 \item{\code{optimizer:}}{ A character indicating the optimizer that is used if
 the implementation of van Aert (2023) is used. The default value is "Nelder-Mead".
-The \code{optim} function is used for optimization, so the optimizations 
+The \code{optim} function is used for optimization, so the optimization 
 methods implemented in the \code{optim} function can be used. See the 
 documentation of the \code{optim} function for more information.}
 \item{\code{type:}}{ A character vector indicating whether Wald-based hypothesis
-tests and confidence intervals are preferrred (\code{type = "Wald"}) or 
+tests and confidence intervals are preferred (\code{type = "Wald"}) or 
 likelihood-ratio tests and profile likelihood confidence intervals 
-(\code{type = "profile"}).}
+(\code{type = "profile"}). The default is "Wald/profile" which implies that 
+Wald tests and confidence intervals are computed for the fixed effects and 
+likelihood-ratio tests and profile likelihood confidence intervals for the 
+between-study variance.}
 }
 }
 \examples{
