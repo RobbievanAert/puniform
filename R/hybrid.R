@@ -20,13 +20,13 @@
 #' @param yi A vector of standardized effect sizes (see Details)
 #' @param vi A vector of sampling variances belonging to the standardized effect
 #' sizes (see Details)
-#' @param original A vector indicating whether a study is an original study (1)
+#' @param conventional A vector indicating whether a study is a conventional study (1)
 #' and therefore was susceptible to bias or not (0)
 #' @param side A character indicating whether the observed effect size of the
-#' original studies are in the right-tail of the distribution (i.e., positive) or
+#' conventional studies are in the right-tail of the distribution (i.e., positive) or
 #' in the left-tail of the distribution (i.e., negative) (either \code{"right"}
 #' or \code{"left"})
-#' @param alpha A numerical value specifying the alpha level as used in the original
+#' @param alpha A numerical value specifying the alpha level as used in the conventional
 #' study (default is 0.05, see Details)
 #' @param mods A one-sided formula to specify the moderators to include. For 
 #' example \code{x1} can be included as moderator by specifying \code{mods = ~ x1}
@@ -47,16 +47,16 @@
 #' correlations. It is also possible to specify the standardized effect sizes and 
 #' its sampling variances directly via the \code{yi} and \code{vi} arguments. 
 #'  
-#' Two other arguments that need to be specified are \code{side} and \code{original}. 
-#' \code{side} indicates whether the effect size in the original study was expected
+#' Two other arguments that need to be specified are \code{side} and \code{conventional}. 
+#' \code{side} indicates whether the effect size in the conventional study was expected
 #' to be in the right-tail (\code{side = "right"} or in the left-tail 
-#' (\code{side = "left"}) of the distribution. The argument \code{original} has 
-#' to be used to indicate which studies are original studies and expected to be 
+#' (\code{side = "left"}) of the distribution. The argument \code{conventional} has 
+#' to be used to indicate which studies are conventional studies and expected to be 
 #' susceptible to bias. A 1 indicates that a study was susceptible to bias and 
 #' a 0 indicates that a study was not susceptible to bias.
 #' 
-#' It is assumed that two-tailed hypothesis tests were conducted in the original 
-#' studies. In case one-tailed hypothesis tests were conducted in the original 
+#' It is assumed that two-tailed hypothesis tests were conducted in the conventional 
+#' studies. In case one-tailed hypothesis tests were conducted in the conventional 
 #' studies, the alpha level has to be multiplied by two. For example, if one-tailed 
 #' hypothesis tests were conducted with an alpha level of .05, an alpha of 0.1 
 #' has to be supplied to the \code{hybrid} function.
@@ -64,11 +64,11 @@
 #' \strong{Previous version}
 #' 
 #' The usage of a previous version of the \code{hybrid} function was more restricted.
-#' Users could only apply the method to a single original study and replication. 
-#' Before the addition of the extra functionality to also analyze multiple original 
-#' studies and replications, data of the original study and replication were 
+#' Users could only apply the method to a single conventional study and replication. 
+#' Before the addition of the extra functionality to also analyze multiple conventional 
+#' studies and replications, data of the conventional study and replication were 
 #' specified in vectors containing two elements with the first element being 
-#' the data of the original study and the second one the data of the replication. 
+#' the data of the conventional study and the second one the data of the replication. 
 #' In order to maintain backwards compatibility, it is still possible to analyze 
 #' data like this by using the arguments \code{m1i, m2i, mi, ri, sd1i, sd2i, sdi, 
 #' n1i, n2i, ni, tobs}. However, using the \code{hybrid} function in this way is 
@@ -76,7 +76,7 @@
 #'
 #' @return
 #' \item{k}{total number of effect sizes}
-#' \item{k.original}{number of effect sizes of original studies}
+#' \item{k.conventional}{number of effect sizes of conventional studies}
 #' \item{est}{parameter estimates of the fixed effects of the hybrid method}
 #' \item{tau2}{estimate of the between-study variance in true effect size of hybrid 
 #' method}
@@ -110,7 +110,7 @@
 #'  no effect}
 #' \item{pval.0.hyr}{p-value of hybridR method's test of null-hypothesis of no 
 #' effect} 
-#' \item{pval.o}{two-tailed p-value of original study}
+#' \item{pval.o}{two-tailed p-value of conventional study}
 #' \item{est.hy0}{effect size estimate of hybrid0 method}
 #' \item{ci.lb.hy0}{lower bound of hybrid0 method's confidence interval of the 
 #' effect size}
@@ -177,7 +177,7 @@
 #' \item{\code{par:}}{ Starting values for the optimization procedure in case of
 #' the implementation of van Aert (2023). The default values are zeros.}
 #' \item{\code{implementation:}}{ A character indicating whether the implementation
-#' of van Aert and van Assen (2018) based on a single original and single replication
+#' of van Aert and van Assen (2018) based on a single conventional and single replication
 #' should be used (\code{implementation = "two"}) or whether the implementation 
 #' of van Aert (2023) should be used that allows for including more than two studies
 #' (\code{implementation = "multiple"}).}
@@ -210,9 +210,9 @@
 #' library(metadat)
 #' dat <- dat.lehmann2018
 #'
-#' ### Create a new object to indicate which studies were original studies and 
+#' ### Create a new object to indicate which studies were conventional studies and 
 #' # which ones were preregistered
-#' dat$original <- ifelse(dat$Preregistered == "Not Pre-Registered", 1, 0)
+#' dat$conventional <- ifelse(dat$Preregistered == "Not Pre-Registered", 1, 0)
 #'
 #' ### Lehmann et al. split the analyses for males and females. We only use the data
 #' # of females for this example.
@@ -221,40 +221,40 @@
 #' ### Prepare data for the analysis
 #' yi <- red_romance_femalep$yi
 #' vi <- red_romance_femalep$vi
-#' original <- red_romance_femalep$original
+#' conventional <- red_romance_femalep$conventional
 #'
 #' ### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
-#' hybrid(yi = yi, vi = vi, original = original, side = "right")
+#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right")
 #'
 #' ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 #' # likelihood confidence intervals
-#' hybrid(yi = yi, vi = vi, original = original, side = "right", control = list(type = "profile"))
+#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", control = list(type = "profile"))
 #'
 #' ### Include Color_Match as moderator
 #' Color_Match <- red_romance_femalep$Color_Match
 #'
 #' ### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
-#' hybrid(yi = yi, vi = vi, original = original, side = "right", mods = ~ Color_Match)
+#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match)
 #'
 #' ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 #' # likelihood confidence intervals
-#' hybrid(yi = yi, vi = vi, original = original, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
+#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
 #' 
 #' ### Application using the implementation of van Aert and van Assen (2018). 
 #' # The hybrid method is applied to example on page 5 of van Aert and van Assen 
 #' # (2018).
 #'
-#' pval <- c(0.03, 0.3) # p-value original study and replication
+#' pval <- c(0.03, 0.3) # p-value conventional study and replication
 #' n1i <- n2i <- c(40, 80) # Sample sizes per group 
 #' tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values 
 #' 
 #' ### Apply hybrid method using the implementation of van Aert and van Assen (2018)
-#' hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", original = c(1,0), 
+#' hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
 #' control = list(implementation = "two"))
 #'  
-#' ### Apply hybrid method to two original studies and two replications
+#' ### Apply hybrid method to two conventional studies and two replications
 #' 
-#' noi <- nri <- 50 # Sample size original studies and replicaitons
+#' noi <- nri <- 50 # Sample size conventional studies and replications
 #' sdoi <- sdri <- 1 
 #' sei <- sdoi/sqrt(50) # Standard error
 #' 
@@ -270,7 +270,7 @@
 #' @export
 
 hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi, 
-                   original, mods = NULL, alpha = 0.05, side, control) 
+                   conventional, mods = NULL, alpha = 0.05, side, control) 
 {
   
   if (!missing("mi") | !missing("tobs") | !missing("m1i") | !missing("ri"))
@@ -282,7 +282,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       es <- escompute(mi = mi, ni = ni, sdi = sdi, alpha = alpha/2, side = side,
                       measure = measure)
       
-      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$conventional <- c(1, 0) # Create variable to indicate that first study is an conventional study
       
       res.repl <- repl(es = es, mi = mi, sdi = sdi, ni = ni, measure = measure,
                        side = side)
@@ -293,7 +293,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       es <- escompute(ni = ni, tobs = tobs, alpha = alpha/2, side = side,
                       measure = measure)
       
-      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$conventional <- c(1, 0) # Create variable to indicate that first study is an conventional study
       
       res.repl <- repl(es = es, tobs = tobs, measure = measure, side = side)
       
@@ -304,7 +304,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       es <- escompute(m1i = m1i, m2i = m2i, n1i = n1i, n2i = n2i, sd1i = sd1i,
                       sd2i = sd2i, alpha = alpha/2, side = side, measure = measure)
       
-      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$conventional <- c(1, 0) # Create variable to indicate that first study is an conventional study
       
       res.repl <- repl(es = es, m1i = m1i, m2i = m2i, n1i = n1i, n2i = n2i,
                        sd1i = sd1i, sd2i = sd2i, measure = measure, side = side)
@@ -315,7 +315,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       es <- escompute(n1i = n1i, n2i = n2i, tobs = tobs, alpha = alpha/2,
                       side = side, measure = measure)
       
-      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$conventional <- c(1, 0) # Create variable to indicate that first study is an conventional study
       
       res.repl <- repl(es = es, tobs = tobs, measure = measure, side = side)
       
@@ -325,17 +325,17 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       es <- escompute(ri = ri, ni = ni, alpha = alpha/2, side = side,
                       measure = measure)
       
-      es$original <- c(1, 0) # Create variable to indicate that first study is an original study
+      es$conventional <- c(1, 0) # Create variable to indicate that first study is an conventional study
       
       res.repl <- repl(es = es, measure = measure, side = side)
     }
     
     if (es$pval[1] > alpha/2) 
     {
-      stop("Original study is not statistically significant")
+      stop("Conventional study is not statistically significant")
     }
     
-    ### If data of more than one original study and replication are provided
+    ### If data of more than one conventional study and replication are provided
   } else
   {
     if (!missing("mi") & !missing("ni") & !missing("sdi")) 
@@ -345,7 +345,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       ### Compute effect size
       es <- escompute(mi = mi, ni = ni, sdi = sdi, alpha = alpha/2, side = side, 
                       measure = measure)
-      es$original <- original
+      es$conventional <- conventional
       
     } else if (!missing("ni") & !missing("tobs")) 
     {
@@ -353,7 +353,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       
       ### Compute effect size
       es <- escompute(ni = ni, tobs = tobs, alpha = alpha/2, side = side, measure = measure)
-      es$original <- original
+      es$conventional <- conventional
       
     } else if (!missing("m1i") & !missing("m2i") & !missing("n1i") & 
                !missing("n2i") & !missing("sd1i") & !missing("sd2i")) 
@@ -363,7 +363,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       ### Compute effect size
       es <- escompute(m1i = m1i, m2i = m2i, n1i = n1i, n2i = n2i, sd1i = sd1i,
                       sd2i = sd2i, alpha = alpha/2, side = side, measure = measure)
-      es$original <- original
+      es$conventional <- conventional
       
     } else if (!missing("n1i") & !missing("n2i") & !missing("tobs")) 
     {
@@ -372,7 +372,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       ### Compute effect size
       es <- escompute(n1i = n1i, n2i = n2i, tobs = tobs, alpha = alpha/2,
                       side = side, measure = measure)
-      es$original <- original
+      es$conventional <- conventional
       
     } else if (!missing("ri") & !missing("ni")) 
     {
@@ -381,7 +381,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       ### Compute effect size
       es <- escompute(ri = ri, ni = ni, alpha = alpha/2, side = side,
                       measure = measure)
-      es$original <- original
+      es$conventional <- conventional
       
     } else if (!missing("yi") & !missing("vi"))
     {
@@ -390,13 +390,13 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       ### Compute effect size
       es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, 
                       measure = measure)
-      es$original <- original
+      es$conventional <- conventional
       
     }
   }
   
   k <- nrow(es) # Total number of effect sizes
-  k.original <- sum(es$original == 1) # Number of original studies in the meta-analysis
+  k.conventional <- sum(es$conventional == 1) # Number of conventional studies in the meta-analysis
   
   ### Critical value
   es$ycv <- es$zcv*sqrt(es$vi)
@@ -465,7 +465,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
              con = con)
   
   # If the implementation of van Aert and van Assen (2018) is used with only two
-  # studies (one original and one replication study), compute Hybrid^R,
+  # studies (one conventional and one replication study), compute Hybrid^R,
   # Hybrid^0, and fixed-effect meta-analysis
   if (con$implementation == "two")
   {
@@ -475,12 +475,12 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
     
     ### Hybrid^R method
     if (res.repl$pval.o < alpha/2) 
-    { # Use results of hybrid if two-tailed p-value of original studies < alpha/2
+    { # Use results of hybrid if two-tailed p-value of conventional studies < alpha/2
       res2 <- data.frame(est.hyr = res1$est, ci.lb.hyr = res1$ci.lb,
                          ci.ub.hyr = res1$ci.ub, L.0.hyr = res1$L.0, 
                          pval.0.hyr = res1$pval.0, pval.o = res.repl$pval.o)
     } else 
-    { # Use results of only replications if two-tailed p-value of original studies 
+    { # Use results of only replications if two-tailed p-value of conventional studies 
       # > alpha/2
       res2 <- data.frame(est.hyr = res.repl$est.repl, ci.lb.hyr = res.repl$ci.lb.repl,
                          ci.ub.hyr = res.repl$ci.ub.repl, L.0.hyr = res.repl$stat.repl,
@@ -556,7 +556,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
             est.repl = res.repl$est.repl, se.repl = res.repl$se.repl,
             ci.lb.repl = res.repl$ci.lb.repl, ci.ub.repl = res.repl$ci.ub.repl,
             stat.repl = res.repl$stat.repl, pval.repl = res.repl$pval.repl, 
-            k = k, k.original = k.original, optim.info = res1$optim.info)
+            k = k, k.conventional = k.conventional, optim.info = res1$optim.info)
   class(x) <- "hybridoutput"
   return(x)
 }

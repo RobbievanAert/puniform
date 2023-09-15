@@ -14,7 +14,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
   
   if (implementation == "two")
   { # If the implementation of van Aert and van Assen (2018) is used with only two
-    # studies (one original and one replication study)
+    # studies (one conventional and one replication study)
     
     ### Apply bisection method for effect size
     est <- try(bisect(func = pdist_hy_helper, lo = int[1], hi = int[2], es = es, 
@@ -50,7 +50,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     q <- pdist_hy(d = 0, es = es, val = "est")$q
     
     if (length(q) == 2)
-    { # If there is only one original study and one replication
+    { # If there is only one conventional study and one replication
       L.0 <- ifelse(sum(q) < 1, sum(q), 2-sum(q))  # Compute probability density  
       pval.0 <- ifelse(sum(q) < 1, 0.5*sum(q)^2, -0.5*sum(q)^2 + 2*sum(q)-1)
       pval.0 <- ifelse(pval.0 > 0.5, (1-pval.0)*2, pval.0*2) # Compute two-tailed p-value  
@@ -61,7 +61,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       pval.0 <- ifelse(pval.0 > 0.5, (1-pval.0)*2, pval.0*2) # Compute two-tailed p-value
     }
     
-    ### Objects that are not obtained in case of only one original and replication study
+    ### Objects that are not obtained in case of only one conventional and replication study
     tau2 <- se <- L.het <- pval.het <- tau2.lb <- tau2.ub <- 
       out <- NA
     

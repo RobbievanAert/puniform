@@ -4,7 +4,7 @@ ml_hy <- function(par, es, mods, n_bs, par_fixed, transf, verbose)
   yi <- es$yi
   vi <- es$vi
   ycv <- es$ycv
-  original <- es$original
+  conventional <- es$conventional
   
   ### Add fixed parameters to vector of optimized parameters to get the correct
   # log-likelihood
@@ -27,9 +27,9 @@ ml_hy <- function(par, es, mods, n_bs, par_fixed, transf, verbose)
   M <- X %*% bs
   
   ### Compute the log-likelihood of the truncated densities
-  q <- mapply(function(M, yi, vi, ycv, original, tau2)
+  q <- mapply(function(M, yi, vi, ycv, conventional, tau2)
   {
-    ifelse(original == 1, 
+    ifelse(conventional == 1, 
            ifelse(yi > ycv,
                   dnorm(yi, mean = M, sd = sqrt(vi+tau2), log = TRUE) -
                     pnorm(ycv, mean = M, sd = sqrt(vi+tau2), lower.tail = FALSE, log.p = TRUE),
@@ -37,7 +37,7 @@ ml_hy <- function(par, es, mods, n_bs, par_fixed, transf, verbose)
                     pnorm(ycv, mean = M, sd = sqrt(vi+tau2), log.p = TRUE)),
            dnorm(yi, mean = M, sd = sqrt(vi+tau2), log = TRUE))
     
-  }, M = M, yi = yi, vi = vi, ycv = ycv, original = original, MoreArgs = list(tau2 = tau2))
+  }, M = M, yi = yi, vi = vi, ycv = ycv, conventional = conventional, MoreArgs = list(tau2 = tau2))
   
   return(-sum(q))
 }

@@ -18,7 +18,7 @@ hybrid(
   tobs,
   yi,
   vi,
-  original,
+  conventional,
   mods = NULL,
   alpha = 0.05,
   side,
@@ -55,17 +55,17 @@ means}
 \item{vi}{A vector of sampling variances belonging to the standardized effect
 sizes (see Details)}
 
-\item{original}{A vector indicating whether a study is an original study (1)
+\item{conventional}{A vector indicating whether a study is a conventional study (1)
 and therefore was susceptible to bias or not (0)}
 
 \item{mods}{A one-sided formula to specify the moderators to include. For 
 example \code{x1} can be included as moderator by specifying \code{mods = ~ x1}}
 
-\item{alpha}{A numerical value specifying the alpha level as used in the original
+\item{alpha}{A numerical value specifying the alpha level as used in the conventional
 study (default is 0.05, see Details)}
 
 \item{side}{A character indicating whether the observed effect size of the
-original studies are in the right-tail of the distribution (i.e., positive) or
+conventional studies are in the right-tail of the distribution (i.e., positive) or
 in the left-tail of the distribution (i.e., negative) (either \code{"right"}
 or \code{"left"})}
 
@@ -74,7 +74,7 @@ over the estimation procedures (see Note)}
 }
 \value{
 \item{k}{total number of effect sizes}
-\item{k.original}{number of effect sizes of original studies}
+\item{k.conventional}{number of effect sizes of conventional studies}
 \item{est}{parameter estimates of the fixed effects of the hybrid method}
 \item{tau2}{estimate of the between-study variance in true effect size of hybrid 
 method}
@@ -108,7 +108,7 @@ effect size}
  no effect}
 \item{pval.0.hyr}{p-value of hybridR method's test of null-hypothesis of no 
 effect} 
-\item{pval.o}{two-tailed p-value of original study}
+\item{pval.o}{two-tailed p-value of conventional study}
 \item{est.hy0}{effect size estimate of hybrid0 method}
 \item{ci.lb.hy0}{lower bound of hybrid0 method's confidence interval of the 
 effect size}
@@ -161,16 +161,16 @@ analyzing the data. The results in the output are of the Fisher's z transformed
 correlations. It is also possible to specify the standardized effect sizes and 
 its sampling variances directly via the \code{yi} and \code{vi} arguments. 
  
-Two other arguments that need to be specified are \code{side} and \code{original}. 
-\code{side} indicates whether the effect size in the original study was expected
+Two other arguments that need to be specified are \code{side} and \code{conventional}. 
+\code{side} indicates whether the effect size in the conventional study was expected
 to be in the right-tail (\code{side = "right"} or in the left-tail 
-(\code{side = "left"}) of the distribution. The argument \code{original} has 
-to be used to indicate which studies are original studies and expected to be 
+(\code{side = "left"}) of the distribution. The argument \code{conventional} has 
+to be used to indicate which studies are conventional studies and expected to be 
 susceptible to bias. A 1 indicates that a study was susceptible to bias and 
 a 0 indicates that a study was not susceptible to bias.
 
-It is assumed that two-tailed hypothesis tests were conducted in the original 
-studies. In case one-tailed hypothesis tests were conducted in the original 
+It is assumed that two-tailed hypothesis tests were conducted in the conventional 
+studies. In case one-tailed hypothesis tests were conducted in the conventional 
 studies, the alpha level has to be multiplied by two. For example, if one-tailed 
 hypothesis tests were conducted with an alpha level of .05, an alpha of 0.1 
 has to be supplied to the \code{hybrid} function.
@@ -178,11 +178,11 @@ has to be supplied to the \code{hybrid} function.
 \strong{Previous version}
 
 The usage of a previous version of the \code{hybrid} function was more restricted.
-Users could only apply the method to a single original study and replication. 
-Before the addition of the extra functionality to also analyze multiple original 
-studies and replications, data of the original study and replication were 
+Users could only apply the method to a single conventional study and replication. 
+Before the addition of the extra functionality to also analyze multiple conventional 
+studies and replications, data of the conventional study and replication were 
 specified in vectors containing two elements with the first element being 
-the data of the original study and the second one the data of the replication. 
+the data of the conventional study and the second one the data of the replication. 
 In order to maintain backwards compatibility, it is still possible to analyze 
 data like this by using the arguments \code{m1i, m2i, mi, ri, sd1i, sd2i, sdi, 
 n1i, n2i, ni, tobs}. However, using the \code{hybrid} function in this way is 
@@ -223,7 +223,7 @@ about the estimation procedure. Its default value is FALSE.}
 \item{\code{par:}}{ Starting values for the optimization procedure in case of
 the implementation of van Aert (2023). The default values are zeros.}
 \item{\code{implementation:}}{ A character indicating whether the implementation
-of van Aert and van Assen (2018) based on a single original and single replication
+of van Aert and van Assen (2018) based on a single conventional and single replication
 should be used (\code{implementation = "two"}) or whether the implementation 
 of van Aert (2023) should be used that allows for including more than two studies
 (\code{implementation = "multiple"}).}
@@ -247,9 +247,9 @@ likelihood-ratio tests and profile likelihood confidence intervals
 library(metadat)
 dat <- dat.lehmann2018
 
-### Create a new object to indicate which studies were original studies and 
+### Create a new object to indicate which studies were conventional studies and 
 # which ones were preregistered
-dat$original <- ifelse(dat$Preregistered == "Not Pre-Registered", 1, 0)
+dat$conventional <- ifelse(dat$Preregistered == "Not Pre-Registered", 1, 0)
 
 ### Lehmann et al. split the analyses for males and females. We only use the data
 # of females for this example.
@@ -258,40 +258,40 @@ red_romance_femalep <- dat[dat$Gender == "Females", ]
 ### Prepare data for the analysis
 yi <- red_romance_femalep$yi
 vi <- red_romance_femalep$vi
-original <- red_romance_femalep$original
+conventional <- red_romance_femalep$conventional
 
 ### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
-hybrid(yi = yi, vi = vi, original = original, side = "right")
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right")
 
 ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 # likelihood confidence intervals
-hybrid(yi = yi, vi = vi, original = original, side = "right", control = list(type = "profile"))
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", control = list(type = "profile"))
 
 ### Include Color_Match as moderator
 Color_Match <- red_romance_femalep$Color_Match
 
 ### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
-hybrid(yi = yi, vi = vi, original = original, side = "right", mods = ~ Color_Match)
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match)
 
 ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 # likelihood confidence intervals
-hybrid(yi = yi, vi = vi, original = original, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
 
 ### Application using the implementation of van Aert and van Assen (2018). 
 # The hybrid method is applied to example on page 5 of van Aert and van Assen 
 # (2018).
 
-pval <- c(0.03, 0.3) # p-value original study and replication
+pval <- c(0.03, 0.3) # p-value conventional study and replication
 n1i <- n2i <- c(40, 80) # Sample sizes per group 
 tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values 
 
 ### Apply hybrid method using the implementation of van Aert and van Assen (2018)
-hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", original = c(1,0), 
+hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
 control = list(implementation = "two"))
  
-### Apply hybrid method to two original studies and two replications
+### Apply hybrid method to two conventional studies and two replications
 
-noi <- nri <- 50 # Sample size original studies and replicaitons
+noi <- nri <- 50 # Sample size conventional studies and replications
 sdoi <- sdri <- 1 
 sei <- sdoi/sqrt(50) # Standard error
 
