@@ -5,7 +5,7 @@ print.hybridoutput <- function(x, ...) {
   if (x$con$implementation == "two")
   {
     cat("\n")
-    cat("Results Hybrid method (k = ", x$k, "; Number original studies = ", x$k.original, ")", sep = "")
+    cat("Results Hybrid method (k = ", x$k, "; Number conventional studies = ", x$k.conventional, ")", sep = "")
     cat("\n")
     cat("\n")
     x$pval.0 <- ifelse(x$pval.0 < 0.001, "  <.001", round(x$pval.0, 4))
@@ -36,7 +36,7 @@ print.hybridoutput <- function(x, ...) {
                             pval = round(x$pval.0.hyr, 4), ci.lb = round(x$ci.lb.hyr, 4), 
                             ci.ub = round(x$ci.ub.hyr, 4), row.names = ""), width = 9))
     cat("\n")
-    cat("- Two-tailed p-value FE meta-analysis original studies:", x$pval.o)
+    cat("- Two-tailed p-value FE meta-analysis conventional studies:", x$pval.o)
     cat("\n")
     cat("\n")
     cat("===")
@@ -65,7 +65,7 @@ print.hybridoutput <- function(x, ...) {
   } else if (x$con$implementation == "multiple")
   {
     cat("\n")
-    cat("Results Hybrid method (k = ", x$k, "; number original studies = ", x$k.original, ")", sep = "")
+    cat("Results Hybrid method (k = ", x$k, "; number conventional studies = ", x$k.conventional, ")", sep = "")
     cat("\n")
     cat("\n")
     cat("Model results Hybrid method:")
