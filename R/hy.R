@@ -18,7 +18,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     
     ### Apply bisection method for effect size
     est <- try(bisect(func = pdist_hy_helper, lo = int[1], hi = int[2], es = es, 
-                         val = "est", tol = tol, verbose = verbose), silent = TRUE)
+                      val = "est", tol = tol, verbose = verbose), silent = TRUE)
     
     if (inherits(est, what = "try-error"))
     { # If estimate cannot be computed, return NA
@@ -27,9 +27,9 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     
     ### Apply bisection method for lower bound
     ci.lb <- try(bisect(func = pdist_hy_helper, lo = est-est.ci[1], 
-                           hi = est, es = es, 
-                           val = "ci.lb", cv.P = get_cv_P(nrow(es)), 
-                           tol = tol, verbose = verbose), silent = TRUE)
+                        hi = est, es = es, 
+                        val = "ci.lb", cv.P = get_cv_P(nrow(es)), 
+                        tol = tol, verbose = verbose), silent = TRUE)
     
     if (inherits(ci.lb, what = "try-error")) 
     {
@@ -38,8 +38,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     
     ### Apply bisection method for upper bound
     ci.ub <- try(bisect(func = pdist_hy_helper, lo = est, hi = est+est.ci[2], 
-                           es = es, val = "ci.ub", cv.P = nrow(es) - get_cv_P(nrow(es)), 
-                           tol = tol, verbose = verbose), silent = TRUE)
+                        es = es, val = "ci.ub", cv.P = nrow(es) - get_cv_P(nrow(es)), 
+                        tol = tol, verbose = verbose), silent = TRUE)
     
     if (inherits(ci.ub, what = "try-error")) 
     {
@@ -182,7 +182,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       L.0 <- -2*(ll0-ll)
       pval.0 <- pchisq(L.0, df = 1, lower.tail = FALSE)
       
-    } else if (type == "Wald")
+    } else if (type == "Wald" | type == "Wald/profile")
     { # Wald test
       L.0 <- est/se[1:n_bs]
       pval.0 <- 2*pnorm(abs(L.0), lower.tail = FALSE)
@@ -192,7 +192,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     
     ##### Test whether there is (residual) between-study variance #####
     
-    if (type == "profile")
+    if (type == "profile" | type == "Wald/profile")
     { # Likelihood-ratio test
       
       par_fixed <- c(rep(NA, n_bs), 0)
@@ -229,38 +229,12 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     
     ##############################################################################
     
-    ##### Compute 95% confidence intervals #####
+    ##### Compute 95% confidence intervals for fixed effects #####
     
     if (type == "profile")
-    { # Compute profile likelihood confidence intervals
+    { # Compute profile likelihood confidence intervals for fixed effects
       
       par_fixed <- rep(NA, n_bs+1)
-      
-      ### Function used for estimating profile likelihood confidence intervals
-      get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind, 
-                                 chi_cv, ll)
-      {
-        par_fixed[ind] <- x
-        
-        ### Remove the fixed parameters from par
-        par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
-        
-        ### Re-estimate model without the fixed parameter. Multiply with -1 to 
-        # get the log-likelihood, because ml_mods() returns the negative log-likelihood
-        if (length(par_transf) == 1)
-        { # If only one parameter is estimated, use optimize() instead of optim()
-          ll0 <- -1*optimize(ml_hy, interval = c(-10,10), es = es, mods = mods, 
-                             n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
-                             verbose = FALSE)$objective
-        } else
-        {
-          ll0 <- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
-                          es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                          transf = TRUE, verbose = FALSE)$value
-        }
-        
-        return(-2*(ll0-ll)-chi_cv)
-      }
       
       message("Profile likelihood confidence intervals are computed")
       
@@ -300,6 +274,22 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
         return(tmp)
       })
       
+    } else if (type == "Wald" | type == "Wald/profile")
+    { # Compute Wald confidence intervals for fixed effects
+      
+      if (all(is.na(se) == FALSE))
+      { # Only compute Wald confidence intervals if se could be computed
+        ci.lb <- est - qnorm(.975)*se[1:n_bs]
+        ci.ub <- est + qnorm(.975)*se[1:n_bs]
+      } else
+      {
+        ci.lb <- ci.ub <- rep(NA, n_bs)
+      }
+    }
+    
+    if (type == "profile" | type == "Wald/profile")
+    { # Compute profile likelihood confidence intervals for tau^2
+      
       ### Check if lower bound of CI of tau2 is negative
       ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
                                    par_fixed = par_fixed, mods = mods, est = est, 
@@ -312,12 +302,12 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       } else
       {
         tau2.lb <- try(uniroot(f = get_profile_ci,
-                                     interval = log(c(max(1e-50,tau2-tau2.ci[1]), 
-                                                      tau2)),
-                                     es = es, n_bs = n_bs, par_fixed = par_fixed, 
-                                     mods = mods, est = est, tau2 = tau2,
-                                     ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                                     ll = ll)$root, silent = TRUE)
+                               interval = log(c(max(1e-50,tau2-tau2.ci[1]), 
+                                                tau2)),
+                               es = es, n_bs = n_bs, par_fixed = par_fixed, 
+                               mods = mods, est = est, tau2 = tau2,
+                               ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
+                               ll = ll)$root, silent = TRUE)
         
         if (!inherits(tau2.lb, what = "try-error"))
         { # If lower bound could be computed transform to tau2 scale
@@ -331,11 +321,11 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       }
       
       tau2.ub <- try(uniroot(f = get_profile_ci,
-                                   interval = log(c(tau2, tau2+tau2.ci[2])),
-                                   es = es, n_bs = n_bs, par_fixed = par_fixed, 
-                                   mods = mods, est = est, tau2 = tau2,
-                                   ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                                   ll = ll)$root, silent = TRUE)
+                             interval = log(c(tau2, tau2+tau2.ci[2])),
+                             es = es, n_bs = n_bs, par_fixed = par_fixed, 
+                             mods = mods, est = est, tau2 = tau2,
+                             ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
+                             ll = ll)$root, silent = TRUE)
       
       if (!inherits(tau2.ub, what = "try-error"))
       { # If upper bound could be computed transform to tau2 scale
@@ -346,16 +336,11 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       {
         tau2.ub <- NA
       }
-      
     } else if (type == "Wald")
-    { # Wald confidence interval
+    { # Compute Wald confidence interval for tau^2
       
-      ### Only compute Wald confidence intervals if se could be computed
       if (all(is.na(se) == FALSE))
-      {
-        ci.lb <- est - qnorm(.975)*se[1:n_bs]
-        ci.ub <- est + qnorm(.975)*se[1:n_bs]
-        
+      { # Only compute Wald confidence intervals if se could be computed
         tau2.lb <- tau2 - qnorm(.975)*se[length(se)]
         tau2.ub <- tau2 + qnorm(.975)*se[length(se)]
         
@@ -363,7 +348,6 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
         tau2.ub <- ifelse(tau2.ub < 0, 0, tau2.ub)
       } else
       {
-        ci.lb <- ci.ub <- rep(NA, n_bs)
         tau2.lb <- tau2.ub <- NA
       }
     }

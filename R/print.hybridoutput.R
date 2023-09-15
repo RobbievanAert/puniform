@@ -71,7 +71,7 @@ print.hybridoutput <- function(x, ...) {
     cat("Model results Hybrid method:")
     cat("\n")
     cat("\n")
-    if (x$con$type == "Wald") 
+    if (x$con$type == "Wald" | x$con$type == "Wald/profile") 
     {
       print(format(data.frame(est = report(x$est), 
                               se = report(x$se[1:(length(x$se)-1)]), 
@@ -112,7 +112,7 @@ print.hybridoutput <- function(x, ...) {
                               zval = report(x$L.het),
                               pval = report(x$pval.het, type = "p"), 
                               row.names = ""), width = 9))
-    } else if (x$con$type == "profile")
+    } else if (x$con$type == "profile" | x$con$type == "Wald/profile")
     {
       print(format(data.frame(tau2 = report(x$tau2, type = "tau2"),
                               se = report(x$se[length(x$se)]), 

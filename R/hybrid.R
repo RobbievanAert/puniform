@@ -436,7 +436,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
               par = rep(0, n_bs+1), # Starting values for ML estimation. +1 for estimating tau^2
               implementation = "multiple",
               optimizer = "Nelder-Mead",
-              type = "Wald") 
+              type = "Wald/profile") # If Wald is used for fixed effects and profile for tau^2 
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
