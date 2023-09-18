@@ -20,8 +20,9 @@
 #' @param yi A vector of standardized effect sizes (see Details)
 #' @param vi A vector of sampling variances belonging to the standardized effect
 #' sizes (see Details)
-#' @param conventional A vector indicating whether a study is a conventional study (1)
-#' and therefore was susceptible to bias or not (0)
+#' @param conventional A vector indicating whether a study is a conventional study 
+#' (indicated with a 1) and therefore was susceptible to bias. Studies not susceptible
+#' to bias are indicated with a 0
 #' @param side A character indicating whether the observed effect size of the
 #' conventional studies are in the right-tail of the distribution (i.e., positive) or
 #' in the left-tail of the distribution (i.e., negative) (either \code{"right"}
@@ -101,6 +102,12 @@
 #' chi-square value (\code{LR} in the output) in case of a likelihood-ratio test}
 #' \item{pval.het}{p-value of hybrid method's test of null-hypothesis of no
 #' heterogeneity}
+#' \item{optim.info}{model fitting results if the implementation of van Aert 
+#' (2023) is used}
+#' 
+#' The elements below are only returned if the deprecated implementation 
+#' of van Aert and van Assen (2018) is used:
+#' 
 #' \item{est.hyr}{effect size estimate of hybridR method}
 #' \item{ci.lb.hyr}{lower bound of hybridR method's confidence interval of the 
 #' effect size}
@@ -140,8 +147,6 @@
 #'  no effect}
 #' \item{pval.repl}{two-tailed p-value of replication for testing
 #' null-hypothesis of no effect}
-#' \item{optim.info}{model fitting results if the implementation of van Aert 
-#' (2023) is used}
 #' 
 #' @note The \code{control} argument in the \code{hybrid} function is an optional 
 #' argument that gives the user more control over the estimation procedures. 
@@ -202,7 +207,9 @@
 #' biased original study and replication. Behavior Research Methods, 50(4): 1515-1539.
 #' doi:10.3758/s13428-017-0967-6
 #' 
-#' @references van Aert, R.C.M. (2023). Manuscript in preparation.
+#' @references van Aert, R.C.M. (2023). Empowering meta-analysis by taking advantage 
+#' of preregistered studies: The extended hybrid meta-analysis method. Manuscript 
+#' in preparation.
 #'
 #' @examples
 #' 

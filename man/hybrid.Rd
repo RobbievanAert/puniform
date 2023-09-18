@@ -55,8 +55,9 @@ means}
 \item{vi}{A vector of sampling variances belonging to the standardized effect
 sizes (see Details)}
 
-\item{conventional}{A vector indicating whether a study is a conventional study (1)
-and therefore was susceptible to bias or not (0)}
+\item{conventional}{A vector indicating whether a study is a conventional study 
+(indicated with a 1) and therefore was susceptible to bias. Studies not susceptible
+to bias are indicated with a 0}
 
 \item{mods}{A one-sided formula to specify the moderators to include. For 
 example \code{x1} can be included as moderator by specifying \code{mods = ~ x1}}
@@ -99,6 +100,12 @@ heterogeneity This is either a z-value (\code{zval} in the output) or a
 chi-square value (\code{LR} in the output) in case of a likelihood-ratio test}
 \item{pval.het}{p-value of hybrid method's test of null-hypothesis of no
 heterogeneity}
+\item{optim.info}{model fitting results if the implementation of van Aert 
+(2023) is used}
+
+The elements below are only returned if the deprecated implementation 
+of van Aert and van Assen (2018) is used:
+
 \item{est.hyr}{effect size estimate of hybridR method}
 \item{ci.lb.hyr}{lower bound of hybridR method's confidence interval of the 
 effect size}
@@ -138,8 +145,6 @@ fixed-effect meta-analysis}
  no effect}
 \item{pval.repl}{two-tailed p-value of replication for testing
 null-hypothesis of no effect}
-\item{optim.info}{model fitting results if the implementation of van Aert 
-(2023) is used}
 }
 \description{
 Function to statistically combine original studies and preregistered/replications 
@@ -314,7 +319,9 @@ reproducibility in psychology: A hybrid method for statistically combining a
 biased original study and replication. Behavior Research Methods, 50(4): 1515-1539.
 doi:10.3758/s13428-017-0967-6
 
-van Aert, R.C.M. (2023). Manuscript in preparation.
+van Aert, R.C.M. (2023). Empowering meta-analysis by taking advantage 
+of preregistered studies: The extended hybrid meta-analysis method. Manuscript 
+in preparation.
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
