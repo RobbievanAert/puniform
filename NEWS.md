@@ -2,6 +2,13 @@
 
 - Updated and improved documentation
 
+- Include a new implementation of the hybrid() function such that it also works
+for multiple original and replication studies.
+
+- The R package "metadat" is now included as suggested package, because the data
+from Lehmann et al. (2018) are now used as example in the documentation of the
+hybrid() function.
+
 
 # Changes in puniform 0.2.6 (2023-06-08)
 

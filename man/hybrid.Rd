@@ -5,28 +5,6 @@
 \title{hybrid}
 \usage{
 hybrid(
-  mo1i,
-  mo2i,
-  moi,
-  roi,
-  sdo1i,
-  sdo2i,
-  sdoi,
-  no1i,
-  no2i,
-  noi,
-  toobs,
-  mr1i,
-  mr2i,
-  mri,
-  rri,
-  sdr1i,
-  sdr2i,
-  sdri,
-  nr1i,
-  nr2i,
-  nri,
-  trobs,
   m1i,
   m2i,
   mi,
@@ -38,168 +16,127 @@ hybrid(
   n2i,
   ni,
   tobs,
-  yoi,
-  yri,
-  voi,
-  vri,
+  yi,
+  vi,
+  conventional,
+  mods = NULL,
   alpha = 0.05,
   side,
   control
 )
 }
 \arguments{
-\item{mo1i}{A vector of means in group 1 for two-independent means for the 
-original studies}
+\item{m1i}{A vector of means in group 1 for two-independent means}
 
-\item{mo2i}{A vector of means in group 2 for two-independent means for the 
-original studies}
+\item{m2i}{A vector of means in group 2 for two-independent means}
 
-\item{moi}{A vector of group means for one-sample means for the original studies}
+\item{mi}{A vector of group means for one-sample means}
 
-\item{roi}{A vector of raw correlations for the original studies}
-
-\item{sdo1i}{A vector of standard deviations in group 1 for two-independent
-means for the original studies}
-
-\item{sdo2i}{A vector of standard deviations in group 2 for two-independent
-means for the original studies}
-
-\item{sdoi}{A vector of standard deviations for one-sample means for original 
-studies}
-
-\item{no1i}{A vector of sample sizes in group 1 for two-independent means for 
-the original studies}
-
-\item{no2i}{A vector of sample sizes in group 2 for two-independent means for 
-the original studies}
-
-\item{noi}{A vector of sample sizes for one-sample means and correlations for 
-original studies}
-
-\item{toobs}{A vector of t-values for one-sample means and two-independent means 
-for the original studies}
-
-\item{mr1i}{A vector of means in group 1 for two-independent means for the 
-replications}
-
-\item{mr2i}{A vector of means in group 2 for two-independent means for the 
-replications}
-
-\item{mri}{A vector of group means for one-sample means for the replications}
-
-\item{rri}{A vector of raw correlations for the replications}
-
-\item{sdr1i}{A vector of standard deviations in group 1 for two-independent
-means for the replications}
-
-\item{sdr2i}{A vector of standard deviations in group 2 for two-independent
-means for the replications}
-
-\item{sdri}{A vector of standard deviations for one-sample means for replications}
-
-\item{nr1i}{A vector of sample sizes in group 1 for two-independent means for 
-the replications}
-
-\item{nr2i}{A vector of sample sizes in group 2 for two-independent means for 
-the replications}
-
-\item{nri}{A vector of sample sizes for one-sample means and correlations for 
-replications}
-
-\item{trobs}{A vector of t-values for one-sample means and two-independent means 
-for the replications}
-
-\item{m1i}{A vector of means in group 1 for two-independent means (deprecated, 
-see Details)}
-
-\item{m2i}{A vector of means in group 2 for two-independent means (deprecated, 
-see Details)}
-
-\item{mi}{A vector of group means for one-sample means (deprecated, see Details)}
-
-\item{ri}{A vector of raw correlations (deprecated, see Details)}
+\item{ri}{A vector of raw correlations}
 
 \item{sd1i}{A vector of standard deviations in group 1 for two-independent
-means (deprecated, see Details)}
+means}
 
 \item{sd2i}{A vector of standard deviations in group 2 for two-independent
-means (deprecated, see Details)}
+means}
 
-\item{sdi}{A vector of standard deviations for one-sample means (deprecated, 
-see Details)}
+\item{sdi}{A vector of standard deviations for one-sample means}
 
-\item{n1i}{A vector of sample sizes in group 1 for two-independent means 
-(deprecated, see Details)}
+\item{n1i}{A vector of sample sizes in group 1 for two-independent means}
 
-\item{n2i}{A vector of sample sizes in group 2 for two-independent means 
-(deprecated, see Details)}
+\item{n2i}{A vector of sample sizes in group 2 for two-independent means}
 
-\item{ni}{A vector of sample sizes for one-sample means and correlations 
-(deprecated, see Details)}
+\item{ni}{A vector of sample sizes for one-sample means and correlations}
 
-\item{tobs}{A vector of t-values (deprecated, see Details)}
+\item{tobs}{A vector of t-values}
 
-\item{yoi}{A vector of standardized effect sizes of the original studies 
-(see Details)}
+\item{yi}{A vector of standardized effect sizes (see Details)}
 
-\item{yri}{A vector of standardized effect sizes of the replications 
-(see Details)}
+\item{vi}{A vector of sampling variances belonging to the standardized effect
+sizes (see Details)}
 
-\item{voi}{A vector of sampling variances belonging to the standardized effect
-sizes of the original studies (see Details)}
+\item{conventional}{A vector indicating whether a study is a conventional study 
+(indicated with a 1) and therefore was susceptible to bias. Studies not susceptible
+to bias are indicated with a 0}
 
-\item{vri}{A vector of sampling variances belonging to the standardized effect
-sizes of the replications (see Details)}
+\item{mods}{A one-sided formula to specify the moderators to include. For 
+example \code{x1} can be included as moderator by specifying \code{mods = ~ x1}}
 
-\item{alpha}{A numerical value specifying the alpha level as used in the original
-study (default is 0.05, see Details).}
+\item{alpha}{A numerical value specifying the alpha level as used in the conventional
+study (default is 0.05, see Details)}
 
 \item{side}{A character indicating whether the observed effect size of the
-original study is in the right-tail of the distribution (i.e., positive) or
+conventional studies are in the right-tail of the distribution (i.e., positive) or
 in the left-tail of the distribution (i.e., negative) (either \code{"right"}
 or \code{"left"})}
 
 \item{control}{An optional list of elements that give the user more control 
-over the root-finding procedures (see Note)}
+over the estimation procedures (see Note)}
 }
 \value{
 \item{k}{total number of effect sizes}
-\item{krep}{number of effect sizes of replications}
-\item{est.hy}{effect size estimate of hybrid method}
-\item{ci.lb.hy}{lower bound of hybrid method's confidence interval}
-\item{ci.ub.hy}{upper bound of hybrid method's confidence interval}
-\item{x.hy}{test statistic of hybrid method's test of null-hypothesis of no
-effect}
-\item{pval.hy}{two-tailed p-value of hybrid method's test of null-hypothesis
- of no effect}
-\item{measure}{effect size measure}
+\item{k.conventional}{number of effect sizes of conventional studies}
+\item{est}{parameter estimates of the fixed effects of the hybrid method}
+\item{tau2}{estimate of the between-study variance in true effect size of hybrid 
+method}
+\item{se}{standard error of the fixed effects and of the estimated between-study
+variance}
+\item{ci.lb}{lower bound of hybrid method's confidence interval of the average
+effect size}
+\item{ci.ub}{upper bound of hybrid method's confidence interval of the average
+effect size}
+\item{L.0}{test statistic of hybrid method's test of null-hypothesis of no
+effect. This is either a z-value (\code{zval} in the output) or a 
+chi-square value (\code{LR} in the output) in case of a likelihood-ratio test}
+\item{pval.0}{p-value of hybrid method's test of null-hypothesis of no effect}
+ \item{tau2}{estimate of the between-study variance in true effect size of hybrid 
+method}
+\item{tau2.lb}{lower bound of hybrid method's confidence interval of the
+between-study variance}
+\item{tau2.ub}{upper bound of hybrid method's confidence interval of the
+between-study variance}
+\item{L.het}{test statistic of hybrid method's test of null-hypothesis of no
+heterogeneity This is either a z-value (\code{zval} in the output) or a 
+chi-square value (\code{LR} in the output) in case of a likelihood-ratio test}
+\item{pval.het}{p-value of hybrid method's test of null-hypothesis of no
+heterogeneity}
+\item{optim.info}{model fitting results if the implementation of van Aert 
+(2023) is used}
+
+The elements below are only returned if the deprecated implementation 
+of van Aert and van Assen (2018) is used:
+
 \item{est.hyr}{effect size estimate of hybridR method}
-\item{ci.lb.hyr}{lower bound of hybridR method's confidence interval}
-\item{ci.ub.hyr}{upper bound of hybridR method's confidence interval}
-\item{x.hyr}{test statistic of hybridR method's test of null-hypothesis of
+\item{ci.lb.hyr}{lower bound of hybridR method's confidence interval of the 
+effect size}
+\item{ci.ub.hyr}{upper bound of hybridR method's confidence interval of the 
+ effect size}
+\item{L.0.hyr}{test statistic of hybridR method's test of null-hypothesis of
  no effect}
-\item{pval.hyr}{two-tailed p-value of hybridR method's test of
-null-hypothesis of no effect}
-\item{pval.o}{two-tailed p-value of original study}
+\item{pval.0.hyr}{p-value of hybridR method's test of null-hypothesis of no 
+effect} 
+\item{pval.o}{two-tailed p-value of conventional study}
 \item{est.hy0}{effect size estimate of hybrid0 method}
-\item{ci.lb.hy0}{lower bound of hybrid0 method's confidence interval}
-\item{ci.ub.hy0}{upper bound of hybrid0 method's confidence interval}
-\item{x.hy0}{test statistic of hybrid0 method's test of null-hypothesis of no
+\item{ci.lb.hy0}{lower bound of hybrid0 method's confidence interval of the 
+effect size}
+\item{ci.ub.hy0}{upper bound of hybrid0 method's confidence interval of the 
+effect size}
+\item{L.0.hy0}{test statistic of hybrid0 method's test of null-hypothesis of no
 effect}
-\item{pval.hy0}{two-tailed p-value of hybrid0 method's test of
+\item{pval.0.hy0}{two-tailed p-value of hybrid0 method's test of
 null-hypothesis of no effect}
-\item{est.fe}{effect size estimate based on traditional fixed-effect
+\item{est.fe}{effect size estimate based on fixed-effect
 meta-analysis}
 \item{se.fe}{standard error of effect size estimate based on traditional
 fixed-effect meta-analysis}
 \item{zval.fe}{test statistic of the null-hypothesis of no effect based on
-traditional fixed-effect meta-analysis}
+fixed-effect meta-analysis}
 \item{pval.fe}{two-tailed p-value of the null-hypothesis of no effect based
-on traditional fixed-effect meta-analysis}
+on fixed-effect meta-analysis}
 \item{ci.lb.fe}{lower bound of confidence interval based on traditional
 fixed-effect meta-analysis}
 \item{ci.ub.fe}{upper bound of confidence interval based on
-traditional fixed-effect meta-analysis}
+fixed-effect meta-analysis}
 \item{est.repl}{effect size estimate of replication}
 \item{se.repl}{standard error of replication's effect size estimate}
 \item{ci.lb.repl}{lower bound of replication's confidence interval}
@@ -210,63 +147,47 @@ traditional fixed-effect meta-analysis}
 null-hypothesis of no effect}
 }
 \description{
-Function to statistically combine original studies and replications by means
-of the hybrid methods and fixed-effect meta-analysis as described in van Aert
-and van Assen (2018).
+Function to statistically combine original studies and preregistered/replications 
+by means of the hybrid methods as described in van Aert and van Assen (2018) 
+and van Aert (2023).
 }
 \details{
 Three different effect sizes can be used as input for the
 \code{hybrid} function: one-sample means, two-independent means, and raw
-correlation coefficients. For each effect size measure, data of the original 
-studies and replications have to be provided separately. For analyzing 
-one-sample means, either the group means (\code{moi} and \code{mri}), standard 
-deviations (\code{sdoi} and \code{sdri}), and sample sizes (\code{noi} and 
-\code{nri}) for the original studies and replications or t-values (\code{toobs} 
-and \code{trobs}) and sample sizes (\code{noi} and \code{nri}) have to be 
-provided. For analyzing two-independent means, either the group means of group 
-1 (\code{mo1i} and \code{mr1i}) and group 2 (\code{mo1i} and \code{mr1i}), 
-standard deviations of group 1 (\code{sdo1i} and \code{sdr1i}) and group 2 
-(\code{sdo2i} and \code{sdr2i}), and sample sizes of group 1 (\code{no1i} and 
-\code{nr1i}) and group 2 (\code{no2i} and \code{nr2i}) for the original studies 
-and replications have to be provided. It is also possible to analyze 
-two-independent means by providing t-values (\code{toobs} and \code{trobs}) in 
-combination with sample sizes of group 1 (\code{no1i} and \code{nr1i}) and group
-2 (\code{no2i} and \code{nr2i}) for the original studies and replications. 
-Correlation coefficients can also be analyzed by supplying the function with 
-raw correlation coefficients (\code{roi} and \code{rri}) and sample sizes 
-(\code{noi} and \code{nri}) of the original studies and replications. The 
-\code{side} argument to specify whether the observed effect size of the
-original study is in the right-tail of the distribution (i.e., positive) or
-in the left-tail of the distribution should also be specified for every effect size 
-measure.
+correlation coefficients. Analyzing one-sample means and two-independent
+means can be done by either providing the function group means (\code{mi} or
+\code{m1i} and \code{m2i}), standard deviations (\code{sdi} or \code{sd1i}
+and \code{sd2i}), and sample sizes (\code{ni} or \code{n1i} and \code{n2i})
+or t-values (\code{tobs}) and sample sizes (\code{ni} or \code{n1i}
+and \code{n2i}). Pearson correlation coefficients can be analyzed by supplying 
+\code{ri} and \code{ni} to the \code{hybrid} function. These correlation 
+coefficients are internally transformed to Fisher's z correlations before 
+analyzing the data. The results in the output are of the Fisher's z transformed
+correlations. It is also possible to specify the standardized effect sizes and 
+its sampling variances directly via the \code{yi} and \code{vi} arguments. 
+ 
+Two other arguments that need to be specified are \code{side} and \code{conventional}. 
+\code{side} indicates whether the effect size in the conventional study was expected
+to be in the right-tail (\code{side = "right"} or in the left-tail 
+(\code{side = "left"}) of the distribution. The argument \code{conventional} has 
+to be used to indicate which studies are conventional studies and expected to be 
+susceptible to bias. A 1 indicates that a study was susceptible to bias and 
+a 0 indicates that a study was not susceptible to bias.
 
-It is also possible to specify the standardized effect sizes and its sampling
-variances directly via the \code{yoi}, \code{yri}, \code{voi}, and \code{vri} 
-arguments. However, extensive knowledge about computing standardized effect 
-sizes and its sampling variances is required and specifying standardized effect 
-sizes and sampling variances is not recommended to be used if the p-values in 
-the primary studies are not computed with a z-test. In case the p-values in the 
-original studies were computed with, for instance, a t-test, the p-values of a 
-z-test and t-test do not exactly coincide and studies may be not statistically 
-significant according to a z-test.
-
-The hybrid methods assume that the original studies are statistically
-significant, so original studies that are not statistically signifcant are 
-discarded from the analysis. Furthermore, it is assumed that two-tailed 
-hypothesis tests were conducted in the original studies. In case one-tailed 
-hypothesis tests were conducted in the original studies, the alpha level has 
-to be multiplied by two. For example, if one-tailed hypothesis tests were 
-conducted with an alpha level of .05, an alpha of 0.1 has to be entered into 
-the \code{hybrid} function.
+It is assumed that two-tailed hypothesis tests were conducted in the conventional 
+studies. In case one-tailed hypothesis tests were conducted in the conventional 
+studies, the alpha level has to be multiplied by two. For example, if one-tailed 
+hypothesis tests were conducted with an alpha level of .05, an alpha of 0.1 
+has to be supplied to the \code{hybrid} function.
 
 \strong{Previous version}
 
 The usage of a previous version of the \code{hybrid} function was more restricted.
-Users could only apply the method to a single original study and replication. 
-Before the addition of the extra functionality to also analyze multiple original 
-studies and replications, data of the original study and replication were 
+Users could only apply the method to a single conventional study and replication. 
+Before the addition of the extra functionality to also analyze multiple conventional 
+studies and replications, data of the conventional study and replication were 
 specified in vectors containing two elements with the first element being 
-the data of the original study and the second one the data of the replication. 
+the data of the conventional study and the second one the data of the replication. 
 In order to maintain backwards compatibility, it is still possible to analyze 
 data like this by using the arguments \code{m1i, m2i, mi, ri, sd1i, sd2i, sdi, 
 n1i, n2i, ni, tobs}. However, using the \code{hybrid} function in this way is 
@@ -274,7 +195,7 @@ now deprecated.
 }
 \note{
 The \code{control} argument in the \code{hybrid} function is an optional 
-argument that gives the user more control over the root-finding procedures. 
+argument that gives the user more control over the estimation procedures. 
 This can be especially useful if estimation of the method does not converge 
 and NAs are returned by the function. The \code{control} argument should 
 be specified as a list containing one or more elements. For example, 
@@ -286,36 +207,99 @@ not specified. The following elements can be specified by the user:
 bound of the interval that is used for estimating the effect size. The effect 
 size estimate should be included in this interval. Its default values are -10
 for the first element and the maximum effect size of a study included in the 
-analysis + 1 as the second element.}
+analysis + 1 as the second element. This control argument is only applicable 
+to the implementation of van Aert and van Assen (2018).}
 \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
 subtracted from and added to the estimate of the effect size for computing the 
 95\% confidence intervals. Its default values are (50, 1). To give an example, 
 estimates for the lower and upper bound around the effect size estimate are 
 searched on the interval (est-50, est) and (est, est+1), respectively.}
+\item{\code{tau2.ci}}{ A vector of length two indicating the values that are 
+subtracted from and added to the estimate of the between-study variance for 
+computing the 95\% confidence intervals. Its default values are (0.5, 0.5). 
+To give an example, estimates for the lower and upper bound around the effect 
+size estimate are searched on the interval (tau2-0.5, tau2) and (tau2, tau2+0.5), 
+respectively.}
 \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
-Its default value is .Machine$double.eps^0.25.} 
+Its default value is .Machine$double.eps^0.25. This control argument is only 
+applicable to the implementation of van Aert and van Assen (2018).} 
 \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 about the estimation procedure. Its default value is FALSE.}
+\item{\code{par:}}{ Starting values for the optimization procedure in case of
+the implementation of van Aert (2023). The default values are zeros.}
+\item{\code{implementation:}}{ A character indicating whether the implementation
+of van Aert and van Assen (2018) based on a single conventional and single replication
+should be used (\code{implementation = "two"}) or whether the implementation 
+of van Aert (2023) should be used that allows for including more than two studies
+(\code{implementation = "multiple"}).}
+\item{\code{optimizer:}}{ A character indicating the optimizer that is used if
+the implementation of van Aert (2023) is used. The default value is "Nelder-Mead".
+The \code{optim} function is used for optimization, so the optimization 
+methods implemented in the \code{optim} function can be used. See the 
+documentation of the \code{optim} function for more information.}
+\item{\code{type:}}{ A character vector indicating whether Wald-based hypothesis
+tests and confidence intervals are preferred (\code{type = "Wald"}) or 
+likelihood-ratio tests and profile likelihood confidence intervals 
+(\code{type = "profile"}). The default is "Wald/profile" which implies that 
+Wald tests and confidence intervals are computed for the fixed effects and 
+likelihood-ratio tests and profile likelihood confidence intervals for the 
+between-study variance.}
 }
 }
 \examples{
-### Apply hybrid method to example on page 5 of van Aert and van Assen (2018).
 
-pval.o <- 0.03 # p-value original study
-pval.r <- 0.3 # p-value replication
+### Application using the implementation of van Aert (2023) with more than two studies.
+# Note that these data come from the "metadat" R package that needs to be loaded.
+# The data come from the meta-analyses by Lehmann et al. (2018). See the help 
+# file of dat.lehmann2018 for more information about this meta-analysis.
+library(metadat)
+dat <- dat.lehmann2018
 
-no1i <- no2i <- 40 # Sample size per group in original study
-nr1i <- nr2i <- 80 # Sample size per group in replication
-toobs <- qt(pval.o/2, df = no1i+no2i-2, lower.tail = FALSE) # Observed t-values original study
-trobs <- qt(pval.r/2, df = nr1i+nr2i-2, lower.tail = FALSE) # Observed t-values replication
+### Create a new object to indicate which studies were conventional studies and 
+# which ones were preregistered
+dat$conventional <- ifelse(dat$Preregistered == "Not Pre-Registered", 1, 0)
 
-### Apply hybrid method
-hybrid(toobs = toobs, trobs = trobs, no1i = no1i, no2i = no2i, nr1i = nr1i, 
-nr2i = nr2i, side = "right")
+### Lehmann et al. split the analyses for males and females. We only use the data
+# of females for this example.
+red_romance_femalep <- dat[dat$Gender == "Females", ]
 
-### Apply hybrid method to two original studies and two replications
+### Prepare data for the analysis
+yi <- red_romance_femalep$yi
+vi <- red_romance_femalep$vi
+conventional <- red_romance_femalep$conventional
 
-noi <- nri <- 50 # Sample size original studies and replicaitons
+### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right")
+
+### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
+# likelihood confidence intervals
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", control = list(type = "profile"))
+
+### Include Color_Match as moderator
+Color_Match <- red_romance_femalep$Color_Match
+
+### Apply the hybrid method with Wald-type hypothesis tests and confidence intervals
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match)
+
+### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
+# likelihood confidence intervals
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
+
+### Application using the implementation of van Aert and van Assen (2018). 
+# The hybrid method is applied to example on page 5 of van Aert and van Assen 
+# (2018).
+
+pval <- c(0.03, 0.3) # p-value conventional study and replication
+n1i <- n2i <- c(40, 80) # Sample sizes per group 
+tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values 
+
+### Apply hybrid method using the implementation of van Aert and van Assen (2018)
+hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
+control = list(implementation = "two"))
+ 
+### Apply hybrid method to two conventional studies and two replications
+
+noi <- nri <- 50 # Sample size conventional studies and replications
 sdoi <- sdri <- 1 
 sei <- sdoi/sqrt(50) # Standard error
 
@@ -334,6 +318,10 @@ van Aert, R. C. M., & van Assen, M. A. L. M. (2018). Examining
 reproducibility in psychology: A hybrid method for statistically combining a
 biased original study and replication. Behavior Research Methods, 50(4): 1515-1539.
 doi:10.3758/s13428-017-0967-6
+
+van Aert, R.C.M. (2023). Empowering meta-analysis by taking advantage 
+of preregistered studies: The extended hybrid meta-analysis method. Manuscript 
+in preparation.
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
