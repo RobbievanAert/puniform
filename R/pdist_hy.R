@@ -7,7 +7,7 @@ pdist_hy <- function(d, es, val, cv.P)
   vi <- es$vi
   zval <- es$zval
   zcv <- es$zcv
-  ori <- es$ori
+  conventional <- es$conventional
   k <- nrow(es)
   
   zd <- d/sqrt(vi) # Transform d to zd for approximation
@@ -17,7 +17,7 @@ pdist_hy <- function(d, es, val, cv.P)
   ### Loop to compute conditional probabilities
   for (i in 1:k)
   {
-    if (ori[i] == 1)
+    if (conventional[i] == 1)
     { # In case of an original study
       
       pmarg <- pnorm(zcv[i]*sqrt(vi[i]), d, sqrt(vi[i]), lower.tail = FALSE, 
@@ -25,7 +25,7 @@ pdist_hy <- function(d, es, val, cv.P)
       ph1 <- pnorm(yi[i], d, sqrt(vi[i]), lower.tail = FALSE, log.p = TRUE)
       q[i] <- exp(ph1-pmarg)
       
-    } else if (ori[i] == 0)
+    } else if (conventional[i] == 0)
     { # In case of a replication
       q[i] <- pnorm(yi[i], d, sqrt(vi[i]), lower.tail = FALSE)  
     }

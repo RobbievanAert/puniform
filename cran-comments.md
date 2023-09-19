@@ -1,7 +1,7 @@
 ## Test environments
 * Windows 10, R 4.3.1 (local)
-* ubuntu 22.04.2 (GitHub Actions), R 4.3.1
-* osx 12.6.7 (GitHub Actions), R 4.3.1
+* ubuntu 22.04 (GitHub Actions), R 4.3.1
+* osx 12 (GitHub Actions), R 4.3.1
 
 ## R CMD check results
 There were no ERRORs and WARNINGs.

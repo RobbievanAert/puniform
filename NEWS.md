@@ -1,3 +1,15 @@
+# Changes in puniform 0.2.7 (2023-09-18)
+
+- Updated and improved documentation
+
+- Include a new implementation of the hybrid() function such that it also works
+for multiple conventional and preregistered studies.
+
+- The R package "metadat" is now included as suggested package, because the data
+from Lehmann et al. (2018) are now used as example in the documentation of the
+hybrid() function.
+
+
 # Changes in puniform 0.2.6 (2023-07-14)
 
 - Fix a bug in hybrid() where the standard error was also transformed from Fisher's
