@@ -10,7 +10,7 @@ from Lehmann et al. (2018) are now used as example in the documentation of the
 hybrid() function.
 
 
-# Changes in puniform 0.2.6 (2023-06-08)
+# Changes in puniform 0.2.6 (2023-07-14)
 
 - Fix a bug in hybrid() where the standard error was also transformed from Fisher's
 z-value to Pearson correlation
