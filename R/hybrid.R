@@ -1,8 +1,8 @@
 #' hybrid
 #'
-#' Function to statistically combine original studies and preregistered/replications 
-#' by means of the hybrid methods as described in van Aert and van Assen (2018) 
-#' and van Aert (2023).
+#' Function to statistically combine conventional and preregistered/replications 
+#' studies by means of the hybrid methods as described in van Aert and van Assen 
+#' (2018) and van Aert (2023).
 #'
 #' @param mi A vector of group means for one-sample means
 #' @param ri A vector of raw correlations
@@ -238,7 +238,8 @@
 #'
 #' ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 #' # likelihood confidence intervals
-#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", control = list(type = "profile"))
+#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", 
+#' control = list(type = "profile"))
 #'
 #' ### Include Color_Match as moderator
 #' Color_Match <- red_romance_femalep$Color_Match
@@ -248,7 +249,8 @@
 #'
 #' ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 #' # likelihood confidence intervals
-#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
+#' hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match, 
+#' control = list(type = "profile"))
 #' 
 #' ### Application using the implementation of van Aert and van Assen (2018). 
 #' # The hybrid method is applied to example on page 5 of van Aert and van Assen 
@@ -262,26 +264,15 @@
 #' hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
 #' control = list(implementation = "two"))
 #'  
-#' ### Apply hybrid method to two conventional studies and two replications
-#' 
-#' noi <- nri <- 50 # Sample size conventional studies and replications
-#' sdoi <- sdri <- 1 
-#' sei <- sdoi/sqrt(50) # Standard error
-#' 
-#' ### Generate data
-#' pso <- c(0.025/3, 0.025/3*2)
-#' psr <- c(1/3, 1/3*2)
-#' moi <- qnorm(pso, mean = 0, sd = sei, lower.tail = FALSE)
-#' mri <- qnorm(psr, mean = 0, sd = sei, lower.tail = FALSE)
-#' 
-#' ### Apply hybrid method
-#' hybrid(moi = moi, noi = noi, sdoi = sdoi, mri = mri, nri = nri, sdri = sdri, side = "right")
-#'
 #' @export
 
 hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi, 
                    conventional, mods = NULL, alpha = 0.05, side, control) 
 {
+  
+  ### Necessary to pass R CMD check otherwise the following warning will be present:
+  # no visible binding for global variable est.fe etc.
+  est.fe <- ci.ub.fe <- ci.lb.fe <- zval.fe <- NULL 
   
   if (!missing("mi") | !missing("tobs") | !missing("m1i") | !missing("ri"))
   { # If only two studies are supplied as input

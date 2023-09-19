@@ -102,7 +102,7 @@
 #' performance of heterogeneity variance estimators in meta-analysis: A review of 
 #' simulation studies. Research Synthesis Methods, 8(2), 181-198. doi:10.1002/jrsm.1198
 #' @references Paule, R. C., & Mandel, J. (1982). Consensus values and weighting factors. 
-#' Journal of Research of the National Bureau of Standards, 87(5), 377–385.
+#' Journal of Research of the National Bureau of Standards, 87(5), 377-385.
 #' @references van Assen, ..., & van Aert (2023). The meta-plot: A graphical tool 
 #' for interpreting the results of a meta-analysis. Zeitschrift fur Psychologie, 
 #' 231(1), 65-78. doi:10.1027/2151-2604/a000513

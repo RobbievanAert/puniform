@@ -147,9 +147,9 @@ fixed-effect meta-analysis}
 null-hypothesis of no effect}
 }
 \description{
-Function to statistically combine original studies and preregistered/replications 
-by means of the hybrid methods as described in van Aert and van Assen (2018) 
-and van Aert (2023).
+Function to statistically combine conventional and preregistered/replications 
+studies by means of the hybrid methods as described in van Aert and van Assen 
+(2018) and van Aert (2023).
 }
 \details{
 Three different effect sizes can be used as input for the
@@ -273,7 +273,8 @@ hybrid(yi = yi, vi = vi, conventional = conventional, side = "right")
 
 ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 # likelihood confidence intervals
-hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", control = list(type = "profile"))
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", 
+control = list(type = "profile"))
 
 ### Include Color_Match as moderator
 Color_Match <- red_romance_femalep$Color_Match
@@ -283,7 +284,8 @@ hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ C
 
 ### Apply the hybrid method with likelihood ratio hypothesis tests and profile 
 # likelihood confidence intervals
-hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match, control = list(type = "profile"))
+hybrid(yi = yi, vi = vi, conventional = conventional, side = "right", mods = ~ Color_Match, 
+control = list(type = "profile"))
 
 ### Application using the implementation of van Aert and van Assen (2018). 
 # The hybrid method is applied to example on page 5 of van Aert and van Assen 
@@ -297,21 +299,6 @@ tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values
 hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
 control = list(implementation = "two"))
  
-### Apply hybrid method to two conventional studies and two replications
-
-noi <- nri <- 50 # Sample size conventional studies and replications
-sdoi <- sdri <- 1 
-sei <- sdoi/sqrt(50) # Standard error
-
-### Generate data
-pso <- c(0.025/3, 0.025/3*2)
-psr <- c(1/3, 1/3*2)
-moi <- qnorm(pso, mean = 0, sd = sei, lower.tail = FALSE)
-mri <- qnorm(psr, mean = 0, sd = sei, lower.tail = FALSE)
-
-### Apply hybrid method
-hybrid(moi = moi, noi = noi, sdoi = sdoi, mri = mri, nri = nri, sdri = sdri, side = "right")
-
 }
 \references{
 van Aert, R. C. M., & van Assen, M. A. L. M. (2018). Examining
