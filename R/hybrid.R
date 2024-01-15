@@ -44,9 +44,10 @@
 #' and \code{n2i}). Pearson correlation coefficients can be analyzed by supplying 
 #' \code{ri} and \code{ni} to the \code{hybrid} function. These correlation 
 #' coefficients are internally transformed to Fisher's z correlations before 
-#' analyzing the data. The results in the output are of the Fisher's z transformed
-#' correlations. It is also possible to specify the standardized effect sizes and 
-#' its sampling variances directly via the \code{yi} and \code{vi} arguments. 
+#' analyzing the data. The results in the output are those of the Fisher's z 
+#' transformed correlations. It is also possible to specify the standardized 
+#' effect sizes and its sampling variances directly via the \code{yi} and \code{vi} 
+#' arguments. 
 #'  
 #' Two other arguments that need to be specified are \code{side} and \code{conventional}. 
 #' \code{side} indicates whether the effect size in the conventional study was expected
@@ -495,35 +496,13 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
     res4 <- fe_ma(yi = es$yi, vi = es$vi)
     
     ### Transform results of fixed-effect meta-analysis
-    if (measure == "COR") 
-    { # Back transform Fisher z to correlation
-      res4$est.fe <- (exp(2*res4$est.fe) - 1)/(exp(2*res4$est.fe) + 1)
-      res4$ci.lb.fe <- (exp(2*res4$ci.lb.fe) - 1)/(exp(2*res4$ci.lb.fe) + 1)
-      res4$ci.ub.fe <- (exp(2*res4$ci.ub.fe) - 1)/(exp(2*res4$ci.ub.fe) + 1)
-      res4$zval.fe <- res4$zval.fe
-      
-      if (side == "left") 
-      { # Re-mirror estimates
-        res4$est.fe <- est.fe*-1
-        tmp <- ci.ub.fe
-        res4$ci.ub.fe <- ci.lb.fe*-1
-        res4$ci.lb.fe <- tmp*-1
-        res4$zval.fe <- zval.fe*-1
-      }
-      
-    } else if (side == "left" & measure != "COR") 
+    if (side == "left") 
     { # Re-mirror estimates
-      res4$est.fe <- res4$est.fe*-1
-      tmp <- res4$ci.ub.fe
-      res4$ci.ub.fe <- res4$ci.lb.fe*-1
+      res4$est.fe <- est.fe*-1
+      tmp <- ci.ub.fe
+      res4$ci.ub.fe <- ci.lb.fe*-1
       res4$ci.lb.fe <- tmp*-1
-      res4$zval.fe <- res4$zval.fe*-1
-    } else 
-    {
-      res4$est.fe <- res4$est.fe
-      res4$ci.ub.fe <- res4$ci.ub.fe
-      res4$ci.lb.fe <- res4$ci.lb.fe
-      res4$zval.fe <- res4$zval.fe
+      res4$zval.fe <- zval.fe*-1
     }
   } else
   { # Assign NAs to objects if implementation == "multiple"
@@ -538,7 +517,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
                        Qstat = NA, Qpval = NA)
     
     res.repl <- data.frame(est.repl = NA, se.repl = NA, ci.lb.repl = NA, 
-               ci.ub.repl = NA, stat.repl = NA, pval.repl = NA, pval.o = NA)
+                           ci.ub.repl = NA, stat.repl = NA, pval.repl = NA, pval.o = NA)
   }
   
   x <- list(con = con, var_names = var_names, est = res1$est, tau2 = res1$tau2, 

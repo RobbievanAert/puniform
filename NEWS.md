@@ -1,3 +1,9 @@
+# Changes in puniform 0.2.8 (XXXX-XX-XX)
+
+- If raw correlations are provided in hybrid(), the output of fixed-effect 
+meta-analysis is reported as Fisher's z transformed correlations
+
+
 # Changes in puniform 0.2.7 (2023-09-18)
 
 - Updated and improved documentation

@@ -162,9 +162,10 @@ or t-values (\code{tobs}) and sample sizes (\code{ni} or \code{n1i}
 and \code{n2i}). Pearson correlation coefficients can be analyzed by supplying 
 \code{ri} and \code{ni} to the \code{hybrid} function. These correlation 
 coefficients are internally transformed to Fisher's z correlations before 
-analyzing the data. The results in the output are of the Fisher's z transformed
-correlations. It is also possible to specify the standardized effect sizes and 
-its sampling variances directly via the \code{yi} and \code{vi} arguments. 
+analyzing the data. The results in the output are those of the Fisher's z 
+transformed correlations. It is also possible to specify the standardized 
+effect sizes and its sampling variances directly via the \code{yi} and \code{vi} 
+arguments. 
  
 Two other arguments that need to be specified are \code{side} and \code{conventional}. 
 \code{side} indicates whether the effect size in the conventional study was expected
