@@ -167,7 +167,7 @@
 #' value in the optimization. \code{fnscale} is one of the control arguments of 
 #' the \code{optim()} function that is internally used for optimization when the 
 #' \code{ML} method is used and both parameters are estimated at the same time. 
-#' See the argument \code{proc.ml} above #' and the documentation of the \code{optim()} 
+#' See the argument \code{proc.ml} above and the documentation of the \code{optim()} 
 #' function for more information.} 
 #' \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 #' about the algorithm for estimating the effect size and between-study variance. 
@@ -294,7 +294,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
             tau2.lb = res.es$tau.lb^2, tau2.ub = res.es$tau.ub^2, 
             L.het = res.hetero$L.het, pval.het = res.hetero$pval.het, 
             pval.boot = res.hetero$pval.boot, L.pb = res.pub$L.pb, 
-            pval.pb = res.pub$pval.pb)
+            pval.pb = res.pub$pval.pb, optim.info = res.es$optim.info)
   
   class(x) <- "puni_staroutput"
   

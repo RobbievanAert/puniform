@@ -3,6 +3,9 @@
 - If raw correlations are provided in hybrid(), the output of fixed-effect 
 meta-analysis is reported as Fisher's z transformed correlations
 
+- Optimization information is now returned when puni_star() is applied and both
+parameters are estimated at the same time with method = "ML"
+
 
 # Changes in puniform 0.2.7 (2023-09-18)
 

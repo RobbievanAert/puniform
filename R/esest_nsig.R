@@ -64,6 +64,11 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
         tau.est <- NA
         
       }
+      
+      ### Return NA, because optimization information is only returned if both
+      # parameters are estimated at the same time
+      out <- NA
+      
     } else
     {
       ### Starting values
@@ -465,8 +470,13 @@ esest_nsig <- function(yi, vi, int, tau.int, ycv, method, con)
         }
       }
     }
+    
+    ### Return NA, because optimization information is only returned if both
+    # parameters are estimated at the same time with method = "ML"
+    out <- NA
+    
   }
   
-  return(data.frame(est = est, tau.est = tau.est, lb = lb, ub = ub, tau.lb = tau.lb, 
-                    tau.ub = tau.ub))
+  return(list(est = est, tau.est = tau.est, lb = lb, ub = ub, tau.lb = tau.lb, 
+              tau.ub = tau.ub, optim.info = out))
 }
