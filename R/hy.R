@@ -137,14 +137,10 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       se <- rep(NA, n_bs+1)
       
       warning("Error when inverting Hessian", call. = FALSE)
-    } else if (any(diag(inv_H) < 0))
-    {
-      se <- rep(NA, n_bs+1)
-      
-      warning("Error when inverting Hessian", call. = FALSE)
     } else 
     {
-      se <- sqrt(diag(inv_H))  
+      ### Suppress warning in case of taking the square root of a negative value
+      se <- suppressWarnings(sqrt(diag(inv_H)))
     }
     
     ############################################################################
