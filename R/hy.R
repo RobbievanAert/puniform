@@ -273,7 +273,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     } else if (type == "Wald" | type == "Wald/profile")
     { # Compute Wald confidence intervals for fixed effects
       
-      if (all(is.na(se) == FALSE))
+      if (all(is.na(se)) == FALSE)
       { # Only compute Wald confidence intervals if se could be computed
         ci.lb <- est - qnorm(.975)*se[1:n_bs]
         ci.ub <- est + qnorm(.975)*se[1:n_bs]
