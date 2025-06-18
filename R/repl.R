@@ -46,13 +46,6 @@ repl <- function(es, m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs,
   tmp <- fe_ma(yi = sub$yi, vi = sub$vi)
   pval.o <- tmp$pval.fe
   
-  if (measure == "COR") 
-  { # Back transform Fisher z to correlation
-    est.repl <- (exp(2*est.repl) - 1)/(exp(2*est.repl) + 1)
-    ci.lb.repl <- (exp(2*ci.lb.repl) - 1)/(exp(2*ci.lb.repl) + 1)
-    ci.ub.repl <- (exp(2*ci.ub.repl) - 1)/(exp(2*ci.ub.repl) + 1)
-  }
-  
   if (side == "left") 
   { # Re-mirror estimates
     est.repl <- est.repl*-1

@@ -262,7 +262,7 @@
 #' tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values 
 #' 
 #' ### Apply hybrid method using the implementation of van Aert and van Assen (2018)
-#' hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
+#' hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right",
 #' control = list(implementation = "two"))
 #'  
 #' @export
@@ -275,7 +275,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
   # no visible binding for global variable est.fe etc.
   est.fe <- ci.ub.fe <- ci.lb.fe <- zval.fe <- NULL 
   
-  if (!missing("mi") | !missing("tobs") | !missing("m1i") | !missing("ri"))
+  if (missing("conventional"))
   { # If only two studies are supplied as input
     
     if (!missing("mi") & !missing("ni") & !missing("sdi")) 
@@ -330,6 +330,13 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
       es$conventional <- c(1, 0) # Create variable to indicate that first study is an conventional study
       
       res.repl <- repl(es = es, measure = measure, side = side)
+    } else if (!missing("yi") & !missing("vi"))
+    {
+      measure <- "SPE"
+      es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side,
+                      measure = measure)
+      
+      es$conventional <- c(1, 0) # Create variable to indicate that first study is an conventional study
     }
     
     if (es$pval[1] > alpha/2) 
@@ -445,6 +452,18 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
   {
     con.pos <- pmatch(names(control), names(con))
     con[con.pos] <- control[1:length(con.pos)]
+  }
+  
+  ##############################################################################
+  
+  ### The "conventional" argument needs to be specified with the "multiple" 
+  # implementation. Only with the "two" implementation can the "conventional"
+  # argument be omitted.
+  if (missing("conventional") &
+      con$implementation == "multiple" & 
+      k > 2)
+  {
+    stop("Argument 'conventional' needs to be specified when using the default implementation")
   }
   
   ##############################################################################
