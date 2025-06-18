@@ -297,7 +297,7 @@ n1i <- n2i <- c(40, 80) # Sample sizes per group
 tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values 
 
 ### Apply hybrid method using the implementation of van Aert and van Assen (2018)
-hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
+hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right",
 control = list(implementation = "two"))
  
 }
