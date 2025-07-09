@@ -111,9 +111,8 @@ snapshot <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05)
   ### Compute posterior probabilities of hypotheses using the log sum exponent
   # trick to avoid numerical underflow
   fs <- c(f.0, f.sm, f.me, f.la)
-  constant <- max(fs_log)
-  logz <- constant + log(sum(exp(fs_log - constant)))
-  ps <- exp(fs_log-logz)
+  constant <- max(fs)
+  ps <- exp(fs-constant + log(sum(exp(fs - constant))))
   
   ### Store posterior probabilities
   p.0 <- ps[1]
