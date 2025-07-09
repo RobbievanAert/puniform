@@ -12,6 +12,8 @@ correlations
 - Added the functionality in hybrid() to also specify "yi" and "vi" as arguments
 if implementation = "two"
 
+- Implemented the snapshot method on the log scale to avoid numerical underflow
+
 
 # Changes in puniform 0.2.7 (2023-09-18)
 
