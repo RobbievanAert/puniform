@@ -112,7 +112,7 @@ snapshot <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05)
   # trick to avoid numerical underflow
   fs <- c(f.0, f.sm, f.me, f.la)
   constant <- max(fs)
-  ps <- exp(fs-constant + log(sum(exp(fs - constant))))
+  ps <- exp(fs - (constant + log(sum(exp(fs - constant)))))
   
   ### Store posterior probabilities
   p.0 <- ps[1]
