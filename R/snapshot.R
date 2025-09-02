@@ -91,21 +91,34 @@ snapshot <- function(ri, ni, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, alpha = 0.05)
 
   ycvi <- qnorm(alpha, lower.tail = FALSE)*sqrt(es$vi) # Critical value
 
-  ### Compute probabilities
-  f.0 <- (dnorm(es$yi[1],true.es[1],sqrt(es$vi[1]))/pnorm(ycvi[1],true.es[1],sqrt(es$vi[1]),
-                                                          lower.tail=FALSE))*dnorm(es$yi[2],true.es[1],sqrt(es$vi[2]))
-  f.sm <- (dnorm(es$yi[1],true.es[2],sqrt(es$vi[1]))/pnorm(ycvi[1],true.es[2],sqrt(es$vi[1]),
-                                                           lower.tail=FALSE)) * dnorm(es$yi[2],true.es[2],sqrt(es$vi[2]))
-  f.me <- (dnorm(es$yi[1],true.es[3],sqrt(es$vi[1]))/pnorm(ycvi[1],true.es[3],sqrt(es$vi[1]),
-                                                           lower.tail=FALSE)) * dnorm(es$yi[2],true.es[3],sqrt(es$vi[2]))
-  f.la <- (dnorm(es$yi[1],true.es[4],sqrt(es$vi[1]))/pnorm(ycvi[1],true.es[4],sqrt(es$vi[1]),
-                                                           lower.tail=FALSE)) * dnorm(es$yi[2],true.es[4],sqrt(es$vi[2]))
-
-  ### Posterior probabilities of hypotheses
-  p.0 <- f.0/(f.0+f.sm+f.me+f.la)
-  p.sm <- f.sm/(f.0+f.sm+f.me+f.la)
-  p.me <- f.me/(f.0+f.sm+f.me+f.la)
-  p.la <- f.la/(f.0+f.sm+f.me+f.la)
+  ### Compute log likelihood given a particular effect size (i.e., snapshot) 
+  f.0 <- (dnorm(es$yi[1],true.es[1],sqrt(es$vi[1]), log = TRUE) - 
+                pnorm(ycvi[1],true.es[1],sqrt(es$vi[1]), lower.tail = FALSE, log.p = TRUE)) + 
+    dnorm(es$yi[2],true.es[1],sqrt(es$vi[2]), log = TRUE)
+  
+  f.sm <- (dnorm(es$yi[1],true.es[2],sqrt(es$vi[1]), log = TRUE) - 
+                 pnorm(ycvi[1],true.es[2],sqrt(es$vi[1]), lower.tail = FALSE, log.p = TRUE)) + 
+    dnorm(es$yi[2],true.es[2],sqrt(es$vi[2]), log = TRUE)
+  
+  f.me <- (dnorm(es$yi[1],true.es[3],sqrt(es$vi[1]), log = TRUE) - 
+                 pnorm(ycvi[1],true.es[3],sqrt(es$vi[1]), lower.tail = FALSE, log.p = TRUE)) + 
+    dnorm(es$yi[2],true.es[3],sqrt(es$vi[2]), log = TRUE)
+  
+  f.la <- (dnorm(es$yi[1],true.es[4],sqrt(es$vi[1]), log = TRUE) - 
+                 pnorm(ycvi[1],true.es[4],sqrt(es$vi[1]), lower.tail = FALSE, log.p = TRUE)) + 
+    dnorm(es$yi[2],true.es[4],sqrt(es$vi[2]), log = TRUE)
+  
+  ### Compute posterior probabilities of hypotheses using the log sum exponent
+  # trick to avoid numerical underflow
+  fs <- c(f.0, f.sm, f.me, f.la)
+  constant <- max(fs)
+  ps <- exp(fs - (constant + log(sum(exp(fs - constant)))))
+  
+  ### Store posterior probabilities
+  p.0 <- ps[1]
+  p.sm <- ps[2]
+  p.me <- ps[3]
+  p.la <- ps[4]
 
   return(data.frame(p.0 = p.0, p.sm = p.sm, p.me = p.me, p.la = p.la))
 }

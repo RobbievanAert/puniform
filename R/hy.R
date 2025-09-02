@@ -137,14 +137,10 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       se <- rep(NA, n_bs+1)
       
       warning("Error when inverting Hessian", call. = FALSE)
-    } else if (any(diag(inv_H) < 0))
-    {
-      se <- rep(NA, n_bs+1)
-      
-      warning("Error when inverting Hessian", call. = FALSE)
     } else 
     {
-      se <- sqrt(diag(inv_H))  
+      ### Suppress warning in case of taking the square root of a negative value
+      se <- suppressWarnings(sqrt(diag(inv_H)))
     }
     
     ############################################################################
@@ -277,7 +273,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     } else if (type == "Wald" | type == "Wald/profile")
     { # Compute Wald confidence intervals for fixed effects
       
-      if (all(is.na(se) == FALSE))
+      if (all(is.na(se)) == FALSE)
       { # Only compute Wald confidence intervals if se could be computed
         ci.lb <- est - qnorm(.975)*se[1:n_bs]
         ci.ub <- est + qnorm(.975)*se[1:n_bs]

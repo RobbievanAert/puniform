@@ -1,3 +1,20 @@
+# Changes in puniform 0.2.8 (2025-09-02)
+
+- If raw correlations are provided in hybrid(), the output of fixed-effect 
+meta-analysis is reported as Fisher's z transformed correlations
+
+- Optimization information is now returned when puni_star() is applied and both
+parameters are estimated at the same time with method = "ML"
+
+- Fix a bug in repl() that transformed the correlations to Fisher's z transformed
+correlations
+
+- Added the functionality in hybrid() to also specify "yi" and "vi" as arguments
+if implementation = "two"
+
+- Implemented the snapshot method on the log scale to avoid numerical underflow
+
+
 # Changes in puniform 0.2.7 (2023-09-18)
 
 - Updated and improved documentation

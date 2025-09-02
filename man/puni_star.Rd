@@ -164,7 +164,7 @@ be specified as a list containing one or more elements. For example,
 \code{control = list(verbose = TRUE)} Default values are used if an element is 
 not specified. The following elements can be specified by the user:
 
-\itemize{
+\describe{
 \item{\code{proc.ml:}}{ A character indicating with optimization procedure should 
 be used for the method \code{ML}. The initial implementation of p-uniform* iteratively
 optimized the profile log-likelihood functions. As of version 0.2.6 of this 
@@ -213,7 +213,7 @@ value is 300.}
 value in the optimization. \code{fnscale} is one of the control arguments of 
 the \code{optim()} function that is internally used for optimization when the 
 \code{ML} method is used and both parameters are estimated at the same time. 
-See the argument \code{proc.ml} above #' and the documentation of the \code{optim()} 
+See the argument \code{proc.ml} above and the documentation of the \code{optim()} 
 function for more information.} 
 \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 about the algorithm for estimating the effect size and between-study variance. 

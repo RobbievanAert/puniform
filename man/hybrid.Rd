@@ -162,9 +162,10 @@ or t-values (\code{tobs}) and sample sizes (\code{ni} or \code{n1i}
 and \code{n2i}). Pearson correlation coefficients can be analyzed by supplying 
 \code{ri} and \code{ni} to the \code{hybrid} function. These correlation 
 coefficients are internally transformed to Fisher's z correlations before 
-analyzing the data. The results in the output are of the Fisher's z transformed
-correlations. It is also possible to specify the standardized effect sizes and 
-its sampling variances directly via the \code{yi} and \code{vi} arguments. 
+analyzing the data. The results in the output are those of the Fisher's z 
+transformed correlations. It is also possible to specify the standardized 
+effect sizes and its sampling variances directly via the \code{yi} and \code{vi} 
+arguments. 
  
 Two other arguments that need to be specified are \code{side} and \code{conventional}. 
 \code{side} indicates whether the effect size in the conventional study was expected
@@ -202,7 +203,7 @@ be specified as a list containing one or more elements. For example,
 \code{control = list(verbose = TRUE)} Default values are used if an element is 
 not specified. The following elements can be specified by the user:
 
-\itemize{
+\describe{
 \item{\code{int:}}{ A vector of length two that indicates the lower and upper 
 bound of the interval that is used for estimating the effect size. The effect 
 size estimate should be included in this interval. Its default values are -10
@@ -296,7 +297,7 @@ n1i <- n2i <- c(40, 80) # Sample sizes per group
 tobs <- qt(pval/2, df = n1i+n2i-2, lower.tail = FALSE) # Observed t-values 
 
 ### Apply hybrid method using the implementation of van Aert and van Assen (2018)
-hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right", conventional = c(1,0), 
+hybrid(tobs = tobs, n1i = n1i, n2i = n2i, side = "right",
 control = list(implementation = "two"))
  
 }

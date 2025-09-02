@@ -20,7 +20,7 @@
 #' @param measure A character indicating what kind of effect size should be computed (Hedges' g or Fisher's r-to-z transformed correlation coefficients) and which arguments are used as input ("\code{M}", "\code{MT}", "\code{MD}", "\code{MDT}", or "\code{COR}"). See Details below.
 #'
 #' @details The \code{measure} argument has to be used to specify the desired effect size and what input parameters are used. There are six options:
-#' \itemize{
+#' \describe{
 #' \item{\code{"M"}}{ for one-sample mean with \code{mi}, \code{ni}, \code{sdi}, \code{alpha}, and \code{side} as input parameters}
 #' \item{\code{"MT"}}{ for one-sample mean with \code{tobs}, \code{ni}, \code{alpha}, and \code{side} as input parameters}
 #' \item{\code{"MD"}}{ for two-sample mean with \code{m1i}, \code{m2i}, \code{n1i}, \code{n2i}, \code{sd1i}, \code{sd2i}, \code{alpha}, and \code{side} as input parameters}
@@ -28,7 +28,7 @@
 #' \item{\code{"COR"}}{ for raw correlation coefficients with \code{ri}, \code{ni}, \code{alpha}, and \code{side} as input parameters}
 #' \item{\code{"SPE"}}{ for user-specified standardized effect sizes and sampling variances with \code{yi}, \code{vi}, \code{alpha}, and \code{side} as input parameters}
 #' }
-#'
+#' 
 #' @return Function returns a data frame with standardized effect sizes (yi), variances of these standardized effect sizes (vi), z-values (zval), p-values as computed in primary studies (pval), and critical z-values (zcv).
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
