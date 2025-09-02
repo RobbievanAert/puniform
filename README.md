@@ -49,5 +49,4 @@ devtools::install_github("RobbievanAert/puniform")
 
 The puniform package was written by [Robbie C.M. van
 Aert](https://www.robbievanaert.com). If you suspect a bug, please
-report a report
-[here](https://github.com/RobbievanAert/puniform/issues).
+report this [here](https://github.com/RobbievanAert/puniform/issues).
