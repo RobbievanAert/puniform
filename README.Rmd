@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-![R-CMD-check](https://github.com/RobbievanAert/puniform/workflows/R-CMD-check/badge.svg?branch=master)
+[![R-CMD-check](https://github.com/RobbievanAert/puniform/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master)](https://github.com/RobbievanAert/puniform/actions/workflows/R-CMD-check.yaml)
 
 # puniform
 
