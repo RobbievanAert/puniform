@@ -164,7 +164,7 @@ be specified as a list containing one or more elements. For example,
 \code{control = list(verbose = TRUE)} Default values are used if an element is 
 not specified. The following elements can be specified by the user:
 
-\itemize{
+\describe{
 \item{\code{proc.ml:}}{ A character indicating with optimization procedure should 
 be used for the method \code{ML}. The initial implementation of p-uniform* iteratively
 optimized the profile log-likelihood functions. As of version 0.2.6 of this 

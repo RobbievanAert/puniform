@@ -1,4 +1,4 @@
-# Changes in puniform 0.2.8 (XXXX-XX-XX)
+# Changes in puniform 0.2.8 (2025-09-02)
 
 - If raw correlations are provided in hybrid(), the output of fixed-effect 
 meta-analysis is reported as Fisher's z transformed correlations

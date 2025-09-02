@@ -157,7 +157,7 @@
 #' \code{control = list(verbose = TRUE)} Default values are used if an element is 
 #' not specified. The following elements can be specified by the user:
 #' 
-#' \itemize{
+#' \describe{
 #' \item{\code{int:}}{ A vector of length two that indicates the lower and upper 
 #' bound of the interval that is used for estimating the effect size. The effect 
 #' size estimate should be included in this interval. Its default values are -10

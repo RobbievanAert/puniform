@@ -64,7 +64,7 @@ Function that computes Hedges' g and its sampling variance for an one-sample mea
 }
 \details{
 The \code{measure} argument has to be used to specify the desired effect size and what input parameters are used. There are six options:
-\itemize{
+\describe{
 \item{\code{"M"}}{ for one-sample mean with \code{mi}, \code{ni}, \code{sdi}, \code{alpha}, and \code{side} as input parameters}
 \item{\code{"MT"}}{ for one-sample mean with \code{tobs}, \code{ni}, \code{alpha}, and \code{side} as input parameters}
 \item{\code{"MD"}}{ for two-sample mean with \code{m1i}, \code{m2i}, \code{n1i}, \code{n2i}, \code{sd1i}, \code{sd2i}, \code{alpha}, and \code{side} as input parameters}

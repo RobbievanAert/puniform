@@ -1,7 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-![R-CMD-check](https://github.com/RobbievanAert/puniform/workflows/R-CMD-check/badge.svg?branch=master)
+<figure>
+<img
+src="https://github.com/RobbievanAert/puniform/workflows/R-CMD-check/badge.svg?branch=master"
+alt="R-CMD-check" />
+<figcaption aria-hidden="true">R-CMD-check</figcaption>
+</figure>
 
 # puniform
 
