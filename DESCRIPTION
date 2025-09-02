@@ -6,7 +6,7 @@ Date: 2025-09-02
 Authors@R: person(given = c("Robbie", "C.M."),
                     family = "van Aert",
                     role = c("aut", "cre"),
-                    email = "r.c.m.vanaert@tilburguniversity.edu")
+                    email = "R.C.M.vanAert@tilburguniversity.edu")
 Maintainer: Robbie C.M. van Aert <R.C.M.vanAert@tilburguniversity.edu>
 Description: Provides meta-analysis methods that correct for
     publication bias and outcome reporting bias. Four methods and a visual tool 

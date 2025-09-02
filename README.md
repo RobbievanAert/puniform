@@ -11,8 +11,7 @@ and outcome reporting bias.
 The currently included methods are:
 
 - The *p*-uniform method as described in [van Assen, van Aert, and
-  Wicherts
-  (2015)](https://psycnet.apa.org/doiLanding?doi=10.1037%2Fmet0000025)
+  Wicherts (2015)](https://doi.org/10.1037/met0000025)
 - The *p*-uniform\* method as described in [van Aert and van Assen
   (2025)](https://osf.io/preprints/metaarxiv/zqjr9/)
 - The hybrid method as described in [van Aert and van Assen
@@ -48,5 +47,5 @@ devtools::install_github("RobbievanAert/puniform")
 ## Additional information about the package
 
 The puniform package was written by [Robbie C.M. van
-Aert](https://www.robbievanaert.com). If you suspect a bug, please
-report this [here](https://github.com/RobbievanAert/puniform/issues).
+Aert](https://robbievanaert.com/). If you suspect a bug, please report
+this [here](https://github.com/RobbievanAert/puniform/issues).
