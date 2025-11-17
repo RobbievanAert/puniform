@@ -238,6 +238,11 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
     es <- escompute(yi = yi, vi = vi, alpha = alpha/2, side = side, measure = measure)
   }
   
+  ### Number of fixed effects parameters to be estimated
+  n_bs <- ifelse(is.null(mods), 1, ncol(model.matrix(mods, data = es)))
+  
+  ##############################################################################
+  
   ### Default values for optimizing (ML) and root-finding procedures (P and LNP)
   con <- list(proc.ml = "", # Whether both parameters need to be estimated at the same time (default) or profile likelihoods need to be optimized
               stval.d = mean(es$yi), # Starting value of d for estimation (ML)
@@ -254,7 +259,27 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               maxit = 300,   # Maximum number of iterations for the optimizing (ML) and root-finding procedures (P, LNP)
               fnscale = 1, # Control argument of the optim() function. Used for ML when estimating both parameters at the same time
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
-              reps = 1000) # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              reps = 1000, # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              ### Still need to update con above.
+              par = rep(0, n_bs+1)
+              
+              
+              
+              
+              
+              
+              
+              
+              ) 
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
@@ -262,6 +287,31 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
     con.pos <- pmatch(names(control), names(con))
     con[con.pos] <- control[1:length(con.pos)]
   }
+  
+  ##############################################################################
+  
+  ### In the absence of moderators, fit an intercept-only model
+  if (is.null(mods)) 
+  { 
+    mods <- ~ 1
+    var_names <- ""
+  } else
+  { # Add data of moderators to es data frame
+    es <- cbind(es, model.frame(mods))
+    
+    ### Extract variable names for the output
+    var_names <- colnames(model.matrix(mods, data = es))
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   ##### EFFECT SIZE ESTIMATION #####
   res.es <- esest_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi), 
