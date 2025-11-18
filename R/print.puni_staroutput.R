@@ -8,32 +8,33 @@ print.puni_staroutput <- function(x, ...) {
   cat("Model results p-uniform*:")
   cat("\n")
   cat("\n")
-  if (x$con$type == "Wald" | x$con$type == "Wald/profile") 
-  {
-    print(format(data.frame(est = report(x$est), 
-                            se = report(x$se[1:(length(x$se)-1)]), 
-                            ci.lb = report(x$ci.lb),
-                            ci.ub = report(x$ci.ub), 
-                            zval = report(x$L.0),
-                            pval = report(x$pval.0, type = "p"), 
-                            row.names = x$var_names), width = 9))
-  } else if (x$con$type == "profile")
-  {
-    print(format(data.frame(est = report(x$est), 
-                            se = report(x$se[1:(length(x$se)-1)]), 
-                            ci.lb = report(x$ci.lb),
-                            ci.ub = report(x$ci.ub), 
-                            LR = report(x$L.0),
-                            pval = report(x$pval.0, type = "p"), 
-                            row.names = x$var_names), width = 9))
-  }
   if (x$method == "P" | x$method == "LNP")
   {
-    cat("\n")
-    cat("Note:")
-    cat("\n")
-    cat("- Test of no effect is not available for method", x$method)
-    cat("\n")
+    print(format(data.frame(est = report(x$est, 4), se = report(x$se), 
+                            ci.lb = report(x$ci.lb, 4),
+                            ci.ub = report(x$ci.ub, 4), L.0 = report(x$L.0, 4),
+                            pval = report(x$pval.0, type = "p"), row.names = ""), width = 9))
+  } else 
+  {
+    if (x$con$type == "Wald" | x$con$type == "Wald/profile") 
+    {
+      print(format(data.frame(est = report(x$est), 
+                              se = report(x$se[1:(length(x$se)-1)]), 
+                              ci.lb = report(x$ci.lb),
+                              ci.ub = report(x$ci.ub), 
+                              zval = report(x$L.0),
+                              pval = report(x$pval.0, type = "p"), 
+                              row.names = x$var_names), width = 9))
+    } else if (x$con$type == "profile")
+    {
+      print(format(data.frame(est = report(x$est), 
+                              se = report(x$se[1:(length(x$se)-1)]), 
+                              ci.lb = report(x$ci.lb),
+                              ci.ub = report(x$ci.ub), 
+                              LR = report(x$L.0),
+                              pval = report(x$pval.0, type = "p"), 
+                              row.names = x$var_names), width = 9))
+    }
   }
   cat("\n")
   cat("===")
@@ -48,24 +49,44 @@ print.puni_staroutput <- function(x, ...) {
   }
   cat("\n")
   cat("\n")
-  if (x$con$type == "Wald")
+  if (x$method == "P" | x$method == "LNP")
   {
-    print(format(data.frame(tau2 = report(x$tau2, type = "tau2"),
-                            se = report(x$se[length(x$se)]), 
-                            tau2.lb = report(x$tau2.lb, type = "tau2"),
-                            tau2.ub = report(x$tau2.ub, type = "tau2"), 
-                            zval = report(x$L.het),
-                            pval = report(x$pval.het, type = "p"), 
-                            row.names = ""), width = 9))
-  } else if (x$con$type == "profile" | x$con$type == "Wald/profile")
+    print(format(data.frame(tau2 = report(x$tau2, 4), se = report(x$se), 
+                            tau2.lb = report(x$tau2.lb, 4),
+                            tau2.ub = report(x$tau2.ub, 4), L.het = report(x$L.het, 4),
+                            pval = report(x$pval.het, type = "p"), row.names = ""), 
+                 width = 9))
+  } else 
   {
-    print(format(data.frame(tau2 = report(x$tau2, type = "tau2"),
-                            se = report(x$se[length(x$se)]), 
-                            tau2.lb = report(x$tau2.lb, type = "tau2"),
-                            tau2.ub = report(x$tau2.ub, type = "tau2"), 
-                            LR = report(x$L.het),
-                            pval = report(x$pval.het, type = "p"), 
-                            row.names = ""), width = 9))
+    if (x$con$type == "Wald")
+    {
+      print(format(data.frame(tau2 = report(x$tau2, type = "tau2"),
+                              se = report(x$se[length(x$se)]), 
+                              tau2.lb = report(x$tau2.lb, type = "tau2"),
+                              tau2.ub = report(x$tau2.ub, type = "tau2"), 
+                              zval = report(x$L.het),
+                              pval = report(x$pval.het, type = "p"), 
+                              row.names = ""), width = 9))
+    } else if (x$con$type == "profile" | x$con$type == "Wald/profile")
+    {
+      print(format(data.frame(tau2 = report(x$tau2, type = "tau2"),
+                              se = report(x$se[length(x$se)]), 
+                              tau2.lb = report(x$tau2.lb, type = "tau2"),
+                              tau2.ub = report(x$tau2.ub, type = "tau2"), 
+                              LR = report(x$L.het),
+                              pval = report(x$pval.het, type = "p"), 
+                              row.names = ""), width = 9))
+    }
+  }
+  if (x$method == "P" | x$method == "LNP")
+  {
+    cat("\n")
+    cat("Note:")
+    cat("\n")
+    cat("- Test of no effect is not available for method", x$method)
+    cat("\n")
+    cat("- Standard errors are not available for method", x$method)
+    cat("\n")
   }
   # cat("\n")
   # cat("===")
