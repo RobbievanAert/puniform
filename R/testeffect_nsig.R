@@ -15,6 +15,7 @@ testeffect_nsig <- function(yi, vi, est, tau.est, ycv, method, con)
     ### Conduct likelihood-ratio test
     L.0 <- -2*(ll0-ll)
     pval.0 <- pchisq(L.0, df = 1, lower.tail = FALSE)
+    
   } else if (method == "P" | method == "LNP")
   {
     L.0 <- pval.0 <- NA 

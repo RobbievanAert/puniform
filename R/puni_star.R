@@ -17,6 +17,8 @@
 #' @param yi A vector of standardized effect sizes (see Details)
 #' @param vi A vector of sampling variances belonging to the standardized effect
 #' sizes (see Details)
+#' @param mods A one-sided formula to specify the moderators to include. For 
+#' example \code{x1} can be included as moderator by specifying \code{mods = ~ x1}
 #' @param alpha A numerical value specifying the alpha level as used in primary studies
 #' (default is 0.05 but see Details).
 #' @param side A character indicating whether the effect sizes in the primary studies
@@ -124,18 +126,8 @@
 #' optimized the profile log-likelihood functions. As of version 0.2.6 of this 
 #' package, the default optimization routine estimates both parameters at the 
 #' same time. The old optimization procedure can be used by specifying \code{proc.ml = "prof"}}.
-#' \item{\code{stval.d:}}{ An integer that is the starting value of the effect 
-#' size for estimation. This starting value is used for the method \code{ML} and 
-#' is only needed when both parameters are estimated at the same time. See argument 
-#' \code{proc.ml} for more information. The default value is the mean of the effect
-#' sizes in the meta-analysis.}
-#' \item{\code{stval.tau:}}{ An integer that is the starting value of tau for estimation.
-#' This starting value is used for the methods \code{ML}, \code{P}, and \code{LNP}. 
-#' The default value is the standard deviation of the effect sizes in the meta-analysis.}
-#' \item{\code{int:}}{ A vector of length two that indicates the lower and upper 
-#' bound of the interval that is used for estimating the effect size. The effect 
-#' size estimate should be included in this interval. This interval is used for the 
-#' methods \code{ML}, \code{P}, and \code{LNP} and its default values are (-2, 2).}
+#' \item{\code{par:}}{ Starting values for the optimization procedure in case of
+#' method \code{ML}. The default values are zeros.}
 #' \item{\code{bounds.int}}{ A vector of length two that is used for determining the 
 #' bounds for estimating the effect size with \code{P} and \code{LNP}. The default 
 #' values are a function of the \code{yi}. The lower bound is the minimum \code{yi} 
@@ -144,7 +136,7 @@
 #' \item{\code{tau.int:}}{ A vector of length two that indicates the lower and upper 
 #' bound of the interval that is used for estimating the between-study variance. 
 #' The estimate of the between-study variance should be included in this interval. 
-#' This interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
+#' This interval is used for the methods \code{P} and \code{LNP} 
 #' and its default values are (0, 2).}
 #' \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
 #' subtracted from and added to the estimate of the effect size for computing the 
@@ -152,23 +144,17 @@
 #' \code{P}, and \code{LNP} and its default values are (3, 3). To give an example, 
 #' estimates for the lower and upper bound around the effect size estimate are 
 #' searched on the interval (est-3, est) and (est, est+3), respectively.}
-#' \item{\code{tau.ci:}}{ A vector of length two indicating the values that are 
+#' \item{\code{tau2.ci:}}{ A vector of length two indicating the values that are 
 #' added to the estimate of the between-study variance for computing the 95\% confidence 
 #' intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-#' and its default values are (3, 1).}
+#' and its default values are (0.5, 0.5).}
 #' \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
-#' This number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its 
+#' This number is used for the methods \code{P} and \code{LNP} and its 
 #' default value is 0.001.} 
 #' \item{\code{maxit:}}{ An integer indicating the maximum number of iterations 
 #' that is used for estimating the effect size and between-study variance. This 
-#' number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its default 
+#' number is used for the methods \code{P} and \code{LNP} and its default 
 #' value is 300.}
-#' \item{\code{fnscale:}}{ An integer that can be used for scaling the log-likelihood
-#' value in the optimization. \code{fnscale} is one of the control arguments of 
-#' the \code{optim()} function that is internally used for optimization when the 
-#' \code{ML} method is used and both parameters are estimated at the same time. 
-#' See the argument \code{proc.ml} above and the documentation of the \code{optim()} 
-#' function for more information.} 
 #' \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 #' about the algorithm for estimating the effect size and between-study variance. 
 #' This logical is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
@@ -176,7 +162,19 @@
 #' \item{\code{reps:}}{ An integer indicating the number of bootstrap replications
 #' for computing the bootstrapped p-value for the test of no between-study variance.
 #' This integer is used for the methods \code{P} and \code{LNP} and its default value 
-#' is 1000.}
+#' is 1,000.}
+#' \item{\code{type:}}{ A character vector indicating whether Wald-based hypothesis
+#' tests and confidence intervals are preferred (\code{type = "Wald"}) or 
+#' likelihood-ratio tests and profile likelihood confidence intervals 
+#' (\code{type = "profile"}). This character vector is used for method \code{ML}.
+#' The default is "Wald/profile" which implies that Wald tests and confidence 
+#' intervals are computed for the fixed effects and likelihood-ratio tests and 
+#' profile likelihood confidence intervals for the between-study variance.}
+#' \item{\code{optimizer:}}{ A character indicating the optimizer that is used 
+#' for method \code{ML}. The default value is "Nelder-Mead". The \code{optim} 
+#' function is used for optimization, so the optimization methods implemented in 
+#' the \code{optim} function can be used. See the documentation of the \code{optim} 
+#' function for more information.}
 #' } 
 #'
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
@@ -204,7 +202,8 @@
 #' @export
 
 puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
-                      alpha = 0.05, side, method = "ML", boot = FALSE, control)
+                      mods = NULL, alpha = 0.05, side, method = "ML", 
+                      boot = FALSE, control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
@@ -245,42 +244,22 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   
   ### Default values for optimizing (ML) and root-finding procedures (P and LNP)
   con <- list(proc.ml = "", # Whether both parameters need to be estimated at the same time (default) or profile likelihoods need to be optimized
-              stval.d = mean(es$yi), # Starting value of d for estimation (ML)
-              stval.tau = sd(es$yi), # Starting value of tau for estimation (ML)
-              int = c(-2, 2),    # Interval that is used for estimating ES (ML)
+              par = rep(0, n_bs+1), # Starting values for ML estimation
+              int = c(-2, 2), # Interval that is used for estimating ES with ML when profile likelihoods need to be optimized
               bounds.int = c(min(es$yi)-1,max(es$yi)+1), # Interval that is used for determining bounds for estimating ES (P, LNP)            
-              tau.int = c(0, 2), # Interval that is used for estimating tau (ML, P, LNP)
+              tau.int = c(0, 2), # Interval that is used for estimating tau (ML when iteratively optimizing the profile likelihoods, P, LNP)
               ### Values that are added to the estimates of the ES and tau for estimating 
               # CIs. For example, for CIs around ES estimate lb is searched for on the 
               # interval c(est-3, est) and ub c(est, est+3)
               est.ci = c(3, 3),
-              tau.ci = c(3, 1),
+              tau2.ci = c(0.5, 0.5),
               tol = 0.001,       # Desired accuracy for the optimizing (ML) and root-finding procedures (P, LNP)
               maxit = 300,   # Maximum number of iterations for the optimizing (ML) and root-finding procedures (P, LNP)
-              fnscale = 1, # Control argument of the optim() function. Used for ML when estimating both parameters at the same time
               verbose = FALSE,   # If verbose = TRUE output is printed about estimation procedures for ES and tau (ML, P, LNP)
               reps = 1000, # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
+              type = "Wald/profile", # If Wald is used for fixed effects and profile for tau^2 
+              optimizer = "Nelder-Mead") # Optimizer that is used for ML estimation 
               
-              
-              
-              
-              
-              
-              
-              
-              
-              ### Still need to update con above.
-              par = rep(0, n_bs+1)
-              
-              
-              
-              
-              
-              
-              
-              
-              ) 
-  
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
   {
@@ -303,29 +282,20 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
     var_names <- colnames(model.matrix(mods, data = es))
   }
   
+  ##### EFFECT SIZE ESTIMATION, TESTS OF NO EFFECT, AND TEST OF NO BETWEEN-STUDY
+  # VARIANCE #####
+  res.es <- esest_nsig(es = es, mods = mods, n_bs = n_bs, method = method, 
+                       boot = boot, con = con)
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  ##### EFFECT SIZE ESTIMATION #####
-  res.es <- esest_nsig(yi = es$yi, vi = es$vi, ycv = es$zcv*sqrt(es$vi), 
-                       method = method, con = con)
-  
-  ##### TEST OF AN EFFECT #####
-  res.null <- testeffect_nsig(yi = es$yi, vi = es$vi, est = res.es$est,
-                              tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
-                              method = method, con = con)
-  
-  ##### TEST OF NO BETWEEN-STUDY VARIANCE #####
-  res.hetero <- testhetero(yi = es$yi, vi = es$vi, est = res.es$est,
-                           tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
-                           method = method, boot = boot, con = con)
+  # ##### TEST OF AN EFFECT #####
+  # res.null <- testeffect_nsig(yi = es$yi, vi = es$vi, est = res.es$est,
+  #                             tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
+  #                             method = method, con = con)
+  # 
+  # ##### TEST OF NO BETWEEN-STUDY VARIANCE #####
+  # res.hetero <- testhetero(yi = es$yi, vi = es$vi, est = res.es$est,
+  #                          tau.est = res.es$tau.est, ycv = es$zcv*sqrt(es$vi),
+  #                          method = method, boot = boot, con = con)
   
   # ##### PUBLICATION BIAS TEST #####
   # Commented out for now. More research is needed to develop a publication bias 
@@ -338,13 +308,22 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   res.trans <- transform_nsig(res.es = res.es, side = side)
   
   ##### CREATE OUTPUT #####
-  x <- list(method = method, k = length(es$yi), ksig = sum(es$pval < alpha/2), 
-            est = res.trans$est, ci.lb = res.trans$lb, ci.ub = res.trans$ub, 
-            L.0 = res.null$L.0, pval.0 = res.null$pval.0, tau2 = res.es$tau.est^2, 
-            tau2.lb = res.es$tau.lb^2, tau2.ub = res.es$tau.ub^2, 
-            L.het = res.hetero$L.het, pval.het = res.hetero$pval.het, 
-            pval.boot = res.hetero$pval.boot, L.pb = res.pub$L.pb, 
-            pval.pb = res.pub$pval.pb, optim.info = res.es$optim.info)
+  # x <- list(method = method, k = length(es$yi), ksig = sum(es$pval < alpha/2), 
+  #           est = res.trans$est, ci.lb = res.trans$lb, ci.ub = res.trans$ub, 
+  #           L.0 = res.null$L.0, pval.0 = res.null$pval.0, tau2 = res.es$tau.est^2, 
+  #           tau2.lb = res.es$tau.lb^2, tau2.ub = res.es$tau.ub^2, 
+  #           L.het = res.hetero$L.het, pval.het = res.hetero$pval.het, 
+  #           pval.boot = res.hetero$pval.boot, L.pb = res.pub$L.pb, 
+  #           pval.pb = res.pub$pval.pb, optim.info = res.es$optim.info)
+  
+  x <- list(con = con, var_names = var_names, method = method, k = length(es$yi), 
+            ksig = sum(es$pval < alpha/2), est = res.trans$est, 
+            ci.lb = res.trans$ci.lb, ci.ub = res.trans$ci.ub, 
+            L.0 = res.es$L.0, pval.0 = res.es$pval.0, tau2 = res.es$tau2, 
+            tau2.lb = res.es$tau2.lb, tau2.ub = res.es$tau2.ub, se = res.es$se,
+            L.het = res.es$L.het, pval.het = res.es$pval.het, 
+            L.pb = res.pub$L.pb, pval.pb = res.pub$pval.pb, 
+            optim.info = res.es$optim.info)
   
   class(x) <- "puni_staroutput"
   

@@ -241,7 +241,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
                            interval = c(est[ind]-est.ci[1], est[ind]),
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
-                           chi_cv = qchisq(.95, df = 1), ll = ll)$root, 
+                           chi_cv = qchisq(.95, df = 1), ll = ll,
+                           model_type = "hybrid")$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -259,7 +260,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
                            interval = c(est[ind], est.ci[2]+est[ind]),
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
-                           chi_cv = qchisq(.95, df = 1), ll = ll)$root, 
+                           chi_cv = qchisq(.95, df = 1), ll = ll, model_type = "hybrid")$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -290,7 +291,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
                                    par_fixed = par_fixed, mods = mods, est = est, 
                                    tau2 = tau2, ind = n_bs+1, 
-                                   chi_cv = qchisq(.95, df = 1), ll = ll)
+                                   chi_cv = qchisq(.95, df = 1), ll = ll, 
+                                   model_type = "hybrid")
       
       if (ll_at_zero < 0)
       {
@@ -303,7 +305,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
                                es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                mods = mods, est = est, tau2 = tau2,
                                ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                               ll = ll)$root, silent = TRUE)
+                               ll = ll, model_type = "hybrid")$root, silent = TRUE)
         
         if (!inherits(tau2.lb, what = "try-error"))
         { # If lower bound could be computed transform to tau2 scale
@@ -321,7 +323,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
                              es = es, n_bs = n_bs, par_fixed = par_fixed, 
                              mods = mods, est = est, tau2 = tau2,
                              ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                             ll = ll)$root, silent = TRUE)
+                             ll = ll, model_type = "hybrid")$root, silent = TRUE)
       
       if (!inherits(tau2.ub, what = "try-error"))
       { # If upper bound could be computed transform to tau2 scale

@@ -1,29 +1,39 @@
-### Function for estimation with p-uniform*
-esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int, 
-                       tau.int, ycv, method, con) 
+### Function for applying p-uniform*
+esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot, con) 
 {
+  
+  yi <- es$yi
+  vi <- es$vi
+  ycv <- es$zcv*sqrt(vi)
+  
+  est.ci <- con$est.ci
+  tau2.ci <- con$tau2.ci
+  par <- con$par
+  optimizer <- con$optimizer
+  type <- con$type
+  int <- con$int
+  bounds.int <- con$bounds.int
+  tau.int <- con$tau.int
+  tol <- con$tol
+  maxit <- con$maxit
+  verbose <- con$verbose
+  reps <- con$reps
   
   if (method == "ML")
   {
     
-    est.ci <- con$est.ci
-    tau.ci <- con$tau.ci
-    
-    
-    ### Update in con in puni_star()
-    optimizer <- "Nelder-Mead"
-    par <- con$par
-    
-    
-    
-    
-    
-    
     if(con$proc.ml == "prof")
-    {
+    { # Old estimation procedure with ML where the profile log-likelihood functions
+      # are iteratively optimized
+      
+      if (mods != ~1)
+      { # Return an error if not the default optimization procedure is requested
+        stop("Moderators cannot be included when the profile log-likelihood functions 
+        are iteratively optimized. Please use the default estimation procedure.")
+      }
       
       ### Starting values for optimization
-      tau.est <- con$stval.tau
+      tau.est <- sqrt(par[2])
       int <- con$int
       tau.int <- con$tau.int
       tol <- con$tol
@@ -175,31 +185,99 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
         se <- suppressWarnings(sqrt(diag(inv_H)))
       }
       
-      ##########################################################################
+      ############################################################################
       
-      
-      if (is.na(est) & is.na(tau.est))
+      if (any(is.na(c(est, tau2))))
       {
-        lb <- NA
-        ub <- NA
-        tau.lb <- NA
-        tau.ub <- NA
+        ci.lb <- NA
+        ci.ub <- NA
+        tau2.lb <- NA
+        tau2.ub <- NA
+        L.0 <- NA
+        pval.0 <- NA
+        L.het <- NA
+        pval.het <- NA
       } else 
       {
         
+        ##### Test whether the fixed effects are different from zero #####
         
+        if (type == "profile")
+        { # Likelihood-ratio test
+          ll0 <- numeric(n_bs)
+          
+          for (b in 1:n_bs)
+          {
+            par_fixed <- rep(NA, n_bs+1)
+            par_fixed[b] <- 0
+            
+            if (n_bs == 1)
+            { # If only one parameter is estimated, use optimize() instead of optim()
+              ### Multiplied by minus 1, because log-likelihood is minimized
+              ll0[b] <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+                                    n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
+                                    verbose = FALSE)$objective
+            } else
+            { 
+              ### Remove the fixed parameters from par
+              par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
+              
+              ll0[b]<- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
+                                es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                                transf = TRUE, verbose = FALSE)$value
+            }
+          }
+          
+          ### Conduct likelihood-ratio test
+          L.0 <- -2*(ll0-ll)
+          pval.0 <- pchisq(L.0, df = 1, lower.tail = FALSE)
+          
+        } else if (type == "Wald" | type == "Wald/profile")
+        { # Wald test
+          L.0 <- est/se[1:n_bs]
+          pval.0 <- 2*pnorm(abs(L.0), lower.tail = FALSE)
+        }
         
+        ##############################################################################
         
-        ### VANAF HIER NOG VERDER AANPASSEN
+        ##### Test whether there is no (residual) between-study variance #####
         
+        if (type == "profile" | type == "Wald/profile")
+        { # Likelihood-ratio test
+          
+          par_fixed <- c(rep(NA, n_bs), 0)
+          
+          ### Remove the fixed parameters from par
+          par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
+          
+          if (length(par_transf) == 1)
+          { # If only one parameter is estimated, use optimize() instead of optim()
+            ### Multiplied by minus 1, because log-likelihood is minimized
+            ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+                               n_bs = n_bs, par_fixed = par_fixed, transf = FALSE, 
+                               verbose = FALSE)$objective
+          } else
+          {
+            ll0 <- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
+                            es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                            transf = FALSE, verbose = FALSE)$value
+          }
+          
+          ### Conduct likelihood-ratio test
+          L.het <- -2*(ll0-ll)
+          
+          ### 0.5 x chisq, because the tested null-hypothesis H0: tau2 = 0 is on the 
+          # boundary of the parameter space. See Andrews (2001) and Molenberghs and 
+          # Verbeke (2012)
+          pval.het <- 0.5*pchisq(L.het, df = 1, lower.tail = FALSE)
+          
+        } else if (type == "Wald")
+        { # Wald test
+          L.het <- tau2/se[length(se)]
+          pval.het <- 2*pnorm(abs(L.het), lower.tail = FALSE)
+        }
         
-        
-        
-        
-        
-        
-        
-        
+        ########################################################################
         
         ##### Compute 95% confidence intervals for fixed effects #####
         
@@ -217,7 +295,8 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
                                interval = c(est[ind]-est.ci[1], est[ind]),
                                es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                                est = est, tau2 = tau2, ind = ind, 
-                               chi_cv = qchisq(.95, df = 1), ll = ll)$root, 
+                               chi_cv = qchisq(.95, df = 1), ll = ll,
+                               model_type = "puni_star")$root, 
                        silent = TRUE)
             
             if (inherits(tmp, what = "try-error"))
@@ -235,7 +314,8 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
                                interval = c(est[ind], est.ci[2]+est[ind]),
                                es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                                est = est, tau2 = tau2, ind = ind, 
-                               chi_cv = qchisq(.95, df = 1), ll = ll)$root, 
+                               chi_cv = qchisq(.95, df = 1), ll = ll,
+                               model_type = "puni_star")$root, 
                        silent = TRUE)
             
             if (inherits(tmp, what = "try-error"))
@@ -266,7 +346,8 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
           ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
                                        par_fixed = par_fixed, mods = mods, est = est, 
                                        tau2 = tau2, ind = n_bs+1, 
-                                       chi_cv = qchisq(.95, df = 1), ll = ll)
+                                       chi_cv = qchisq(.95, df = 1), ll = ll,
+                                       model_type = "puni_star")
           
           if (ll_at_zero < 0)
           {
@@ -279,7 +360,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
                                    es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                    mods = mods, est = est, tau2 = tau2,
                                    ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                                   ll = ll)$root, silent = TRUE)
+                                   ll = ll, model_type = "puni_star")$root, silent = TRUE)
             
             if (!inherits(tau2.lb, what = "try-error"))
             { # If lower bound could be computed transform to tau2 scale
@@ -297,7 +378,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
                                  es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                  mods = mods, est = est, tau2 = tau2,
                                  ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                                 ll = ll)$root, silent = TRUE)
+                                 ll = ll, model_type = "puni_star")$root, silent = TRUE)
           
           if (!inherits(tau2.ub, what = "try-error"))
           { # If upper bound could be computed transform to tau2 scale
@@ -324,6 +405,10 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
           }
         }
         
+        ########################################################################
+        
+        ### This is the old implementation of getting profile likelihood confidence
+        # intervals
         
         # ### Function to compute profile likelihood confidence intervals for the 
         # # average effect size
@@ -414,15 +499,14 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
   } else if (method == "P" | method == "LNP")
   {
     
-    ### Starting values for root-finding
-    bounds.int <- con$bounds.int
-    tau.int <- con$tau.int
-    est.ci <- con$est.ci
-    tau.ci <- con$tau.ci
-    tol <- con$tol
-    maxit <- con$maxit
-    verbose <- con$verbose
+    if (mods != ~1)
+    { # Return an error if ML estimation is not used 
+      stop("Moderators cannot be included with estimation methods 'P' and 'LNP'.
+        Please use the default method 'ML'.")
+    }
     
+    ### Starting values for root-finding
+    tau.ci <- sqrt(tau2.ci)
     tau.est <- 0 # Use tau=0 for first step
     est <- 0 # Use est=0 for first step
     stay <- TRUE # In order to stay in while loop
@@ -607,7 +691,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
         { # Truncate lower bound to zero if it is negative
           tau.lb <- 0 
           
-          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
+          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+tau.ci[1]), 
                                                  est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
                                                  method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                                          silent = TRUE))
@@ -620,7 +704,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
         } else 
         { # Estimate lower and upper bound
           
-          tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(max(0, tau.est-con$tau.ci[2]), tau.est), 
+          tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(max(0, tau.est-tau.ci[2]), tau.est), 
                                                  est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
                                                  method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
                                          silent = TRUE))  
@@ -630,7 +714,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
             tau.lb <- NA
           } 
           
-          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
+          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+tau.ci[1]), 
                                                  est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
                                                  method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                                          silent = TRUE))
@@ -651,7 +735,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
         {
           tau.lb <- 0 # Truncate lower bound to zero if it is negative
           
-          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
+          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+tau.ci[1]), 
                                                  est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
                                                  method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                                          silent = TRUE))
@@ -663,7 +747,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
           
         } else 
         { # Estimate lower and upper bound
-          if (con$tau.ci[2] == 0)
+          if (tau.ci[2] == 0)
           { # If user did not specify a value for search interval, search from 0 to tau.est
             tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est), est = est, 
                                                    yi = yi, vi = vi, param = "tau", ycv = ycv, 
@@ -671,7 +755,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
                                            silent = TRUE))  
           } else 
           { # Estimate lower and upper bound
-            tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(max(0, tau.est-con$tau.ci[2]), tau.est), 
+            tau.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(max(0, tau.est-tau.ci[2]), tau.est), 
                                                    est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
                                                    method = method, val = "ci.lb", cv_P = get_cv_P(length(yi)))$root, 
                                            silent = TRUE))  
@@ -682,7 +766,7 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
             tau.lb <- NA
           } 
           
-          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+con$tau.ci[1]), 
+          tau.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(0, tau.est+tau.ci[1]), 
                                                  est = est, yi = yi, vi = vi, param = "tau", ycv = ycv, 
                                                  method = method, val = "ci.ub", cv_P = get_cv_P(length(yi)))$root, 
                                          silent = TRUE))
@@ -695,12 +779,74 @@ esest_nsig <- function(es, yi, vi, mods, n_bs, par_fixed = rep(NA, n_bs+1), int,
       }
     }
     
+    ############################################################################
+    
+    ##### Test of no between-study variance #####
+    
+    ### Estimate effect size with tau=0
+    est0 <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(-4, 4), tau = 0, 
+                                         yi = yi, vi = vi, param = "est", ycv = ycv, 
+                                         method = method, val = "es", cv_P = 0)$root, 
+                                 silent = TRUE))
+    
+    if (inherits(est0, what = "try-error")) 
+    {
+      est0 <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(-10, 10), tau = 0, 
+                                           yi = yi, vi = vi, param = "est", ycv = ycv, 
+                                           method = method, val = "es", cv_P = 0)$root, 
+                                   silent = TRUE))
+    }
+    
+    if (inherits(est0, what = "try-error"))
+    { # If effect size cannot be estimated, return NA
+      L.het <- NA
+      pval.het <- NA
+      pval.boot <- NA
+    } else 
+    {
+      ### Compute conditional probabilities at est0
+      tr.q <- trq(est = est0, tau = 0, yi = yi, vi = vi, ycv = ycv, param = "est")
+      
+      het.q <- 2*abs(tr.q-0.5) # Compute heterogeneity statistic
+      L.het <- sum(-log(1-het.q))
+      pval.het <- pgamma(L.het, length(yi), 1, lower.tail = FALSE)
+      
+      if (boot == TRUE)
+      { # If boot == TRUE, bootstrapped p-value is computed
+        
+        ### Conduct bootstrapping
+        L.het.boot <- replicate(reps, expr = boot_het(k = length(yi), est0 = est0, vi = vi, 
+                                                      ycv = ycv, method = method,
+                                                      con = con))
+        
+        ### Compute p-value with bootstrapping
+        pval.het <- length(L.het.boot[L.het.boot > L.het & !is.na(L.het.boot)])/reps
+        
+      } else 
+      {
+        pval.het <- NA
+      }
+    }
+    
+    ############################################################################
+    
     ### Return NA, because optimization information is only returned if both
     # parameters are estimated at the same time with method = "ML"
     out <- NA
     
+    ### Estimates of tau^2 are returned and not of tau in this function
+    tau2 <- tau.est^2
+    tau2.lb <- tau.lb^2
+    tau2.ub <- tau.ub^2
+    
+    ### Standard errors, L.0, and pval.0 are NA for "P" and "LNP"
+    se <- NA
+    L.0 <- NA
+    pval.0 <- NA
+    
   }
   
-  return(list(est = est, tau.est = tau.est, lb = lb, ub = ub, tau.lb = tau.lb, 
-              tau.ub = tau.ub, optim.info = out))
+  return(list(est = est, tau2 = tau2, se = se, L.0 = L.0, pval.0 = pval.0,
+              L.het = L.het, pval.het = pval.het, ci.lb = ci.lb, ci.ub = ci.ub, 
+              tau2.lb = tau2.lb, tau2.ub = tau2.ub, optim.info = out))
 }

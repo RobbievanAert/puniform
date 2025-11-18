@@ -6,14 +6,14 @@ transform_nsig <- function(res.es, side)
   {
     ### Re-mirror effect sizes
     est <- res.es$est * -1
-    tmp <- res.es$ub
-    ub <- res.es$lb * -1
-    lb <- tmp * -1
+    tmp <- res.es$ci.ub
+    ci.ub <- res.es$ci.lb * -1
+    ci.lb <- tmp * -1
   } else {
     est <- res.es$est
-    lb <- res.es$lb
-    ub <- res.es$ub
+    ci.lb <- res.es$ci.lb
+    ci.ub <- res.es$ci.ub
   }
   
-  return(data.frame(est = est, lb = lb, ub = ub))
+  return(data.frame(est = est, ci.lb = ci.lb, ci.ub = ci.ub))
 }
