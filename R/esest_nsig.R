@@ -652,31 +652,31 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
     
     if (is.na(est) == TRUE & is.na(tau.est) == TRUE)
     { # If effect size and tau could not be estimated return NAs for CIs
-      lb <- NA
-      ub <- NA
+      ci.lb <- NA
+      ci.ub <- NA
       tau.lb <- NA
       tau.ub <- NA
     } else 
     {
       ### Estimate CI of est ###
-      lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(est-con$est.ci[1], est),  
+      ci.lb <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(est-con$est.ci[1], est),  
                                          tau = tau.est, yi = yi, vi = vi, param = "est", 
                                          ycv = ycv, method = method, val = "ci.lb", 
                                          get_cv_P(length(yi)))$root, silent = TRUE))
       
-      if (inherits(lb, what = "try-error")) 
+      if (inherits(ci.lb, what = "try-error")) 
       { # Check if lower bound could be estimated
-        lb <- NA
+        ci.lb <- NA
       } 
       
-      ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(est, est+con$est.ci[2]),  
+      ci.ub <- suppressWarnings(try(uniroot(pdist_nsig, interval = c(est, est+con$est.ci[2]),  
                                          tau = tau.est, yi = yi, vi = vi, param = "est", 
                                          ycv = ycv, method = method, val = "ci.ub", 
                                          get_cv_P(length(yi)))$root, silent = TRUE))
       
-      if (inherits(ub, what = "try-error")) 
+      if (inherits(ci.ub, what = "try-error")) 
       { # Check if upper bound could be estimated
-        ub <- NA
+        ci.ub <- NA
       } 
       
       ### Estimate CI of tau ###
