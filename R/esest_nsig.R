@@ -92,28 +92,6 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
       
     } else
     {
-      # ### Starting values
-      # par <- c(con$stval.d, con$stval.tau)
-      # 
-      # ### Control arguments of optim(). -1 times con$fnscale to maximize the 
-      # # log-likelihood function
-      # control.optim <- list(fnscale = -1*con$fnscale, maxit = con$maxit)
-      # 
-      # ### Optimize log likelihood function
-      # out <- optim(par = par, fn = ml_star, yi = yi, vi = vi, ycv = ycv, 
-      #              lower = c(-Inf, 0), method = "L-BFGS-B", 
-      #              verbose = con$verbose, control = control.optim)
-      # 
-      # ### Store estimates
-      # est <- out$par[1]
-      # tau.est <- out$par[2]
-      # 
-      # ### Return warning message if there are indications for non-convergence
-      # if (out$convergence != 0)
-      # {
-      #   warning("Convergence code is non-zero indicating convergence issues. Try changing the control parameters 'fnscale' and 'maxit' to reach convergence.")
-      # }
-      
       ### Set lower bounds for optimization if "L-BFGS-B" is the optimizer
       if (optimizer == "L-BFGS-B") lower <- c(rep(-Inf, n_bs), 0)
       
@@ -199,7 +177,6 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
         pval.het <- NA
       } else 
       {
-        
         ##### Test whether the fixed effects are different from zero #####
         
         if (type == "profile")
@@ -404,96 +381,6 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
             tau2.lb <- tau2.ub <- NA
           }
         }
-        
-        ########################################################################
-        
-        ### This is the old implementation of getting profile likelihood confidence
-        # intervals
-        
-        # ### Function to compute profile likelihood confidence intervals for the 
-        # # average effect size
-        # get_profile_ci_est <- function(d, tau, yi, vi, chi_cv, ll, con)
-        # {
-        #   
-        #   ll0 <- optimize(f = ml_star_tau, interval = con$tau.int, d = d, yi = yi, vi = vi,
-        #                   ycv = ycv, maximum = TRUE)$objective
-        #   
-        #   return(-2*(ll0-ll)-chi_cv)
-        # }
-        # 
-        # if(con$proc.ml == "prof")
-        # { # Get log-likelihood if optimization via the profile likelihoods was done
-        #   
-        #   ### Starting values
-        #   par <- c(con$stval.d, con$stval.tau)
-        #   
-        #   ### Control arguments of optim(). -1 times con$fnscale to maximize the 
-        #   # log-likelihood function
-        #   control.optim <- list(fnscale = -1*con$fnscale, maxit = con$maxit)
-        #   
-        #   ### Optimize log likelihood function
-        #   ll <- optim(par = par, fn = ml_star, yi = yi, vi = vi, ycv = ycv, 
-        #               lower = c(-Inf, 0), method = "L-BFGS-B", 
-        #               verbose = con$verbose, control = control.optim)$value
-        # } else
-        # {
-        #   ll <- out$value
-        # }
-        # 
-        # tmp.lb <- try(uniroot(f = get_profile_ci_est, interval = c(est-est.ci[1],est), 
-        #                       tau = tau.est, yi = yi, vi = vi, 
-        #                       chi_cv = qchisq(.95, df = 1), ll = ll, con = con)$root, 
-        #               silent = TRUE)
-        # 
-        # ### Return NA if lower bound could not be estimated
-        # lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb)
-        # 
-        # tmp.ub <- try(uniroot(f = get_profile_ci_est, interval = c(est,est+est.ci[2]), 
-        #                       tau = tau.est, yi = yi, vi = vi, 
-        #                       chi_cv = qchisq(.95, df = 1), ll = ll, con = con)$root, 
-        #               silent = TRUE)
-        # 
-        # ### Return NA if lower bound could not be estimated
-        # ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub)
-        # 
-        # ##########################################################################
-        # 
-        # ### Estimation of CI tau
-        # 
-        # ### Function to compute profile likelihood confidence intervals for the 
-        # # average effect size
-        # get_profile_ci_tau <- function(tau, d, yi, vi, chi_cv, ll, con)
-        # {
-        #   
-        #   ll0 <- optimize(f = ml_star_est, interval = con$int, tau = tau, yi = yi, 
-        #                   vi = vi, ycv = ycv, maximum = TRUE)$objective
-        #   
-        #   return(-2*(ll0-ll)-chi_cv)
-        # }
-        # 
-        # if (get_profile_ci_tau(tau = 0, d = est, yi = yi, vi = vi, 
-        #                        chi_cv = qchisq(.95, df = 1), ll = ll, con = con) < 0)
-        # { # Set lower bound to zero if it is smaller than 0
-        #   tau.lb <- 0
-        # } else
-        # {
-        #   tmp.lb <- try(uniroot(f = get_profile_ci_tau, 
-        #                         interval = c(max(c(0, tau.est-con$tau.ci[1])), tau.est), 
-        #                         d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1), 
-        #                         ll = ll, con = con)$root, silent = TRUE)
-        #   
-        #   ### Return NA if lower bound could not be estimated
-        #   tau.lb <- ifelse(inherits(tmp.lb, what = "try-error"), NA, tmp.lb)
-        # }
-        # 
-        # tmp.ub <- try(uniroot(f = get_profile_ci_tau, 
-        #                       interval = c(tau.est, tau.est+con$tau.ci[2]), 
-        #                       d = est, yi = yi, vi = vi, chi_cv = qchisq(.95, df = 1), 
-        #                       ll = ll, con = con)$root, silent = TRUE)
-        # 
-        # ### Return NA if lower bound could not be estimated
-        # tau.ub <- ifelse(inherits(tmp.ub, what = "try-error"), NA, tmp.ub)
-        
       }
     }
   } else if (method == "P" | method == "LNP")
@@ -822,9 +709,6 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
         ### Compute p-value with bootstrapping
         pval.het <- length(L.het.boot[L.het.boot > L.het & !is.na(L.het.boot)])/reps
         
-      } else 
-      {
-        pval.het <- NA
       }
     }
     
@@ -843,7 +727,6 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
     se <- NA
     L.0 <- NA
     pval.0 <- NA
-    
   }
   
   return(list(est = est, tau2 = tau2, se = se, L.0 = L.0, pval.0 = pval.0,

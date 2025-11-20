@@ -1,3 +1,8 @@
+# Changes in puniform 0.2.9 (XXXX-XX-XX)
+
+- Moderators can now be included in the puni_star() function
+
+
 # Changes in puniform 0.2.8 (2025-09-02)
 
 - If raw correlations are provided in hybrid(), the output of fixed-effect 
