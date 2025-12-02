@@ -307,9 +307,8 @@ reproducibility in psychology: A hybrid method for statistically combining a
 biased original study and replication. Behavior Research Methods, 50(4): 1515-1539.
 doi:10.3758/s13428-017-0967-6
 
-van Aert, R.C.M. (2023). Empowering meta-analysis by taking advantage 
-of preregistered studies: The extended hybrid meta-analysis method. Manuscript 
-in preparation.
+van Aert, R. C. M. (in press). Meta-analyzing non-preregistered 
+and preregistered studies. Psychological Methods. doi: 10.1037/met0000719
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
