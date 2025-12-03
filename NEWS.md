@@ -1,3 +1,9 @@
+# Changes in puniform 0.2.9 (XXXX-XX-XX)
+
+- The control argument tau2.fixed was added to hybrid() that enables fixing the
+tau2
+
+
 # Changes in puniform 0.2.8 (2025-09-02)
 
 - If raw correlations are provided in hybrid(), the output of fixed-effect 

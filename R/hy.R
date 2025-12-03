@@ -1,5 +1,5 @@
 ### Function for applying hybrid method
-hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con) 
+hy <- function(es, measure, side, mods, n_bs, par_fixed, con) 
 {
   
   int <- con$int
@@ -11,6 +11,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
   implementation <- con$implementation
   type <- con$type
   optimizer <- con$optimizer
+  tau2.fixed <- con$tau2.fixed
   
   if (implementation == "two")
   { # If the implementation of van Aert and van Assen (2018) is used with only two
@@ -76,7 +77,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     if (optimizer == "L-BFGS-B") lower <- c(rep(-Inf, n_bs), 0)
     
     if (any(is.na(par_fixed) == FALSE))
-    { # If there are parameters fixed for hypothesis testing
+    { # If there are parameters fixed
       
       ### Remove the fixed parameters from par
       par <- par[is.na(par_fixed) == TRUE]
@@ -92,17 +93,24 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     ############################################################################
     
     ##### Estimate parameters #####
-    
-    if (optimizer != "L-BFGS-B")
-    {
-      out <- optim(par = par, fn = ml_hy, method = optimizer, es = es, 
-                   mods = mods, n_bs = n_bs, par_fixed = par_fixed, transf = transf, 
-                   verbose = verbose)
-    } else if (optimizer == "L-BFGS-B")
-    {
-      out <- optim(par = par, fn = ml_hy, method = optimizer, lower = lower, 
+    if (length(par) == 1)
+    { # If tau2 is set to a particular value, use one dimensional optimization
+      out <- optim(par = par, fn = ml_hy, method = "Brent", lower = -10, upper = 10,
                    es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                   transf = transf, verbose = verbose)
+                   transf = FALSE, verbose = verbose)
+    } else
+    {
+      if (optimizer != "L-BFGS-B")
+      {
+        out <- optim(par = par, fn = ml_hy, method = optimizer, es = es, 
+                     mods = mods, n_bs = n_bs, par_fixed = par_fixed, transf = transf, 
+                     verbose = verbose)
+      } else if (optimizer == "L-BFGS-B")
+      {
+        out <- optim(par = par, fn = ml_hy, method = optimizer, lower = lower, 
+                     es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                     transf = transf, verbose = verbose)
+      }
     }
     
     if (out$convergence != 0)
@@ -117,6 +125,12 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     ### Take the exponent of tau2 if unconstrained optimization was used
     tau2 <- ifelse(transf == TRUE, exp(tau2), tau2)
     
+    ### If tau2 was set, use this value in the output for tau2
+    if (is.na(tau2.fixed) == FALSE)
+    {
+      tau2 <- tau2.fixed
+    }
+    
     ### Store log-likelihood
     ll <- -1*out$value
     
@@ -127,9 +141,19 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     ### Estimate the standard errors based on the inverse of the Hessian. Note that
     # we are minimizing the negative log-likelihood function, so the computed Hessian
     # is actually the negative Hessian.
-    H <- numDeriv::hessian(func = ml_hy, x = c(est, tau2), es = es, mods = mods, 
-                           n_bs = n_bs, par_fixed = par_fixed, transf = FALSE,
-                           verbose = FALSE)
+    
+    if (is.na(tau2.fixed) == FALSE)
+    { # If tau2 is set to a particular value
+      H <- numDeriv::hessian(func = ml_hy, x = est, es = es, mods = mods, 
+                             n_bs = n_bs, par_fixed = par_fixed, transf = FALSE,
+                             verbose = FALSE)
+    } else
+    {
+      H <- numDeriv::hessian(func = ml_hy, x = c(est, tau2), es = es, mods = mods, 
+                             n_bs = n_bs, par_fixed = par_fixed, transf = FALSE,
+                             verbose = FALSE)
+    }
+    
     inv_H <- try(solve(H), silent = TRUE)
     
     if (inherits(inv_H, what = "try-error"))
@@ -143,12 +167,19 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       se <- suppressWarnings(sqrt(diag(inv_H)))
     }
     
+    ### Add NA for standard error of tau2 if tau2 was set to a particular value
+    if (is.na(tau2.fixed) == FALSE)
+    {
+      se[length(se)+1] <- NA
+    }
+    
     ############################################################################
     
     ##### Test whether the fixed effects are different from zero #####
     
     if (type == "profile")
     { # Likelihood-ratio test
+      
       ll0 <- numeric(n_bs)
       
       for (b in 1:n_bs)
@@ -157,7 +188,14 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
         par_fixed <- rep(NA, n_bs+1)
         par_fixed[b] <- 0
         
-        if (n_bs == 1)
+        if (n_bs == 1 & is.na(tau2.fixed) == FALSE)
+        { # If only one parameter is estimated and tau2 is set to a particular 
+          # value, the null model is the log-likelihood where the effect size 
+          # is zero
+          ll0[b] <- -1*ml_hy(par = 0, es = es, mods = mods, n_bs = n_bs, 
+                             par_fixed = c(NA, 0), transf = FALSE, 
+                             verbose = FALSE)
+        } else if (n_bs == 1)
         { # If only one parameter is estimated, use optimize() instead of optim()
           ### Multiplied by minus 1, because log-likelihood is minimized
           ll0[b] <- -1*optimize(ml_hy, interval = c(-10,10), es = es, mods = mods, 
@@ -168,7 +206,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
           ### Remove the fixed parameters from par
           par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
           
-          ll0[b]<- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
+          ll0[b] <- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
                             es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
                             transf = TRUE, verbose = FALSE)$value
         }
@@ -188,39 +226,48 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
     
     ##### Test whether there is (residual) between-study variance #####
     
-    if (type == "profile" | type == "Wald/profile")
-    { # Likelihood-ratio test
+    if (is.na(tau2.fixed) == FALSE)
+    { # Return NA for test statistic and p-value if tau2 was set to a particular value
+      L.het <- pval.het <- NA
+    } else
+    {
       
-      par_fixed <- c(rep(NA, n_bs), 0)
-      
-      ### Remove the fixed parameters from par
-      par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
-      
-      if (length(par_transf) == 1)
-      { # If only one parameter is estimated, use optimize() instead of optim()
-        ### Multiplied by minus 1, because log-likelihood is minimized
-        ll0 <- -1*optimize(ml_hy, interval = c(-10,10), es = es, mods = mods, 
-                           n_bs = n_bs, par_fixed = par_fixed, transf = FALSE, 
-                           verbose = FALSE)$objective
-      } else
-      {
-        ll0 <- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
-                        es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                        transf = FALSE, verbose = FALSE)$value
+      if (type == "profile" | type == "Wald/profile")
+      { # Likelihood-ratio test
+        
+        
+        
+        par_fixed <- c(rep(NA, n_bs), 0)
+        
+        ### Remove the fixed parameters from par
+        par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
+        
+        if (length(par_transf) == 1)
+        { # If only one parameter is estimated, use optimize() instead of optim()
+          ### Multiplied by minus 1, because log-likelihood is minimized
+          ll0 <- -1*optimize(ml_hy, interval = c(-10,10), es = es, mods = mods, 
+                             n_bs = n_bs, par_fixed = par_fixed, transf = FALSE, 
+                             verbose = FALSE)$objective
+        } else
+        {
+          ll0 <- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
+                          es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                          transf = FALSE, verbose = FALSE)$value
+        }
+        
+        ### Conduct likelihood-ratio test
+        L.het <- -2*(ll0-ll)
+        
+        ### 0.5 x chisq, because the tested null-hypothesis H0: tau2 = 0 is on the 
+        # boundary of the parameter space. See Andrews (2001) and Molenberghs and 
+        # Verbeke (2012)
+        pval.het <- 0.5*pchisq(L.het, df = 1, lower.tail = FALSE)
+        
+      } else if (type == "Wald")
+      { # Wald test
+        L.het <- tau2/se[length(se)]
+        pval.het <- 2*pnorm(abs(L.het), lower.tail = FALSE)
       }
-      
-      ### Conduct likelihood-ratio test
-      L.het <- -2*(ll0-ll)
-      
-      ### 0.5 x chisq, because the tested null-hypothesis H0: tau2 = 0 is on the 
-      # boundary of the parameter space. See Andrews (2001) and Molenberghs and 
-      # Verbeke (2012)
-      pval.het <- 0.5*pchisq(L.het, df = 1, lower.tail = FALSE)
-      
-    } else if (type == "Wald")
-    { # Wald test
-      L.het <- tau2/se[length(se)]
-      pval.het <- 2*pnorm(abs(L.het), lower.tail = FALSE)
     }
     
     ##############################################################################
@@ -241,7 +288,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
                            interval = c(est[ind]-est.ci[1], est[ind]),
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
-                           chi_cv = qchisq(.95, df = 1), ll = ll)$root, 
+                           chi_cv = qchisq(.95, df = 1), ll = ll, 
+                           tau2.fixed = tau2.fixed)$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -259,7 +307,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
                            interval = c(est[ind], est.ci[2]+est[ind]),
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
-                           chi_cv = qchisq(.95, df = 1), ll = ll)$root, 
+                           chi_cv = qchisq(.95, df = 1), ll = ll,
+                           tau2.fixed = tau2.fixed)$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -283,68 +332,76 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed = rep(NA, n_bs+1), con)
       }
     }
     
-    if (type == "profile" | type == "Wald/profile")
-    { # Compute profile likelihood confidence intervals for tau^2
+    if (is.na(tau2.fixed) == FALSE)
+    { # Return NA for CI if tau2 was set to a particular value
+      tau2.lb <- tau2.ub <- NA
+    } else
+    {
       
-      ### Check if lower bound of CI of tau2 is negative
-      ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
-                                   par_fixed = par_fixed, mods = mods, est = est, 
-                                   tau2 = tau2, ind = n_bs+1, 
-                                   chi_cv = qchisq(.95, df = 1), ll = ll)
-      
-      if (ll_at_zero < 0)
-      {
-        tau2.lb <- 0
-      } else
-      {
-        tau2.lb <- try(uniroot(f = get_profile_ci,
-                               interval = log(c(max(1e-50,tau2-tau2.ci[1]), 
-                                                tau2)),
+      if (type == "profile" | type == "Wald/profile")
+      { # Compute profile likelihood confidence intervals for tau^2
+        
+        ### Check if lower bound of CI of tau2 is negative
+        ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
+                                     par_fixed = par_fixed, mods = mods, est = est, 
+                                     tau2 = tau2, ind = n_bs+1, 
+                                     chi_cv = qchisq(.95, df = 1), ll = ll,
+                                     tau2.fixed = tau2.fixed)
+        
+        if (ll_at_zero < 0)
+        {
+          tau2.lb <- 0
+        } else
+        {
+          tau2.lb <- try(uniroot(f = get_profile_ci,
+                                 interval = log(c(max(1e-50,tau2-tau2.ci[1]), 
+                                                  tau2)),
+                                 es = es, n_bs = n_bs, par_fixed = par_fixed, 
+                                 mods = mods, est = est, tau2 = tau2,
+                                 ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
+                                 ll = ll, tau2.fixed = tau2.fixed)$root, silent = TRUE)
+          
+          if (!inherits(tau2.lb, what = "try-error"))
+          { # If lower bound could be computed transform to tau2 scale
+            tau2.lb <- exp(tau2.lb)
+          }
+        }
+        
+        if (inherits(tau2.lb, what = "try-error"))
+        {
+          tau2.lb <- NA
+        }
+        
+        tau2.ub <- try(uniroot(f = get_profile_ci,
+                               interval = log(c(tau2, tau2+tau2.ci[2])),
                                es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                mods = mods, est = est, tau2 = tau2,
                                ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                               ll = ll)$root, silent = TRUE)
+                               ll = ll, tau2.fixed = tau2.fixed)$root, silent = TRUE)
         
-        if (!inherits(tau2.lb, what = "try-error"))
-        { # If lower bound could be computed transform to tau2 scale
-          tau2.lb <- exp(tau2.lb)
+        if (!inherits(tau2.ub, what = "try-error"))
+        { # If upper bound could be computed transform to tau2 scale
+          tau2.ub <- exp(tau2.ub)
         }
-      }
-      
-      if (inherits(tau2.lb, what = "try-error"))
-      {
-        tau2.lb <- NA
-      }
-      
-      tau2.ub <- try(uniroot(f = get_profile_ci,
-                             interval = log(c(tau2, tau2+tau2.ci[2])),
-                             es = es, n_bs = n_bs, par_fixed = par_fixed, 
-                             mods = mods, est = est, tau2 = tau2,
-                             ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                             ll = ll)$root, silent = TRUE)
-      
-      if (!inherits(tau2.ub, what = "try-error"))
-      { # If upper bound could be computed transform to tau2 scale
-        tau2.ub <- exp(tau2.ub)
-      }
-      
-      if (inherits(tau2.ub, what = "try-error"))
-      {
-        tau2.ub <- NA
-      }
-    } else if (type == "Wald")
-    { # Compute Wald confidence interval for tau^2
-      
-      if (all(is.na(se) == FALSE))
-      { # Only compute Wald confidence intervals if se could be computed
-        tau2.lb <- tau2 - qnorm(.975)*se[length(se)]
-        tau2.ub <- tau2 + qnorm(.975)*se[length(se)]
         
-        tau2.lb <- ifelse(tau2.lb < 0, 0, tau2.lb)
-        tau2.ub <- ifelse(tau2.ub < 0, 0, tau2.ub)
-      } else
-      {
-        tau2.lb <- tau2.ub <- NA
+        if (inherits(tau2.ub, what = "try-error"))
+        {
+          tau2.ub <- NA
+        }
+      } else if (type == "Wald")
+      { # Compute Wald confidence interval for tau^2
+        
+        if (all(is.na(se) == FALSE))
+        { # Only compute Wald confidence intervals if se could be computed
+          tau2.lb <- tau2 - qnorm(.975)*se[length(se)]
+          tau2.ub <- tau2 + qnorm(.975)*se[length(se)]
+          
+          tau2.lb <- ifelse(tau2.lb < 0, 0, tau2.lb)
+          tau2.ub <- ifelse(tau2.ub < 0, 0, tau2.ub)
+        } else
+        {
+          tau2.lb <- tau2.ub <- NA
+        }
       }
     }
   }

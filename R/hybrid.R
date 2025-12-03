@@ -199,6 +199,10 @@
 #' Wald tests and confidence intervals are computed for the fixed effects and 
 #' likelihood-ratio tests and profile likelihood confidence intervals for the 
 #' between-study variance.}
+#' \item{\code{tau2.fixed:}}{ A number indicating to what value tau2 should be 
+#' fixed. By fixing tau2, it is not estimated and no statistical inference for 
+#' tau2 are returned. Fixing tau2 to zero implies that a equal-effect model is
+#' fitted to the data.}
 #' } 
 #' 
 #' @author Robbie C.M. van Aert \email{R.C.M.vanAert@@tilburguniversity.edu}
@@ -435,6 +439,7 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
   #                    implementation == "multiple"
   # - type           = type of hypothesis testing procedure and procedure for 
   #                    creating confidence intervals. Options are "Wald" or "profile"
+  # - tau2.fixed     = fixing tau2 to a particular value
   
   con <- list(int = c(-10, max(es$yi + 1)),
               est.ci = c(50, 1),
@@ -444,7 +449,8 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
               par = rep(0, n_bs+1), # Starting values for ML estimation. +1 for estimating tau^2
               implementation = "multiple",
               optimizer = "Nelder-Mead",
-              type = "Wald/profile") # If Wald is used for fixed effects and profile for tau^2 
+              type = "Wald/profile",  # If Wald is used for fixed effects and profile for tau^2 
+              tau2.fixed = NA) 
   
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
@@ -480,9 +486,24 @@ hybrid <- function(m1i, m2i, mi, ri, sd1i, sd2i, sdi, n1i, n2i, ni, tobs, yi, vi
     var_names <- colnames(model.matrix(mods, data = es))
   }
   
+  ### Create par_fixed. This depends on whether tau2 is set to a particular value
+  if (is.na(con$tau2.fixed))
+  {
+    par_fixed <- rep(NA, n_bs+1)
+  } else
+  {
+    par_fixed <- c(rep(NA, n_bs), con$tau2.fixed)
+  }
+  
+  ### Add a message that tau2 cannot be fixed for models with moderators
+  if (identical(mods, ~1) == FALSE & is.na(con$tau2.fixed) == FALSE)
+  {
+    stop("tau^2 can currently only be fixed for models without moderators.")
+  }
+  
   ### Apply hybrid method
   res1 <- hy(es = es, measure = measure, side = side, mods = mods, n_bs = n_bs,
-             con = con)
+             par_fixed = par_fixed, con = con)
   
   # If the implementation of van Aert and van Assen (2018) is used with only two
   # studies (one conventional and one replication study), compute Hybrid^R,
