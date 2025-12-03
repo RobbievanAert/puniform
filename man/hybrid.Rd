@@ -249,7 +249,7 @@ between-study variance.}
 }
 \examples{
 
-### Application using the implementation of van Aert (2023) with more than two studies.
+### Application using the implementation of van Aert (in press) with more than two studies.
 # Note that these data come from the "metadat" R package that needs to be loaded.
 # The data come from the meta-analyses by Lehmann et al. (2018). See the help 
 # file of dat.lehmann2018 for more information about this meta-analysis.
