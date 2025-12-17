@@ -18,6 +18,7 @@ puni_star(
   tobs,
   yi,
   vi,
+  mods = NULL,
   alpha = 0.05,
   side,
   method = "ML",
@@ -53,6 +54,9 @@ puni_star(
 \item{vi}{A vector of sampling variances belonging to the standardized effect
 sizes (see Details)}
 
+\item{mods}{A one-sided formula to specify the moderators to include. For 
+example \code{x1} can be included as moderator by specifying \code{mods = ~ x1}}
+
 \item{alpha}{A numerical value specifying the alpha level as used in primary studies
 (default is 0.05 but see Details).}
 
@@ -85,8 +89,6 @@ between-study variance}
 between-study variance}
 \item{pval.het}{one-tailed p-value of p-uniform*'s test of null hypothesis of 
 no between-study variance}
-\item{pval.boot}{one-tailed p-value of p-uniform*'s test of null hypothesis 
-of no between-study variance obtained with a parametric bootstrap}
 \item{...}{a number of additional elements}
 }
 \description{
@@ -134,10 +136,10 @@ Note that only one effect size measure can be specified at a time. A combination
 of effect size measures usually causes true heterogeneity among effect sizes and
 including different effect size measures is therefore not recommended.
 
-\bold{Selecting a method}
+\bold{Selecting an estimator}
 
-Three different methods are currently implemented in the \code{puni_star} function. 
-The \code{ML} method refers to maximum likelihood estimation of the effect size 
+Three different estimators are currently implemented in the \code{puni_star} function. 
+The \code{ML} estimator refers to maximum likelihood estimation of the effect size 
 and the between-study variance. Profile likelihood confidence intervals around 
 the estimates are computed by means of inverting the likelihood-ratio test. 
 Likelihood-ratio tests are used for testing the null hypotheses of no effect 
@@ -147,10 +149,10 @@ for applying p-uniform*.
 The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
 The method \code{P} is based on the distribution of the sum of independent 
 uniformly distributed random variables (Irwin-Hall distribution) and the 
-\code{LNP} method refers to Fisher's method (1950, Chapter 4). For these methods, 
+\code{LNP} method refers to Fisher's method (1950, Chapter 4). For these implementations, 
 a p-value for testing the null hypothesis of no between-study variance can also be 
 obtained by means of a parametric bootstrap. This is necessary since the data 
-is otherwise first used for estimating the effect size in the procedure for testing 
+are otherwise first used for estimating the effect size in the procedure for testing 
 the null hypothesis of no between-study variance and then also used for computing 
 a p-value. The test of no effect is not available for the methods \code{P} and \code{LNP} 
 and the publication bias test for these methods is not yet implemented.
@@ -170,19 +172,9 @@ be used for the method \code{ML}. The initial implementation of p-uniform* itera
 optimized the profile log-likelihood functions. As of version 0.2.6 of this 
 package, the default optimization routine estimates both parameters at the 
 same time. The old optimization procedure can be used by specifying \code{proc.ml = "prof"}}.
-\item{\code{stval.d:}}{ An integer that is the starting value of the effect 
-size for estimation. This starting value is used for the method \code{ML} and 
-is only needed when both parameters are estimated at the same time. See argument 
-\code{proc.ml} for more information. The default value is the mean of the effect
-sizes in the meta-analysis.}
-\item{\code{stval.tau:}}{ An integer that is the starting value of tau for estimation.
-This starting value is used for the methods \code{ML}, \code{P}, and \code{LNP}. 
-The default value is the standard deviation of the effect sizes in the meta-analysis.}
-\item{\code{int:}}{ A vector of length two that indicates the lower and upper 
-bound of the interval that is used for estimating the effect size. The effect 
-size estimate should be included in this interval. This interval is used for the 
-methods \code{ML}, \code{P}, and \code{LNP} and its default values are (-2, 2).}
-\item{\code{bounds.int}}{ A vector of length two that is used for determining the 
+\item{\code{par:}}{ Starting values for the optimization procedure in case of
+method \code{ML}. The default values are zeros.}
+\item{\code{bounds.int:}}{ A vector of length two that is used for determining the 
 bounds for estimating the effect size with \code{P} and \code{LNP}. The default 
 values are a function of the \code{yi}. The lower bound is the minimum \code{yi} 
 minus 1 and the upper bound is the maximum \code{yi} plus 1. The effect size 
@@ -190,7 +182,7 @@ has to be between the lower and upper bound.}
 \item{\code{tau.int:}}{ A vector of length two that indicates the lower and upper 
 bound of the interval that is used for estimating the between-study variance. 
 The estimate of the between-study variance should be included in this interval. 
-This interval is used for the methods \code{ML}, \code{P}, and \code{LNP} 
+This interval is used for the methods \code{P} and \code{LNP} 
 and its default values are (0, 2).}
 \item{\code{est.ci:}}{ A vector of length two indicating the values that are 
 subtracted from and added to the estimate of the effect size for computing the 
@@ -198,23 +190,17 @@ subtracted from and added to the estimate of the effect size for computing the
 \code{P}, and \code{LNP} and its default values are (3, 3). To give an example, 
 estimates for the lower and upper bound around the effect size estimate are 
 searched on the interval (est-3, est) and (est, est+3), respectively.}
-\item{\code{tau.ci:}}{ A vector of length two indicating the values that are 
+\item{\code{tau2.ci:}}{ A vector of length two indicating the values that are 
 added to the estimate of the between-study variance for computing the 95\% confidence 
 intervals. This vector is used for the methods \code{ML}, \code{P}, and \code{LNP} 
-and its default values are (3, 1).}
+and its default values are (0.5, 2).}
 \item{\code{tol:}}{ A number indicating the desired accuracy of the estimates. 
-This number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its 
+This number is used for the methods \code{P} and \code{LNP} and its 
 default value is 0.001.} 
 \item{\code{maxit:}}{ An integer indicating the maximum number of iterations 
 that is used for estimating the effect size and between-study variance. This 
-number is used for the methods \code{ML}, \code{P}, and \code{LNP} and its default 
+number is used for the methods \code{P} and \code{LNP} and its default 
 value is 300.}
-\item{\code{fnscale:}}{ An integer that can be used for scaling the log-likelihood
-value in the optimization. \code{fnscale} is one of the control arguments of 
-the \code{optim()} function that is internally used for optimization when the 
-\code{ML} method is used and both parameters are estimated at the same time. 
-See the argument \code{proc.ml} above and the documentation of the \code{optim()} 
-function for more information.} 
 \item{\code{verbose:}}{ A logical indicating whether information should be printed 
 about the algorithm for estimating the effect size and between-study variance. 
 This logical is used for the methods \code{ML}, \code{P}, and \code{LNP} and 
@@ -222,7 +208,20 @@ its default value is FALSE.}
 \item{\code{reps:}}{ An integer indicating the number of bootstrap replications
 for computing the bootstrapped p-value for the test of no between-study variance.
 This integer is used for the methods \code{P} and \code{LNP} and its default value 
-is 1000.}
+is 1,000.}
+\item{\code{type:}}{ A character vector indicating whether Wald-based hypothesis
+tests and confidence intervals are preferred (\code{type = "Wald"}) or 
+likelihood-ratio tests and profile likelihood confidence intervals 
+(\code{type = "profile"}). This character vector is used for method \code{ML}.
+The default is "profile". There is also the option \code{type = "Wald/profile"} 
+which implies that Wald tests and confidence intervals are computed for the 
+fixed effects and likelihood-ratio tests and profile likelihood confidence 
+intervals for the between-study variance.}
+\item{\code{optimizer:}}{ A character indicating the optimizer that is used 
+for method \code{ML}. The default value is "Nelder-Mead". The \code{optim} 
+function is used for optimization, so the optimization methods implemented in 
+the \code{optim} function can be used. See the documentation of the \code{optim} 
+function for more information.}
 }
 }
 \examples{
@@ -235,11 +234,21 @@ mi <- rnorm(25, mean = ui, sd = sdi/sqrt(ni))
 tobs <- mi/(sdi/sqrt(ni))
 
 ### Apply p-uniform* method using sample means
-puni_star(mi = mi, ni = ni, sdi = sdi, alpha = 0.05, side = "right", method = "ML")
+puni_star(mi = mi, ni = ni, sdi = sdi, side = "right")
 
 ### Apply p-uniform* method using t-values
-puni_star(tobs = tobs, ni = ni, alpha = 0.05, side = "right", method = "ML")
+puni_star(tobs = tobs, ni = ni, side = "right")
 
+### Generate data in case of a continuous moderator variable 
+set.seed(12345)
+
+vi <- rep(0.04, 50) # Within-study variance
+tau2 <- 0.04 # Between-study variance
+xi <- rnorm(50) # Continuous moderator variable
+yi <- rnorm(50, mean = 0.5*xi, sd = sqrt(vi+tau2))
+
+### Apply p-uniform* method with xi as moderator
+puni_star(yi = yi, vi = vi, mods = ~ xi, sdi = sdi, side = "right")
 }
 \references{
 Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).

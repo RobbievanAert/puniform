@@ -3,6 +3,8 @@
 - The control argument tau2.fixed was added to hybrid() that enables fixing the
 tau2
 
+- Moderators can now be included in the puni_star() function
+
 
 # Changes in puniform 0.2.8 (2025-09-02)
 

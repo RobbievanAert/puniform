@@ -207,8 +207,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
           par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
           
           ll0[b] <- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
-                            es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                            transf = TRUE, verbose = FALSE)$value
+                             es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                             transf = TRUE, verbose = FALSE)$value
         }
       }
       
@@ -289,7 +289,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
                            chi_cv = qchisq(.95, df = 1), ll = ll, 
-                           tau2.fixed = tau2.fixed)$root, 
+                           tau2.fixed = tau2.fixed, model_type = "hybrid")$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -308,7 +308,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
                            chi_cv = qchisq(.95, df = 1), ll = ll,
-                           tau2.fixed = tau2.fixed)$root, 
+                           tau2.fixed = tau2.fixed, model_type = "hybrid")$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -337,7 +337,6 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
       tau2.lb <- tau2.ub <- NA
     } else
     {
-      
       if (type == "profile" | type == "Wald/profile")
       { # Compute profile likelihood confidence intervals for tau^2
         
@@ -346,7 +345,7 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                      par_fixed = par_fixed, mods = mods, est = est, 
                                      tau2 = tau2, ind = n_bs+1, 
                                      chi_cv = qchisq(.95, df = 1), ll = ll,
-                                     tau2.fixed = tau2.fixed)
+                                     tau2.fixed = tau2.fixed, model_type = "hybrid")
         
         if (ll_at_zero < 0)
         {
@@ -359,7 +358,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                  es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                  mods = mods, est = est, tau2 = tau2,
                                  ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                                 ll = ll, tau2.fixed = tau2.fixed)$root, silent = TRUE)
+                                 ll = ll, tau2.fixed = tau2.fixed, 
+                                 model_type = "hybrid")$root, silent = TRUE)
           
           if (!inherits(tau2.lb, what = "try-error"))
           { # If lower bound could be computed transform to tau2 scale
@@ -377,7 +377,41 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                mods = mods, est = est, tau2 = tau2,
                                ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                               ll = ll, tau2.fixed = tau2.fixed)$root, silent = TRUE)
+                               ll = ll, tau2.fixed = tau2.fixed, 
+                               model_type = "hybrid")$root, silent = TRUE)
+        
+        ### Check if lower bound of CI of tau2 is negative
+        ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
+                                     par_fixed = par_fixed, mods = mods, est = est, 
+                                     tau2 = tau2, ind = n_bs+1, 
+                                     chi_cv = qchisq(.95, df = 1), ll = ll, 
+                                     model_type = "hybrid")
+        
+        if (ll_at_zero < 0)
+        {
+          tau2.lb <- 0
+        } else
+        {
+          tau2.lb <- try(uniroot(f = get_profile_ci,
+                                 interval = log(c(max(1e-50,tau2-tau2.ci[1]), 
+                                                  tau2)),
+                                 es = es, n_bs = n_bs, par_fixed = par_fixed, 
+                                 mods = mods, est = est, tau2 = tau2,
+                                 ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
+                                 ll = ll, model_type = "hybrid")$root, silent = TRUE)
+        }
+        
+        if (inherits(tau2.lb, what = "try-error"))
+        {
+          tau2.lb <- NA
+        }
+        
+        tau2.ub <- try(uniroot(f = get_profile_ci,
+                               interval = log(c(tau2, tau2+tau2.ci[2])),
+                               es = es, n_bs = n_bs, par_fixed = par_fixed, 
+                               mods = mods, est = est, tau2 = tau2,
+                               ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
+                               ll = ll, model_type = "hybrid")$root, silent = TRUE)
         
         if (!inherits(tau2.ub, what = "try-error"))
         { # If upper bound could be computed transform to tau2 scale
