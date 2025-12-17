@@ -1,6 +1,6 @@
 ### Function used for estimating profile likelihood confidence intervals
-get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind, 
-                           chi_cv, ll, tau2.fixed, model_type)
+get_profile_ci <- function(x, es, steps, obs_int, n_bs, par_fixed, mods, est, 
+                           tau2, ind, chi_cv, ll, tau2.fixed, model_type)
 {
   par_fixed[ind] <- x
   
@@ -34,14 +34,16 @@ get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind,
     # get the log-likelihood, because ml_star() returns the negative log-likelihood
     if (length(par_transf) == 1)
     { # If only one parameter is estimated, use optimize() instead of optim()
-      ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
-                         n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
+      ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, steps = steps, 
+                         obs_int = obs_int, mods = mods, n_bs = n_bs, 
+                         par_fixed = par_fixed, transf = TRUE, 
                          verbose = FALSE)$objective
     } else
     {
       ll0 <- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
-                      es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                      transf = TRUE, verbose = FALSE)$value
+                      es = es, steps = steps, obs_int = obs_int, mods = mods, 
+                      n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
+                      verbose = FALSE)$value
     }
   }
   

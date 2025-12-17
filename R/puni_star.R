@@ -122,7 +122,7 @@
 #' \item{\code{proc.ml:}}{ A character indicating with optimization procedure should 
 #' be used for the method \code{ML}. The initial implementation of p-uniform* iteratively
 #' optimized the profile log-likelihood functions. As of version 0.2.6 of this 
-#' package, the default optimization routine estimates both parameters at the 
+#' package, the default optimization routine estimates all parameters at the 
 #' same time. The old optimization procedure can be used by specifying \code{proc.ml = "prof"}}.
 #' \item{\code{par:}}{ Starting values for the optimization procedure in case of
 #' method \code{ML}. The default values are zeros.}
@@ -212,7 +212,7 @@
 
 puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
                       mods = NULL, alpha = 0.05, side, method = "ML", 
-                      boot = FALSE, control)
+                      boot = FALSE, steps = 0.025, control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
@@ -291,10 +291,19 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
     var_names <- colnames(model.matrix(mods, data = es))
   }
   
+  ######################
+  ### Add 0 and 1 to steps. Steps now only work for side = "right". Later on,
+  # also make sure that they work for side = "left".
+  # rev() is added here to make sure that steps can be provided as c(0.025, 0.5)
+  # and not as c(0.5,0.025)
+  steps <- c(0, 1-rev(steps), 1)
+  
+  ######################
+  
   ##### EFFECT SIZE ESTIMATION, TESTS OF NO EFFECT, AND TEST OF NO BETWEEN-STUDY
   # VARIANCE #####
   res.es <- esest_nsig(es = es, mods = mods, n_bs = n_bs, method = method, 
-                       boot = boot, con = con)
+                       boot = boot, steps = steps, con = con)
   
   # ##### PUBLICATION BIAS TEST #####
   # Commented out for now. More research is needed to develop a publication bias 

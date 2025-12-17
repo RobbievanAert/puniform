@@ -1,5 +1,6 @@
 ### Function for applying p-uniform*
-esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot, con) 
+esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot, 
+                       steps, con) 
 {
   
   yi <- es$yi
@@ -91,7 +92,17 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
       out <- NA
       
     } else
-    {
+    { # Estimation procedure where all parameters are optimized at the same time
+      
+      ###############
+      
+      ### The category a study belongs to is determined based on the p-value.
+      # Later on take into account that the side can also be left
+      pvals <- pnorm(yi/sqrt(vi))
+      obs_int <- cut(pvals, breaks = steps, labels = FALSE)
+      
+      ###############
+      
       ### Set lower bounds for optimization if "L-BFGS-B" is the optimizer
       if (optimizer == "L-BFGS-B") lower <- c(rep(-Inf, n_bs), 0)
       
@@ -116,13 +127,14 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
       if (optimizer != "L-BFGS-B")
       {
         out <- optim(par = par, fn = ml_star, method = optimizer, es = es, 
-                     mods = mods, n_bs = n_bs, par_fixed = par_fixed, transf = transf, 
-                     verbose = verbose)
+                     steps = steps, obs_int = obs_int, mods = mods, n_bs = n_bs, 
+                     par_fixed = par_fixed, transf = transf, verbose = verbose)
       } else if (optimizer == "L-BFGS-B")
       {
         out <- optim(par = par, fn = ml_star, method = optimizer, lower = lower, 
-                     es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                     transf = transf, verbose = verbose)
+                     es = es, steps = steps, obs_int = obs_int, mods = mods, 
+                     n_bs = n_bs, par_fixed = par_fixed, transf = transf, 
+                     verbose = verbose)
       }
       
       if (out$convergence != 0)
@@ -147,7 +159,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
       ### Estimate the standard errors based on the inverse of the Hessian. Note that
       # we are minimizing the negative log-likelihood function, so the computed Hessian
       # is actually the negative Hessian.
-      H <- numDeriv::hessian(func = ml_star, x = c(est, tau2), es = es, mods = mods, 
+      H <- numDeriv::hessian(func = ml_star, x = c(est, tau2), es = es, 
+                             steps = steps, obs_int = obs_int, mods = mods, 
                              n_bs = n_bs, par_fixed = par_fixed, transf = FALSE,
                              verbose = FALSE)
       inv_H <- try(solve(H), silent = TRUE)
@@ -191,7 +204,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
             if (n_bs == 1)
             { # If only one parameter is estimated, use optimize() instead of optim()
               ### Multiplied by minus 1, because log-likelihood is minimized
-              ll0[b] <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+              ll0[b] <- -1*optimize(ml_star, interval = c(-10,10), es = es, 
+                                    steps = steps, obs_int = obs_int, mods = mods, 
                                     n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
                                     verbose = FALSE)$objective
             } else
@@ -200,7 +214,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
               par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
               
               ll0[b]<- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
-                                es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                                es = es, steps = steps, obs_int = obs_int, 
+                                mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
                                 transf = TRUE, verbose = FALSE)$value
             }
           }
@@ -230,13 +245,15 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
           if (length(par_transf) == 1)
           { # If only one parameter is estimated, use optimize() instead of optim()
             ### Multiplied by minus 1, because log-likelihood is minimized
-            ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+            ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, 
+                               steps = steps, obs_int = obs_int, mods = mods, 
                                n_bs = n_bs, par_fixed = par_fixed, transf = FALSE, 
                                verbose = FALSE)$objective
           } else
           {
             ll0 <- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
-                            es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                            es = es, steps = steps, obs_int = obs_int, 
+                            mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
                             transf = FALSE, verbose = FALSE)$value
           }
           
@@ -270,7 +287,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
           {
             tmp <- try(uniroot(f = get_profile_ci, 
                                interval = c(est[ind]-est.ci[1], est[ind]),
-                               es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
+                               es = es, steps = steps, obs_int = obs_int, 
+                               n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                                est = est, tau2 = tau2, ind = ind, 
                                chi_cv = qchisq(.95, df = 1), ll = ll,
                                model_type = "puni_star")$root, 
@@ -289,7 +307,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
           {
             tmp <- try(uniroot(f = get_profile_ci, 
                                interval = c(est[ind], est.ci[2]+est[ind]),
-                               es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
+                               es = es, steps = steps, obs_int = obs_int, 
+                               n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                                est = est, tau2 = tau2, ind = ind, 
                                chi_cv = qchisq(.95, df = 1), ll = ll,
                                model_type = "puni_star")$root, 
@@ -320,7 +339,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
         { # Compute profile likelihood confidence intervals for tau^2
           
           ### Check if lower bound of CI of tau2 is negative
-          ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
+          ll_at_zero <- get_profile_ci(x = log(0), es = es, steps = steps, 
+                                       obs_int = obs_int, n_bs = n_bs, 
                                        par_fixed = par_fixed, mods = mods, est = est, 
                                        tau2 = tau2, ind = n_bs+1, 
                                        chi_cv = qchisq(.95, df = 1), ll = ll,
@@ -334,7 +354,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
             tau2.lb <- try(uniroot(f = get_profile_ci,
                                    interval = log(c(max(1e-50,tau2-tau2.ci[1]), 
                                                     tau2)),
-                                   es = es, n_bs = n_bs, par_fixed = par_fixed, 
+                                   es = es, steps = steps, obs_int = obs_int, 
+                                   n_bs = n_bs, par_fixed = par_fixed, 
                                    mods = mods, est = est, tau2 = tau2,
                                    ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
                                    ll = ll, model_type = "puni_star")$root, silent = TRUE)
@@ -352,7 +373,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
           
           tau2.ub <- try(uniroot(f = get_profile_ci,
                                  interval = log(c(tau2, tau2+tau2.ci[2])),
-                                 es = es, n_bs = n_bs, par_fixed = par_fixed, 
+                                 es = es, steps = steps, obs_int = obs_int, 
+                                 n_bs = n_bs, par_fixed = par_fixed, 
                                  mods = mods, est = est, tau2 = tau2,
                                  ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
                                  ll = ll, model_type = "puni_star")$root, silent = TRUE)
