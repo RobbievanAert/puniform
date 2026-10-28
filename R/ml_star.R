@@ -1,5 +1,5 @@
 ### Function for computing log-likelihood of p-uniform*
-ml_star <- function(par, es, mods, n_bs, par_fixed, transf, verbose)
+ml_star <- function(par, es, mods, n_bs, par_fixed, transf, verbose, penalty)
 {
   yi <- es$yi
   vi <- es$vi
@@ -35,5 +35,13 @@ ml_star <- function(par, es, mods, n_bs, par_fixed, transf, verbose)
              pnorm(ycv, mean = M, sd = sqrt(vi+tau2), log.p = TRUE))
   }, M = M, yi = yi, vi = vi, ycv = ycv, MoreArgs = list(tau2 = tau2))
   
-  return(-sum(q))
+  if (is.null(penalty))
+  { # Regular maximum likelihood estimation
+    ll <- sum(q)
+  } else
+  { # Penalized maximum likelihood estimation
+    ll <- sum(q) + penalty$beta(bs) + penalty$tau2(tau2)
+  }
+  
+  return(-ll)
 }

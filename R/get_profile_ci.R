@@ -1,6 +1,6 @@
 ### Function used for estimating profile likelihood confidence intervals
 get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind, 
-                           chi_cv, ll, tau2.fixed, model_type)
+                           chi_cv, ll, tau2.fixed, model_type, penalty)
 {
   par_fixed[ind] <- x
   
@@ -36,12 +36,12 @@ get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind,
     { # If only one parameter is estimated, use optimize() instead of optim()
       ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
                          n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
-                         verbose = FALSE)$objective
+                         verbose = FALSE, penalty = penalty)$objective
     } else
     {
       ll0 <- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
                       es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                      transf = TRUE, verbose = FALSE)$value
+                      transf = TRUE, verbose = FALSE, penalty = penalty)$value
     }
   }
   

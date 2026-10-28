@@ -5,6 +5,9 @@ tau2
 
 - Moderators can now be included in the puni_star() function
 
+- Penalized maximum likelihood estimation is implemented in the puni_star()
+function
+
 
 # Changes in puniform 0.2.8 (2025-09-02)
 

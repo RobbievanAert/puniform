@@ -23,6 +23,7 @@ puni_star(
   side,
   method = "ML",
   boot = FALSE,
+  penalty = NULL,
   control
 )
 }
@@ -70,6 +71,12 @@ of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})}
 \item{boot}{A logical indicating whether the p-value of testing whether the 
 between-study variance is zero for methods \code{P} and \code{LNP} should be 
 obtained by means of a parametric bootstrap. The default value is FALSE.}
+
+\item{penalty}{An optional list containing two functions that specify the penalties
+used in penalized maximum likelihood estimation. The first function
+defines the penalty for the average effect size or meta-regression
+coefficients, while the second defines the penalty for the
+between-study variance (see Details).}
 
 \item{control}{An optional list of elements that give the user more control 
 over the optimization and root-finding algorithms (see Note)}
@@ -145,6 +152,14 @@ the estimates are computed by means of inverting the likelihood-ratio test.
 Likelihood-ratio tests are used for testing the null hypotheses of no effect 
 and no between-study variance. The \code{ML} method is the recommended method 
 for applying p-uniform*. 
+
+In addition to conventional maximum likelihood estimation, penalized
+maximum likelihood estimation can be used by specifying penalties for
+the average effect size (or meta-regression coefficients) and the
+between-study variance. By discouraging extreme parameter estimates,
+penalization can improve numerical stability and convergence,
+particularly in meta-analyses with a small number of studies. See the Example
+section for an example.
 
 The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
 The method \code{P} is based on the distribution of the sum of independent 
@@ -239,6 +254,12 @@ puni_star(mi = mi, ni = ni, sdi = sdi, side = "right")
 ### Apply p-uniform* method using t-values
 puni_star(tobs = tobs, ni = ni, side = "right")
 
+### Apply p-uniform* method using sample means and penalty terms as described
+in Pustejovsky, Citkowicz, and Joshi (2026).
+puni_star(mi = mi, ni = ni, sdi = sdi, side = "right", 
+penalty = list(beta = function(betas) -1/16*sum(betas^4), 
+tau2 = function(tau2) 0.5 * log(tau2) - 5 * sqrt(tau2)))
+
 ### Generate data in case of a continuous moderator variable 
 set.seed(12345)
 
@@ -254,9 +275,14 @@ puni_star(yi = yi, vi = vi, mods = ~ xi, sdi = sdi, side = "right")
 Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 London: Oliver & Boyd.
 
-van Aert, R.C.M., & van Assen, M.A.L.M. (2023). Correcting for 
-publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
-for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
+Pustejovsky, J. E., Citkowicz, M., & Joshi, M. (2026). Estimation 
+and inference for step-function selection models in meta-analyses with 
+dependent effects. Research Synthesis Methods, 1–34. 
+https://doi.org/10.1017/rsm.2026.10117
+
+van Aert, R.C.M., & van Assen, M.A.L.M. (2026). Correcting for 
+publication bias in a meta-analysis with the p-uniform* method. Psychonomic 
+Bulletin & Review, 33(3), 102. https://doi.org/10.3758/s13423-025-02812-4
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}
