@@ -387,8 +387,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                      par_fixed = par_fixed, mods = mods, est = est, 
                                      tau2 = tau2, ind = n_bs+1, 
                                      chi_cv = qchisq(.95, df = 1), ll = ll, 
-                                     model_type = "hybrid", optimizer = optimizer, 
-                                     penalty = NULL)
+                                     tau2.fixed = tau2.fixed, model_type = "hybrid", 
+                                     optimizer = optimizer, penalty = NULL)
         
         if (ll_at_zero < 0)
         {
@@ -401,8 +401,9 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                  es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                  mods = mods, est = est, tau2 = tau2,
                                  ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                                 ll = ll, model_type = "hybrid",
-                                 optimizer = optimizer, penalty = NULL)$root, 
+                                 ll = ll, tau2.fixed = tau2.fixed, 
+                                 model_type = "hybrid", optimizer = optimizer, 
+                                 penalty = NULL)$root, 
                          silent = TRUE)
         }
         
@@ -416,8 +417,9 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                mods = mods, est = est, tau2 = tau2,
                                ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                               ll = ll, model_type = "hybrid",
-                               optimizer = optimizer, penalty = NULL)$root, 
+                               ll = ll, tau2.fixed = tau2.fixed, 
+                               model_type = "hybrid", optimizer = optimizer, 
+                               penalty = NULL)$root, 
                        silent = TRUE)
         
         if (!inherits(tau2.ub, what = "try-error"))

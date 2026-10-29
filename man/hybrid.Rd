@@ -247,7 +247,7 @@ likelihood-ratio tests and profile likelihood confidence intervals for the
 between-study variance.}
 \item{\code{tau2.fixed:}}{ A number indicating to what value tau2 should be 
 fixed. By fixing tau2, it is not estimated and no statistical inference for 
-tau2 are returned. Fixing tau2 to zero implies that a equal-effect model is
+tau2 are returned. Fixing tau2 to zero implies that an equal-effect model is
 fitted to the data.}
 }
 }

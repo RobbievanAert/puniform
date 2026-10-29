@@ -206,11 +206,11 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
             if (n_bs == 1)
             { # If only one parameter is estimated, use optimize() instead of optim()
               ### Multiplied by minus 1, because log-likelihood is minimized
-              tmp <- optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+              tmp <- optimize(ml_star, interval = c(-10,5), es = es, mods = mods, 
                               n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
                               verbose = FALSE, penalty = penalty)
               
-              if (tmp$minimum < -9.99 | tmp$minimum > 9.99)
+              if (tmp$minimum < -9.99 | tmp$minimum > 4.99)
               { # Return NA if optimize() yielded a result very close to the 
                 # bounds of the interval used for optimization
                 ll0[b] <- NA
