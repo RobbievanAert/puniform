@@ -31,9 +31,9 @@
 #' obtained by means of a parametric bootstrap. The default value is FALSE.
 #' @param penalty An optional list containing two functions that specify the penalties
 #' used in penalized maximum likelihood estimation. The first function
-#' defines the penalty for the average effect size or meta-regression
-#' coefficients, while the second defines the penalty for the
-#' between-study variance (see Details).
+#' should be named beta and defines the penalty for the average effect size or 
+#' meta-regression coefficients, while the second function should be named tau2
+#' and defines the penalty for the between-study variance (see Details).
 #' @param control An optional list of elements that give the user more control 
 #' over the optimization and root-finding algorithms (see Note) 
 #'
@@ -88,12 +88,16 @@
 #' for applying p-uniform*. 
 #' 
 #' In addition to conventional maximum likelihood estimation, penalized
-#' maximum likelihood estimation can be used by specifying penalties for
-#' the average effect size (or meta-regression coefficients) and the
-#' between-study variance. By discouraging extreme parameter estimates,
-#' penalization can improve numerical stability and convergence,
-#' particularly in meta-analyses with a small number of studies. See the Example
-#' section for an example.
+#' maximum likelihood estimation can be used to improve numerical stability
+#' and convergence, particularly in meta-analyses with a small number of
+#' studies. This requires specifying two penalty functions: one for the
+#' average effect size (or meta-regression coefficients) and one for the
+#' between-study variance. The functions must be named \code{beta} and
+#' \code{tau2}, respectively, and each must return a single numeric value
+#' representing the penalty contribution to the log-likelihood. In
+#' meta-regression models, the \code{beta} function receives a vector
+#' containing all regression coefficients, allowing penalties to be
+#' applied to each coefficient. See the Examples section for an illustration.
 #' 
 #' The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
 #' The method \code{P} is based on the distribution of the sum of independent 
@@ -111,7 +115,7 @@
 #' \item{ci.lb}{lower bound of p-uniform*'s 95\% confidence interval of the effect size}
 #' \item{ci.ub}{upper bound of p-uniform*'s 95\% confidence interval of the effect size}
 #' \item{L.0}{test statistic of p-uniform*'s test of the null hypothesis of no effect}
-#' \item{pval.0}{one-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
+#' \item{pval.0}{two-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
 #' \item{tau2}{p-uniform*'s estimate of the between-study variance}
 #' \item{tau2.lb}{lower bound of p-uniform*'s 95\% confidence interval of the 
 #' between-study variance}
@@ -274,6 +278,34 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   
   ##############################################################################
   
+  ### Checks for the penalty argument
+  if (is.null(penalty) == FALSE) 
+  {
+    if (is.list(penalty) == FALSE ||
+        !all(c("beta", "tau2") %in% names(penalty))) 
+    { # Check if penalty is a list and the function names are beta and tau2
+      stop("'penalty' argument must be a list containing two functions with the names 'beta' and 'tau2'.")
+    }
+    
+    if (!is.function(penalty$beta) ||
+        !is.function(penalty$tau2)) 
+    {# Check if both elements of penalty are functions
+      stop("Both penalty elements must be functions.")
+    }
+    
+    ### Check if both functions return a single numeric value
+    p_beta <- penalty$beta(rep(0, n_bs))
+    p_tau2 <- penalty$tau2(1)
+    
+    if (length(p_beta) > 1 ||
+        length(p_tau2) > 1)
+    {
+      stop("Penalty functions must return a single numeric value.")
+    }
+  }
+  
+  ##############################################################################
+  
   ### Default values for optimizing (ML) and root-finding procedures (P and LNP)
   con <- list(proc.ml = "", # Whether both parameters need to be estimated at the same time (default) or profile likelihoods need to be optimized
               par = rep(0, n_bs+1), # Starting values for ML estimation
@@ -291,7 +323,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               reps = 1000, # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
               type = "profile", # Profile likelihood CIs are computed
               optimizer = "Nelder-Mead") # Optimizer that is used for ML estimation 
-              
+  
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
   {

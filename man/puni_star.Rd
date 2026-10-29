@@ -74,9 +74,9 @@ obtained by means of a parametric bootstrap. The default value is FALSE.}
 
 \item{penalty}{An optional list containing two functions that specify the penalties
 used in penalized maximum likelihood estimation. The first function
-defines the penalty for the average effect size or meta-regression
-coefficients, while the second defines the penalty for the
-between-study variance (see Details).}
+should be named beta and defines the penalty for the average effect size or 
+meta-regression coefficients, while the second function should be named tau2
+and defines the penalty for the between-study variance (see Details).}
 
 \item{control}{An optional list of elements that give the user more control 
 over the optimization and root-finding algorithms (see Note)}
@@ -86,7 +86,7 @@ over the optimization and root-finding algorithms (see Note)}
 \item{ci.lb}{lower bound of p-uniform*'s 95\% confidence interval of the effect size}
 \item{ci.ub}{upper bound of p-uniform*'s 95\% confidence interval of the effect size}
 \item{L.0}{test statistic of p-uniform*'s test of the null hypothesis of no effect}
-\item{pval.0}{one-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
+\item{pval.0}{two-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
 \item{tau2}{p-uniform*'s estimate of the between-study variance}
 \item{tau2.lb}{lower bound of p-uniform*'s 95\% confidence interval of the 
 between-study variance}
@@ -154,12 +154,16 @@ and no between-study variance. The \code{ML} method is the recommended method
 for applying p-uniform*. 
 
 In addition to conventional maximum likelihood estimation, penalized
-maximum likelihood estimation can be used by specifying penalties for
-the average effect size (or meta-regression coefficients) and the
-between-study variance. By discouraging extreme parameter estimates,
-penalization can improve numerical stability and convergence,
-particularly in meta-analyses with a small number of studies. See the Example
-section for an example.
+maximum likelihood estimation can be used to improve numerical stability
+and convergence, particularly in meta-analyses with a small number of
+studies. This requires specifying two penalty functions: one for the
+average effect size (or meta-regression coefficients) and one for the
+between-study variance. The functions must be named \code{beta} and
+\code{tau2}, respectively, and each must return a single numeric value
+representing the penalty contribution to the log-likelihood. In
+meta-regression models, the \code{beta} function receives a vector
+containing all regression coefficients, allowing penalties to be
+applied to each coefficient. See the Examples section for an illustration.
 
 The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
 The method \code{P} is based on the distribution of the sum of independent 

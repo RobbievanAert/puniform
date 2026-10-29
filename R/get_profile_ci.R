@@ -1,6 +1,6 @@
 ### Function used for estimating profile likelihood confidence intervals
 get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind, 
-                           chi_cv, ll, tau2.fixed, model_type, penalty)
+                           chi_cv, ll, tau2.fixed, model_type, optimizer, penalty)
 {
   par_fixed[ind] <- x
   
@@ -24,7 +24,7 @@ get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind,
                          verbose = FALSE)$objective
     } else
     {
-      ll0 <- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
+      ll0 <- -1*optim(par = par_transf, fn = ml_hy, method = optimizer, 
                       es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
                       transf = TRUE, verbose = FALSE)$value
     }
@@ -34,12 +34,22 @@ get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind,
     # get the log-likelihood, because ml_star() returns the negative log-likelihood
     if (length(par_transf) == 1)
     { # If only one parameter is estimated, use optimize() instead of optim()
-      ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
-                         n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
-                         verbose = FALSE, penalty = penalty)$objective
+      tmp <- optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+                      n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
+                      verbose = FALSE, penalty = penalty)
+      
+      if (tmp$minimum < -9.99 | tmp$minimum > 9.99)
+      { # Return NA if optimize() yielded a result very close to the 
+        # bounds of the interval used for optimization
+        ll0 <- NA
+      } else
+      {
+        ll0 <- -1*tmp$objective
+      }
+      
     } else
     {
-      ll0 <- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
+      ll0 <- -1*optim(par = par_transf, fn = ml_star, method = optimizer, 
                       es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
                       transf = TRUE, verbose = FALSE, penalty = penalty)$value
     }

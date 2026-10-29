@@ -33,6 +33,12 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
         are iteratively optimized. Please use the default estimation procedure.")
       }
       
+      if (is.null(penalty) == FALSE)
+      { # Penalties are only implemented for the default optimization procedure
+        stop("Penalties cannot be used when the profile log-likelihood functions 
+        are iteratively optimized. Please use the default estimation procedure.")
+      }
+      
       ### Starting values for optimization
       tau.est <- sqrt(par[2])
       int <- con$int
@@ -130,12 +136,13 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
         
         out <- optim(par = par, fn = ml_star, method = optimizer, lower = lower, 
                      es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                     transf = transf, verbose = verbose)
+                     transf = transf, verbose = verbose, penalty = penalty)
       }
       
       if (out$convergence != 0)
       { # Return warning message if optim returns a nonzero convergence code
-        warning("Convergence code is nonzero suggesting that nonconvergence has occured")
+        warning("Convergence code is nonzero suggesting that nonconvergence has occured.",
+                call. = FALSE)
       }
       
       ### Store the estimated parameters
@@ -199,17 +206,36 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
             if (n_bs == 1)
             { # If only one parameter is estimated, use optimize() instead of optim()
               ### Multiplied by minus 1, because log-likelihood is minimized
-              ll0[b] <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
-                                    n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
-                                    verbose = FALSE, penalty = penalty)$objective
+              tmp <- optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+                              n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
+                              verbose = FALSE, penalty = penalty)
+              
+              if (tmp$minimum < -9.99 | tmp$minimum > 9.99)
+              { # Return NA if optimize() yielded a result very close to the 
+                # bounds of the interval used for optimization
+                ll0[b] <- NA
+              } else
+              {
+                ll0[b] <- -1*tmp$objective
+              }
+              
             } else
             { 
               ### Remove the fixed parameters from par
               par_transf <- c(est, log(tau2))[is.na(par_fixed) == TRUE]
               
-              ll0[b]<- -1*optim(par = par_transf, fn = ml_star, method = optimizer, 
-                                es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                                transf = TRUE, verbose = FALSE, penalty = penalty)$value
+              tmp <- optim(par = par_transf, fn = ml_star, method = optimizer, 
+                           es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                           transf = TRUE, verbose = FALSE, penalty = penalty)
+              
+              if (tmp$convergence != 0)
+              { # Return NA if optim() did not converge
+                ll0[b] <- NA
+              } else
+              {
+                ll0[b] <- -1*tmp$value
+              }
+              
             }
           }
           
@@ -241,14 +267,32 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
             if (length(par_transf) == 1)
             { # If only one parameter is estimated, use optimize() instead of optim()
               ### Multiplied by minus 1, because log-likelihood is minimized
-              ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
-                                 n_bs = n_bs, par_fixed = par_fixed, transf = FALSE, 
-                                 verbose = FALSE, penalty = penalty)$objective
+              tmp <- optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
+                              n_bs = n_bs, par_fixed = par_fixed, transf = FALSE, 
+                              verbose = FALSE, penalty = penalty)
+              
+              if (tmp$minimum < -9.99 | tmp$minimum > 9.99)
+              { # Return NA if optimize() yielded a result very close to the 
+                # bounds of the interval used for optimization
+                ll0 <- NA
+              } else
+              {
+                ll0 <- -1*tmp$objective
+              }
+              
             } else
             {
-              ll0 <- -1*optim(par = par_transf, fn = ml_star, method = optimizer, 
+              tmp <- optim(par = par_transf, fn = ml_star, method = optimizer, 
                               es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                              transf = FALSE, verbose = FALSE, penalty = penalty)$value
+                              transf = FALSE, verbose = FALSE, penalty = penalty)
+              
+              if (tmp$convergence != 0)
+              { # Return NA if optim() did not converge
+                ll0 <- NA
+              } else
+              {
+                ll0 <- -1*tmp$value
+              }
             }
             
             ### Conduct likelihood-ratio test
@@ -261,16 +305,17 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
             
           } else
           {
-            warning("Penalty term for tau^2 = 0 is infinite, so likelihood-ratio test cannot be conducted.")
+            warning("Penalty term for tau^2 = 0 is infinite, so likelihood-ratio test cannot be conducted.",
+                    call. = FALSE)
             
             ### Return NAs for the test
             L.het <- pval.het <- NA
           }
           
         } else if (type == "Wald")
-        { # Wald test
+        { # Right-tailed Wald test
           L.het <- tau2/se[length(se)]
-          pval.het <- 2*pnorm(abs(L.het), lower.tail = FALSE)
+          pval.het <- pnorm(abs(L.het), lower.tail = FALSE)
         }
         
         ########################################################################
@@ -292,7 +337,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
                                es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                mods = mods, est = est, tau2 = tau2, ind = ind, 
                                chi_cv = qchisq(.95, df = 1), ll = ll,
-                               model_type = "puni_star", penalty = penalty)$root, 
+                               model_type = "puni_star", optimizer = optimizer,
+                               penalty = penalty)$root, 
                        silent = TRUE)
             
             if (inherits(tmp, what = "try-error"))
@@ -311,7 +357,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
                                es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                                est = est, tau2 = tau2, ind = ind, 
                                chi_cv = qchisq(.95, df = 1), ll = ll,
-                               model_type = "puni_star", penalty = penalty)$root, 
+                               model_type = "puni_star", optimizer = optimizer,
+                               penalty = penalty)$root, 
                        silent = TRUE)
             
             if (inherits(tmp, what = "try-error"))
@@ -346,7 +393,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
                                          par_fixed = par_fixed, mods = mods, est = est, 
                                          tau2 = tau2, ind = n_bs+1, 
                                          chi_cv = qchisq(.95, df = 1), ll = ll,
-                                         model_type = "puni_star", penalty = penalty)
+                                         model_type = "puni_star", 
+                                         optimizer = optimizer, penalty = penalty)
           } else
           { # Use a very small but positive number in case the penalty for tau^2
             # returns infinite at tau^2 = 0
@@ -354,7 +402,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
                                          par_fixed = par_fixed, mods = mods, est = est, 
                                          tau2 = tau2, ind = n_bs+1, 
                                          chi_cv = qchisq(.95, df = 1), ll = ll,
-                                         model_type = "puni_star", penalty = penalty)
+                                         model_type = "puni_star", 
+                                         optimizer = optimizer, penalty = penalty)
           }
           
           if (ll_at_zero < 0)
@@ -369,7 +418,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
                                    mods = mods, est = est, tau2 = tau2,
                                    ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
                                    ll = ll, model_type = "puni_star", 
-                                   penalty = penalty)$root, silent = TRUE)
+                                   optimizer = optimizer, penalty = penalty)$root, 
+                           silent = TRUE)
             
             if (!inherits(tau2.lb, what = "try-error"))
             { # If lower bound could be computed transform to tau2 scale
@@ -388,7 +438,8 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
                                  mods = mods, est = est, tau2 = tau2,
                                  ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
                                  ll = ll, model_type = "puni_star",
-                                 penalty = penalty)$root, silent = TRUE)
+                                 optimizer = optimizer, penalty = penalty)$root, 
+                         silent = TRUE)
           
           if (!inherits(tau2.ub, what = "try-error"))
           { # If upper bound could be computed transform to tau2 scale
@@ -422,6 +473,12 @@ esest_nsig <- function(es, mods, n_bs, par_fixed = rep(NA, n_bs+1), method, boot
     if (mods != ~1)
     { # Return an error if ML estimation is not used 
       stop("Moderators cannot be included with estimation methods 'P' and 'LNP'.
+        Please use the default method 'ML'.")
+    }
+    
+    if (is.null(penalty) == FALSE)
+    { # Penalties are only implemented for the default optimization procedure
+      stop("Penalties cannot be used with estimation methods 'P' and 'LNP'.
         Please use the default method 'ML'.")
     }
     
