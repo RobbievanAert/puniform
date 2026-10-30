@@ -362,8 +362,8 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   res.trans <- transform_nsig(res.es = res.es, side = side)
   
   ##### CREATE OUTPUT #####
-  x <- list(con = con, var_names = var_names, method = method, k = length(es$yi), 
-            ksig = sum(es$pval < alpha/2), est = res.trans$est, 
+  x <- list(con = con, var_names = var_names, method = method, penalty = penalty,
+            k = length(es$yi), ksig = sum(es$pval < alpha/2), est = res.trans$est, 
             ci.lb = res.trans$ci.lb, ci.ub = res.trans$ci.ub, 
             L.0 = res.es$L.0, pval.0 = res.es$pval.0, tau2 = res.es$tau2, 
             tau2.lb = res.es$tau2.lb, tau2.ub = res.es$tau2.ub, se = res.es$se,

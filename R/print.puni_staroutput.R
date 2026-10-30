@@ -2,7 +2,13 @@
 
 print.puni_staroutput <- function(x, ...) {
   cat("\n")
-  cat("Method: ", x$method, " (k = ", x$k, "; ksig = ", x$ksig, ")", sep = "")
+  if (x$method == "ML" & is.null(x$penalty) == FALSE)
+  {
+    cat("Method: Penalized ", x$method, " (k = ", x$k, "; ksig = ", x$ksig, ")", sep = "")
+  } else
+  {
+    cat("Method: ", x$method, " (k = ", x$k, "; ksig = ", x$ksig, ")", sep = "")
+  }
   cat("\n")
   cat("\n")
   cat("Model results p-uniform*:")
