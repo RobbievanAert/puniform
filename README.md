@@ -13,7 +13,7 @@ The currently included methods are:
 - The *p*-uniform method as described in [van Assen, van Aert, and
   Wicherts (2015)](https://doi.org/10.1037/met0000025)
 - The *p*-uniform\* method as described in [van Aert and van Assen
-  (2025)](https://osf.io/preprints/metaarxiv/zqjr9/)
+  (2026)](https://doi.org/10.3758/s13423-025-02812-4)
 - The hybrid method as described in [van Aert and van Assen
   (2018)](https://link.springer.com/article/10.3758/s13428-017-0967-6)
   and [van Aert (2025)](https://doi.org/10.1037/met0000719)

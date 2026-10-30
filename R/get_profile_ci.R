@@ -1,6 +1,6 @@
 ### Function used for estimating profile likelihood confidence intervals
 get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind, 
-                           chi_cv, ll, tau2.fixed, model_type)
+                           chi_cv, ll, tau2.fixed, model_type, optimizer, penalty)
 {
   par_fixed[ind] <- x
   
@@ -24,7 +24,7 @@ get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind,
                          verbose = FALSE)$objective
     } else
     {
-      ll0 <- -1*optim(par = par_transf, fn = ml_hy, method = "Nelder-Mead", 
+      ll0 <- -1*optim(par = par_transf, fn = ml_hy, method = optimizer, 
                       es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
                       transf = TRUE, verbose = FALSE)$value
     }
@@ -34,14 +34,40 @@ get_profile_ci <- function(x, es, n_bs, par_fixed, mods, est, tau2, ind,
     # get the log-likelihood, because ml_star() returns the negative log-likelihood
     if (length(par_transf) == 1)
     { # If only one parameter is estimated, use optimize() instead of optim()
-      ll0 <- -1*optimize(ml_star, interval = c(-10,10), es = es, mods = mods, 
-                         n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
-                         verbose = FALSE)$objective
+      
+      ### Use different intervals and store log-likelihood if results is not very
+      # close to the bounds of the interval used for optimization
+      intervals <- list(c(-10, 10), c(-40, 40), c(-70, 70), c(-100, 100))
+ 
+      ll0 <- NA
+      
+      for (interval in intervals)
+      {
+        tmp <- optimize(ml_star, interval = interval, es = es, mods = mods, 
+                        n_bs = n_bs, par_fixed = par_fixed, transf = TRUE, 
+                        verbose = FALSE, penalty = penalty)
+        
+        if (tmp$minimum > interval[1]+0.01 & tmp$minimum < interval[2]-0.01)
+        { 
+          ll0 <- -1*tmp$objective
+          break
+        }
+      }
+      
     } else
     {
-      ll0 <- -1*optim(par = par_transf, fn = ml_star, method = "Nelder-Mead", 
-                      es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
-                      transf = TRUE, verbose = FALSE)$value
+      tmp <- optim(par = par_transf, fn = ml_star, method = optimizer, 
+                   es = es, mods = mods, n_bs = n_bs, par_fixed = par_fixed, 
+                   transf = TRUE, verbose = FALSE, penalty = penalty)
+      
+      if (tmp$convergence != 0)
+      { # Return NA if optim() did not converge
+        ll0 <- NA
+      } else
+      {
+        ll0 <- -1*tmp$value
+      }
+      
     }
   }
   

@@ -234,9 +234,6 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
       
       if (type == "profile" | type == "Wald/profile")
       { # Likelihood-ratio test
-        
-        
-        
         par_fixed <- c(rep(NA, n_bs), 0)
         
         ### Remove the fixed parameters from par
@@ -289,7 +286,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
                            chi_cv = qchisq(.95, df = 1), ll = ll, 
-                           tau2.fixed = tau2.fixed, model_type = "hybrid")$root, 
+                           tau2.fixed = tau2.fixed, model_type = "hybrid",
+                           optimizer = optimizer, penalty = NULL)$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -308,7 +306,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                            es = es, n_bs = n_bs, par_fixed = par_fixed, mods = mods, 
                            est = est, tau2 = tau2, ind = ind, 
                            chi_cv = qchisq(.95, df = 1), ll = ll,
-                           tau2.fixed = tau2.fixed, model_type = "hybrid")$root, 
+                           tau2.fixed = tau2.fixed, model_type = "hybrid",
+                           optimizer = optimizer, penalty = NULL)$root, 
                    silent = TRUE)
         
         if (inherits(tmp, what = "try-error"))
@@ -345,7 +344,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                      par_fixed = par_fixed, mods = mods, est = est, 
                                      tau2 = tau2, ind = n_bs+1, 
                                      chi_cv = qchisq(.95, df = 1), ll = ll,
-                                     tau2.fixed = tau2.fixed, model_type = "hybrid")
+                                     tau2.fixed = tau2.fixed, model_type = "hybrid",
+                                     optimizer = optimizer, penalty = NULL)
         
         if (ll_at_zero < 0)
         {
@@ -359,7 +359,8 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                  mods = mods, est = est, tau2 = tau2,
                                  ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
                                  ll = ll, tau2.fixed = tau2.fixed, 
-                                 model_type = "hybrid")$root, silent = TRUE)
+                                 model_type = "hybrid", optimizer = optimizer, 
+                                 penalty = NULL)$root, silent = TRUE)
           
           if (!inherits(tau2.lb, what = "try-error"))
           { # If lower bound could be computed transform to tau2 scale
@@ -378,14 +379,16 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                mods = mods, est = est, tau2 = tau2,
                                ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
                                ll = ll, tau2.fixed = tau2.fixed, 
-                               model_type = "hybrid")$root, silent = TRUE)
+                               model_type = "hybrid", optimizer = optimizer, 
+                               penalty = NULL)$root, silent = TRUE)
         
         ### Check if lower bound of CI of tau2 is negative
         ll_at_zero <- get_profile_ci(x = log(0), es = es, n_bs = n_bs, 
                                      par_fixed = par_fixed, mods = mods, est = est, 
                                      tau2 = tau2, ind = n_bs+1, 
                                      chi_cv = qchisq(.95, df = 1), ll = ll, 
-                                     model_type = "hybrid")
+                                     tau2.fixed = tau2.fixed, model_type = "hybrid", 
+                                     optimizer = optimizer, penalty = NULL)
         
         if (ll_at_zero < 0)
         {
@@ -398,7 +401,10 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                  es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                  mods = mods, est = est, tau2 = tau2,
                                  ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                                 ll = ll, model_type = "hybrid")$root, silent = TRUE)
+                                 ll = ll, tau2.fixed = tau2.fixed, 
+                                 model_type = "hybrid", optimizer = optimizer, 
+                                 penalty = NULL)$root, 
+                         silent = TRUE)
         }
         
         if (inherits(tau2.lb, what = "try-error"))
@@ -411,7 +417,10 @@ hy <- function(es, measure, side, mods, n_bs, par_fixed, con)
                                es = es, n_bs = n_bs, par_fixed = par_fixed, 
                                mods = mods, est = est, tau2 = tau2,
                                ind = n_bs+1, chi_cv = qchisq(.95, df = 1), 
-                               ll = ll, model_type = "hybrid")$root, silent = TRUE)
+                               ll = ll, tau2.fixed = tau2.fixed, 
+                               model_type = "hybrid", optimizer = optimizer, 
+                               penalty = NULL)$root, 
+                       silent = TRUE)
         
         if (!inherits(tau2.ub, what = "try-error"))
         { # If upper bound could be computed transform to tau2 scale

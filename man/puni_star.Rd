@@ -23,6 +23,7 @@ puni_star(
   side,
   method = "ML",
   boot = FALSE,
+  penalty = NULL,
   control
 )
 }
@@ -71,6 +72,12 @@ of the distribution (i.e., negative) (either \code{"right"} or \code{"left"})}
 between-study variance is zero for methods \code{P} and \code{LNP} should be 
 obtained by means of a parametric bootstrap. The default value is FALSE.}
 
+\item{penalty}{An optional list containing two functions that specify the penalties
+used in penalized maximum likelihood estimation. The first function
+should be named beta and defines the penalty for the average effect size or 
+meta-regression coefficients, while the second function should be named tau2
+and defines the penalty for the between-study variance (see Details).}
+
 \item{control}{An optional list of elements that give the user more control 
 over the optimization and root-finding algorithms (see Note)}
 }
@@ -79,7 +86,7 @@ over the optimization and root-finding algorithms (see Note)}
 \item{ci.lb}{lower bound of p-uniform*'s 95\% confidence interval of the effect size}
 \item{ci.ub}{upper bound of p-uniform*'s 95\% confidence interval of the effect size}
 \item{L.0}{test statistic of p-uniform*'s test of the null hypothesis of no effect}
-\item{pval.0}{one-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
+\item{pval.0}{two-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
 \item{tau2}{p-uniform*'s estimate of the between-study variance}
 \item{tau2.lb}{lower bound of p-uniform*'s 95\% confidence interval of the 
 between-study variance}
@@ -145,6 +152,18 @@ the estimates are computed by means of inverting the likelihood-ratio test.
 Likelihood-ratio tests are used for testing the null hypotheses of no effect 
 and no between-study variance. The \code{ML} method is the recommended method 
 for applying p-uniform*. 
+
+In addition to conventional maximum likelihood estimation, penalized
+maximum likelihood estimation can be used to improve numerical stability
+and convergence, particularly in meta-analyses with a small number of
+studies. This requires specifying two penalty functions: one for the
+average effect size (or meta-regression coefficients) and one for the
+between-study variance. The functions must be named \code{beta} and
+\code{tau2}, respectively, and each must return a single numeric value
+representing the penalty contribution to the log-likelihood. In
+meta-regression models, the \code{beta} function receives a vector
+containing all regression coefficients, allowing penalties to be
+applied to each coefficient. See the Examples section for an illustration.
 
 The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
 The method \code{P} is based on the distribution of the sum of independent 
@@ -239,6 +258,12 @@ puni_star(mi = mi, ni = ni, sdi = sdi, side = "right")
 ### Apply p-uniform* method using t-values
 puni_star(tobs = tobs, ni = ni, side = "right")
 
+### Apply p-uniform* method using sample means and penalty terms as described
+in Pustejovsky, Citkowicz, and Joshi (2026).
+puni_star(mi = mi, ni = ni, sdi = sdi, side = "right", 
+penalty = list(beta = function(betas) -1/16*sum(betas^4), 
+tau2 = function(tau2) 0.5 * log(tau2) - 5 * sqrt(tau2)))
+
 ### Generate data in case of a continuous moderator variable 
 set.seed(12345)
 
@@ -254,9 +279,14 @@ puni_star(yi = yi, vi = vi, mods = ~ xi, sdi = sdi, side = "right")
 Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 London: Oliver & Boyd.
 
-van Aert, R.C.M., & van Assen, M.A.L.M. (2023). Correcting for 
-publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
-for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
+Pustejovsky, J. E., Citkowicz, M., & Joshi, M. (2026). Estimation 
+and inference for step-function selection models in meta-analyses with 
+dependent effects. Research Synthesis Methods, 1–34. 
+https://doi.org/10.1017/rsm.2026.10117
+
+van Aert, R.C.M., & van Assen, M.A.L.M. (2026). Correcting for 
+publication bias in a meta-analysis with the p-uniform* method. Psychonomic 
+Bulletin & Review, 33(3), 102. https://doi.org/10.3758/s13423-025-02812-4
 }
 \author{
 Robbie C.M. van Aert \email{R.C.M.vanAert@tilburguniversity.edu}

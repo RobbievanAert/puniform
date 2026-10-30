@@ -29,6 +29,11 @@
 #' @param boot A logical indicating whether the p-value of testing whether the 
 #' between-study variance is zero for methods \code{P} and \code{LNP} should be 
 #' obtained by means of a parametric bootstrap. The default value is FALSE.
+#' @param penalty An optional list containing two functions that specify the penalties
+#' used in penalized maximum likelihood estimation. The first function
+#' should be named beta and defines the penalty for the average effect size or 
+#' meta-regression coefficients, while the second function should be named tau2
+#' and defines the penalty for the between-study variance (see Details).
 #' @param control An optional list of elements that give the user more control 
 #' over the optimization and root-finding algorithms (see Note) 
 #'
@@ -67,7 +72,7 @@
 #' function has to be multiplied by two. For example, if one-tailed hypothesis tests were 
 #' conducted with an alpha level of .05, an alpha of 0.1 has to be submitted to 
 #' the \code{puni_star} function.
-#'
+#' 
 #' Note that only one effect size measure can be specified at a time. A combination
 #' of effect size measures usually causes true heterogeneity among effect sizes and
 #' including different effect size measures is therefore not recommended.
@@ -81,6 +86,18 @@
 #' Likelihood-ratio tests are used for testing the null hypotheses of no effect 
 #' and no between-study variance. The \code{ML} method is the recommended method 
 #' for applying p-uniform*. 
+#' 
+#' In addition to conventional maximum likelihood estimation, penalized
+#' maximum likelihood estimation can be used to improve numerical stability
+#' and convergence, particularly in meta-analyses with a small number of
+#' studies. This requires specifying two penalty functions: one for the
+#' average effect size (or meta-regression coefficients) and one for the
+#' between-study variance. The functions must be named \code{beta} and
+#' \code{tau2}, respectively, and each must return a single numeric value
+#' representing the penalty contribution to the log-likelihood. In
+#' meta-regression models, the \code{beta} function receives a vector
+#' containing all regression coefficients, allowing penalties to be
+#' applied to each coefficient. See the Examples section for an illustration.
 #' 
 #' The two other methods (\code{P} and \code{LNP}) are moment based estimators. 
 #' The method \code{P} is based on the distribution of the sum of independent 
@@ -98,7 +115,7 @@
 #' \item{ci.lb}{lower bound of p-uniform*'s 95\% confidence interval of the effect size}
 #' \item{ci.ub}{upper bound of p-uniform*'s 95\% confidence interval of the effect size}
 #' \item{L.0}{test statistic of p-uniform*'s test of the null hypothesis of no effect}
-#' \item{pval.0}{one-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
+#' \item{pval.0}{two-tailed p-value of p-uniform*'s test of null hypothesis of no effect}
 #' \item{tau2}{p-uniform*'s estimate of the between-study variance}
 #' \item{tau2.lb}{lower bound of p-uniform*'s 95\% confidence interval of the 
 #' between-study variance}
@@ -180,9 +197,13 @@
 #'
 #' @references Fisher, R.A. (1950). Statistical methods for research workers (11th ed.).
 #' London: Oliver & Boyd.
-#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2023). Correcting for 
-#' publication bias in a meta-analysis with the p-uniform* method. Manuscript submitted  
-#' for publication. Preprint: https://osf.io/preprints/bitss/zqjr9/
+#' @references Pustejovsky, J. E., Citkowicz, M., & Joshi, M. (2026). Estimation 
+#' and inference for step-function selection models in meta-analyses with 
+#' dependent effects. Research Synthesis Methods, 1–34. 
+#' https://doi.org/10.1017/rsm.2026.10117
+#' @references van Aert, R.C.M., & van Assen, M.A.L.M. (2026). Correcting for 
+#' publication bias in a meta-analysis with the p-uniform* method. Psychonomic 
+#' Bulletin & Review, 33(3), 102. https://doi.org/10.3758/s13423-025-02812-4
 #'
 #' @examples ### Generate data for one-sample mean with mu = 0.2 and tau^2 = 0.01
 #' set.seed(123)
@@ -198,6 +219,12 @@
 #' ### Apply p-uniform* method using t-values
 #' puni_star(tobs = tobs, ni = ni, side = "right")
 #' 
+#' ### Apply p-uniform* method using sample means and penalty terms as described
+#' in Pustejovsky, Citkowicz, and Joshi (2026).
+#' puni_star(mi = mi, ni = ni, sdi = sdi, side = "right", 
+#' penalty = list(beta = function(betas) -1/16*sum(betas^4), 
+#' tau2 = function(tau2) 0.5 * log(tau2) - 5 * sqrt(tau2)))
+#' 
 #' ### Generate data in case of a continuous moderator variable 
 #' set.seed(12345)
 #' 
@@ -212,7 +239,7 @@
 
 puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi, vi, 
                       mods = NULL, alpha = 0.05, side, method = "ML", 
-                      boot = FALSE, control)
+                      boot = FALSE, penalty = NULL, control)
 {
   
   ##### COMPUTE EFFECT SIZE, VARIANCE, AND Z-VALUES PER STUDY #####
@@ -251,6 +278,34 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   
   ##############################################################################
   
+  ### Checks for the penalty argument
+  if (is.null(penalty) == FALSE) 
+  {
+    if (is.list(penalty) == FALSE ||
+        !all(c("beta", "tau2") %in% names(penalty))) 
+    { # Check if penalty is a list and the function names are beta and tau2
+      stop("'penalty' argument must be a list containing two functions with the names 'beta' and 'tau2'.")
+    }
+    
+    if (!is.function(penalty$beta) ||
+        !is.function(penalty$tau2)) 
+    {# Check if both elements of penalty are functions
+      stop("Both penalty elements must be functions.")
+    }
+    
+    ### Check if both functions return a single numeric value
+    p_beta <- penalty$beta(rep(0, n_bs))
+    p_tau2 <- penalty$tau2(1)
+    
+    if (length(p_beta) > 1 ||
+        length(p_tau2) > 1)
+    {
+      stop("Penalty functions must return a single numeric value.")
+    }
+  }
+  
+  ##############################################################################
+  
   ### Default values for optimizing (ML) and root-finding procedures (P and LNP)
   con <- list(proc.ml = "", # Whether both parameters need to be estimated at the same time (default) or profile likelihoods need to be optimized
               par = rep(0, n_bs+1), # Starting values for ML estimation
@@ -268,7 +323,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
               reps = 1000, # Number of bootstrap replications for computing bootstrapped p-value test of heterogeneity (P, LNP)
               type = "profile", # Profile likelihood CIs are computed
               optimizer = "Nelder-Mead") # Optimizer that is used for ML estimation 
-              
+  
   ### Check if user has specified values in control and if yes replace values in con
   if (missing(control) == FALSE)
   {
@@ -294,7 +349,7 @@ puni_star <- function(mi, ri, ni, sdi, m1i, m2i, n1i, n2i, sd1i, sd2i, tobs, yi,
   ##### EFFECT SIZE ESTIMATION, TESTS OF NO EFFECT, AND TEST OF NO BETWEEN-STUDY
   # VARIANCE #####
   res.es <- esest_nsig(es = es, mods = mods, n_bs = n_bs, method = method, 
-                       boot = boot, con = con)
+                       boot = boot, con = con, penalty = penalty)
   
   # ##### PUBLICATION BIAS TEST #####
   # Commented out for now. More research is needed to develop a publication bias 
